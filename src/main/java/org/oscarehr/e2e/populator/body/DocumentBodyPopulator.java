@@ -14,17 +14,6 @@ import org.oscarehr.e2e.populator.AbstractPopulator;
 public class DocumentBodyPopulator extends AbstractPopulator {
 	public DocumentBodyPopulator(PatientExport patientExport) {
 		populators.add(new AdvanceDirectivesPopulator());
-		populators.add(new AlertsPopulator(patientExport));
-		populators.add(new AllergiesPopulator(patientExport));
-		populators.add(new ClinicallyMeasuredObservationsPopulator(patientExport));
-		populators.add(new EncountersPopulator(patientExport));
-		populators.add(new FamilyHistoryPopulator(patientExport));
-		populators.add(new ImmunizationsPopulator(patientExport));
-		populators.add(new LabsPopulator(patientExport));
-		populators.add(new MedicationsPopulator(patientExport));
-		populators.add(new OrdersAndRequestsPopulator());
-		populators.add(new ProblemsPopulator(patientExport));
-		populators.add(new RiskFactorsPopulator(patientExport));
 	}
 
 	@Override
