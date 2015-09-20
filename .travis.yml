@@ -1,0 +1,8 @@
+language: java
+jdk: oraclejdk8
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+after_success:
+  mvn cobertura:cobertura coveralls:report -DTRAVIS_JOB_ID=$TRAVIS_JOB_ID 
