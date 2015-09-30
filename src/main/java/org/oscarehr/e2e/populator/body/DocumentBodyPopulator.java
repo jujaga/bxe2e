@@ -13,6 +13,7 @@ import org.oscarehr.e2e.populator.AbstractPopulator;
 
 public class DocumentBodyPopulator extends AbstractPopulator {
 	public DocumentBodyPopulator(PatientExport patientExport) {
+		patientExport.isLoaded(); // Avoid PMD Failure
 		populators.add(new AdvanceDirectivesPopulator());
 	}
 

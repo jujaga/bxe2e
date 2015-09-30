@@ -4,15 +4,13 @@ A Bidirectional Transformation approach to handling E2E
 Data model emulates an [OSCAR EMR](https://github.com/scoophealth/oscar "OSCAR EMR") database  
 Based off of the E2E-DTC 1.4 specification
 
-Refer to **MANUAL.md** if you wish to use this framework in your own EMR environment.
-
 Environment
 -----------
 BXE2E should work on Windows, OSX, and Linux
 
 Dependencies
 ------------
-* Oracle Java 6 or higher
+* Oracle Java 8 or higher
 * Maven 3.0.x or higher
 
 Installation

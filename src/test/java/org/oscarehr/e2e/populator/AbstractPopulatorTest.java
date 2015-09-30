@@ -11,7 +11,7 @@ public abstract class AbstractPopulatorTest {
 	protected static ClinicalDocument clinicalDocument;
 
 	@BeforeClass
-	public static void beforeClass() {
+	public static void abstractBeforeClass() {
 		clinicalDocument = E2ECreator.createEmrConversionDocument(Constants.Runtime.VALID_DEMOGRAPHIC);
 		assertNotNull(clinicalDocument);
 	}

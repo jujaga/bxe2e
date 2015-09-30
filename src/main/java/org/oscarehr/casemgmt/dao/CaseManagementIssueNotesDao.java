@@ -16,7 +16,7 @@ public class CaseManagementIssueNotesDao extends AbstractDao<CaseManagementIssue
 
 	@SuppressWarnings("unchecked")
 	public List<Integer> getNoteIdsWhichHaveIssues(String[] issueId) {
-		if(issueId == null || issueId.length == 0 || (issueId.length == 1 && issueId[0].equals(""))) {
+		if(issueId == null || issueId.length == 0 || issueId.length == 1 && issueId[0].equals("")) {
 			return null;
 		}
 
