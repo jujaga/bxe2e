@@ -1,9 +1,7 @@
 package org.oscarehr.e2e.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDao;
@@ -23,10 +21,6 @@ import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
-import org.oscarehr.common.model.Allergy;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.Drug;
-import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementsExt;
@@ -35,13 +29,20 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.constant.Mappings;
+import org.oscarehr.e2e.model.PatientModel.FamilyHistoryEntry;
+import org.oscarehr.e2e.model.PatientModel.Immunization;
+import org.oscarehr.e2e.model.PatientModel.Lab;
+import org.oscarehr.e2e.model.PatientModel.LabComponent;
+import org.oscarehr.e2e.model.PatientModel.LabOrganizer;
 import org.oscarehr.e2e.util.EverestUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class PatientExport extends Model {
-	private static Logger log = Logger.getLogger(PatientExport.class.getName());
+public class CreatePatient {
+	private static Logger log = Logger.getLogger(PatientModel.class.getName());
 	private static ApplicationContext context = null;
+
+	private PatientModel patientModel = null;
 
 	private DemographicDao demographicDao = null;
 	private AllergyDao allergyDao = null;
@@ -61,25 +62,13 @@ public class PatientExport extends Model {
 	// Optimization for Measurements since both Labs and CMOs use the same table
 	private List<Measurement> rawMeasurements = null;
 
-	private Demographic demographic = null;
-	private List<Allergy> allergies = null;
-	private List<Measurement> measurements = null;
-	private List<CaseManagementNote> alerts = null;
-	private List<CaseManagementNote> encounters = null;
-	private List<CaseManagementNote> riskFactors = null;
-	private List<FamilyHistoryEntry> familyHistory = null;
-	private List<Immunization> immunizations = null;
-	private List<Lab> labs = null;
-	private List<Drug> drugs = null;
-	private List<Dxresearch> problems = null;
-
-	public PatientExport() {
+	public CreatePatient() {
 		if(context == null) {
 			context = new ClassPathXmlApplicationContext(Constants.Runtime.SPRING_APPLICATION_CONTEXT);
 		}
 	}
 
-	public PatientExport(Integer demographicNo) {
+	public CreatePatient(Integer demographicNo) {
 		if(context == null) {
 			context = new ClassPathXmlApplicationContext(Constants.Runtime.SPRING_APPLICATION_CONTEXT);
 		}
@@ -99,76 +88,93 @@ public class PatientExport extends Model {
 		drugDao = context.getBean(DrugDao.class);
 		dxResearchDao = context.getBean(DxresearchDao.class);
 
-		loaded = loadPatient(demographicNo);
+		patientModel = loadPatient(demographicNo);
 	}
 
-	private Boolean loadPatient(Integer demographicNo) {
-		demographic = demographicDao.find(demographicNo);
-		if(demographic == null) {
+	public ApplicationContext getApplicationContext() {
+		return context;
+	}
+
+	public PatientModel getPatientModel() {
+		return patientModel;
+	}
+
+	private PatientModel loadPatient(Integer demographicNo) {
+		PatientModel patientModel = new PatientModel();
+		patientModel.setDemographic(demographicDao.find(demographicNo));
+		if(patientModel.getDemographic() == null) {
 			log.error("Demographic ".concat(demographicNo.toString()).concat(" can't be loaded"));
-			return false;
+			patientModel.setLoaded(false);
+			return patientModel;
 		}
 
 		try {
-			allergies = allergyDao.findAllergies(demographicNo);
+			patientModel.setAllergies(allergyDao.findAllergies(demographicNo));
 		} catch (Exception e) {
 			log.error("loadPatient - Failed to load Allergies", e);
-			allergies = null;
+			patientModel.setAllergies(null);
 		}
 
 		try {
-			measurements = assembleMeasurements(demographicNo);
+			patientModel.setMeasurements(assembleMeasurements(demographicNo));
 		} catch (Exception e) {
 			log.error("loadPatient - Failed to load Measurements", e);
-			measurements = null;
+			patientModel.setMeasurements(null);
 		}
 
 		try {
-			encounters = caseManagementNoteDao.getNotesByDemographic(demographicNo.toString());
+			patientModel.setEncounters(caseManagementNoteDao.getNotesByDemographic(demographicNo.toString()));
 		} catch (Exception e) {
 			log.error("loadPatient - Failed to load Encounters", e);
-			encounters = null;
+			patientModel.setEncounters(null);
 		}
 
 		try {
-			immunizations = new ArrayList<Immunization>();
+			List<Immunization> immunizations = new ArrayList<Immunization>();
 			List<Prevention> preventions = preventionDao.findNotDeletedByDemographicId(demographicNo);
 			for(Prevention prevention : preventions) {
 				List<PreventionExt> preventionExts = preventionExtDao.findByPreventionId(prevention.getId());
 				immunizations.add(new Immunization(prevention, preventionExts));
 			}
+			patientModel.setImmunizations(immunizations);
 		} catch (Exception e) {
 			log.error("loadPatient - Failed to load Immunizations", e);
-			immunizations = null;
+			patientModel.setImmunizations(null);
 		}
 
 		try {
-			labs = assembleLabs(demographicNo);
+			patientModel.setLabs(assembleLabs(demographicNo));
 		} catch (Exception e) {
 			log.error("loadPatient - Failed to load Labs", e);
-			labs = null;
+			patientModel.setLabs(null);
 		}
 
 		try {
-			drugs = drugDao.findByDemographicId(demographicNo);
+			patientModel.setMedications(drugDao.findByDemographicId(demographicNo));
 		} catch (Exception e) {
 			log.error("loadPatient - Failed to load Medications", e);
-			drugs = null;
+			patientModel.setMedications(null);
 		}
 
 		try {
-			problems = dxResearchDao.getDxResearchItemsByPatient(demographicNo);
+			patientModel.setProblems(dxResearchDao.getDxResearchItemsByPatient(demographicNo));
 		} catch (Exception e) {
 			log.error("loadPatient - Failed to load Problems", e);
-			problems = null;
+			patientModel.setProblems(null);
 		}
 
 		parseCaseManagement(demographicNo);
 
-		return true;
+		patientModel.setLoaded(true);
+		return patientModel;
 	}
 
 	private void parseCaseManagement(Integer demographicNo) {
+		List<CaseManagementNote> encounters = patientModel.getEncounters();
+		List<CaseManagementNote> alerts = null;
+		List<CaseManagementNote> riskFactors = null;
+		List<FamilyHistoryEntry> familyHistory = null;
+
 		if(encounters != null) {
 			List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDao.getIssuesByDemographic(demographicNo.toString());
 			List<String> cmRiskFactorIssues = new ArrayList<String>();
@@ -252,6 +258,10 @@ public class PatientExport extends Model {
 				alerts = null;
 			}
 		}
+
+		patientModel.setAlerts(alerts);
+		patientModel.setFamilyHistory(familyHistory);
+		patientModel.setRiskFactors(riskFactors);
 	}
 
 	private List<Measurement> assembleMeasurements(Integer demographicNo) {
@@ -375,180 +385,5 @@ public class PatientExport extends Model {
 		}
 
 		return lhs;
-	}
-
-	// PatientExport Standard Interface
-	public ApplicationContext getApplicationContext() {
-		return context;
-	}
-
-	public Demographic getDemographic() {
-		return demographic;
-	}
-
-	public List<Allergy> getAllergies() {
-		return allergies;
-	}
-
-	public List<Measurement> getMeasurements() {
-		return measurements;
-	}
-
-	public List<CaseManagementNote> getAlerts() {
-		return alerts;
-	}
-
-	public List<CaseManagementNote> getEncounters() {
-		return encounters;
-	}
-
-	public List<FamilyHistoryEntry> getFamilyHistory() {
-		return familyHistory;
-	}
-
-	public List<CaseManagementNote> getRiskFactors() {
-		return riskFactors;
-	}
-
-	public List<Immunization> getImmunizations() {
-		return immunizations;
-	}
-
-	public List<Lab> getLabs() {
-		return labs;
-	}
-
-	public List<Drug> getMedications() {
-		return drugs;
-	}
-
-	public List<Dxresearch> getProblems() {
-		return problems;
-	}
-
-	// Supporting Family History Subclass
-	public static class FamilyHistoryEntry {
-		private CaseManagementNote familyHistory = new CaseManagementNote();
-		private Map<String, String> extMap = new HashMap<String, String>();
-
-		public FamilyHistoryEntry(CaseManagementNote familyHistory, List<CaseManagementNoteExt> extMap) {
-			if(familyHistory != null) {
-				this.familyHistory = familyHistory;
-			}
-			if(extMap != null) {
-				for(CaseManagementNoteExt extElement : extMap) {
-					this.extMap.put(extElement.getKeyVal(), extElement.getValue());
-				}
-			}
-		}
-
-		public CaseManagementNote getFamilyHistory() {
-			return familyHistory;
-		}
-
-		public Map<String, String> getExtMap() {
-			return extMap;
-		}
-	}
-
-	// Supporting Immunization Subclass
-	public static class Immunization {
-		private Prevention prevention = new Prevention();
-		private Map<String, String> preventionMap = new HashMap<String, String>();
-
-		public Immunization(Prevention prevention, List<PreventionExt> preventionExt) {
-			if(prevention != null) {
-				this.prevention = prevention;
-			}
-			if(preventionExt != null) {
-				for(PreventionExt extElement : preventionExt) {
-					this.preventionMap.put(extElement.getKeyVal(), extElement.getVal());
-				}
-			}
-		}
-
-		public Prevention getPrevention() {
-			return prevention;
-		}
-
-		public Map<String, String> getPreventionMap() {
-			return preventionMap;
-		}
-	}
-
-	// Supporting Lab Grouping Subclasses
-	public static class Lab {
-		private Hl7TextInfo hl7TextInfo = new Hl7TextInfo();
-		private List<LabOrganizer> labOrganizer = new ArrayList<LabOrganizer>();
-		private String requestDate = null;
-
-		public Lab(Hl7TextInfo hl7TextInfo) {
-			if(hl7TextInfo != null) {
-				this.hl7TextInfo = hl7TextInfo;
-			}
-		}
-
-		public Hl7TextInfo getHl7TextInfo() {
-			return hl7TextInfo;
-		}
-
-		public List<LabOrganizer> getLabOrganizer() {
-			return labOrganizer;
-		}
-
-		public String getRequestDate() {
-			return requestDate;
-		}
-
-		public void setRequestDate(String requestDate) {
-			this.requestDate = requestDate;
-		}
-	}
-
-	public static class LabOrganizer {
-		private Integer id = Constants.Runtime.INVALID_VALUE;
-		private String reportStatus = null;
-		private List<LabComponent> labComponent = new ArrayList<LabComponent>();
-
-		public LabOrganizer(Integer id, String reportStatus) {
-			this.id = id;
-			this.reportStatus = reportStatus;
-		}
-
-		public Integer getGroupId() {
-			return id;
-		}
-
-		public String getReportStatus() {
-			return reportStatus;
-		}
-
-		public List<LabComponent> getLabComponent() {
-			return labComponent;
-		}
-	}
-
-	public static class LabComponent {
-		private Measurement measurement = new Measurement();
-		private Map<String, String> measurementsMap = new HashMap<String, String>();
-
-		public LabComponent(Measurement measurement, List<MeasurementsExt> measurementsExt) {
-			if(measurement != null) {
-				this.measurement = measurement;
-			}
-			if(measurementsExt != null) {
-				for(MeasurementsExt extElement : measurementsExt) {
-					this.measurementsMap.put(extElement.getKeyVal(), extElement.getVal());
-				}
-			}
-		}
-
-		public Measurement getMeasurement() {
-			return measurement;
-		}
-
-		public Map<String, String> getMeasurementsMap() {
-			return measurementsMap;
-		}
 	}
 }
