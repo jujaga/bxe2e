@@ -8,6 +8,7 @@ import java.util.Map;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Dxresearch;
@@ -20,6 +21,7 @@ import org.oscarehr.e2e.constant.Constants;
 
 public class PatientModel extends Model {
 	private Demographic demographic = null;
+	private Clinic clinic = null;
 	private List<Allergy> allergies = null;
 	private List<Measurement> measurements = null;
 	private List<CaseManagementNote> alerts = null;
@@ -38,6 +40,14 @@ public class PatientModel extends Model {
 
 	public void setDemographic(Demographic demographic) {
 		this.demographic = demographic;
+	}
+
+	public Clinic getClinic() {
+		return clinic;
+	}
+
+	public void setClinic(Clinic clinic) {
+		this.clinic = clinic;
 	}
 
 	public List<Allergy> getAllergies() {

@@ -7,15 +7,15 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Patient;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.PatientRole;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
-import org.oscarehr.e2e.model.PatientExport;
+import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.model.export.header.RecordTargetModel;
 import org.oscarehr.e2e.populator.AbstractPopulator;
 
 class RecordTargetPopulator extends AbstractPopulator {
 	private final RecordTargetModel recordTargetModel;
 
-	RecordTargetPopulator(PatientExport patientExport) {
-		recordTargetModel = new RecordTargetModel(patientExport.getDemographic());
+	RecordTargetPopulator(PatientModel patientModel) {
+		recordTargetModel = new RecordTargetModel(patientModel.getDemographic());
 	}
 
 	@Override

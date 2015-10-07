@@ -11,9 +11,8 @@ import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.generic.CE;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.model.PatientExport;
-import org.oscarehr.e2e.populator.AbstractPopulator;
-import org.oscarehr.e2e.populator.EmrExportPopulator;
+import org.oscarehr.e2e.model.CreatePatient;
+import org.oscarehr.e2e.model.PatientModel;
 
 public class PopulatorTest {
 	@BeforeClass
@@ -23,11 +22,11 @@ public class PopulatorTest {
 
 	@Test
 	public void emptyEmrExportPopulatorTest() {
-		PatientExport patientExport = new PatientExport(Constants.Runtime.EMPTY_DEMOGRAPHIC);
+		PatientModel patientModel = new CreatePatient(Constants.Runtime.EMPTY_DEMOGRAPHIC).getPatientModel();
 		CE<String> code = Constants.EMRConversionDocument.CODE;
 		II templateId = new II(Constants.EMRConversionDocument.TEMPLATE_ID);
 
-		AbstractPopulator populator = new EmrExportPopulator(patientExport, code, templateId);
+		AbstractPopulator populator = new EmrExportPopulator(patientModel, code, templateId);
 		populator.populate();
 		assertNotNull(populator);
 
@@ -37,11 +36,11 @@ public class PopulatorTest {
 
 	@Test
 	public void invalidEmrExportPopulatorTest() {
-		PatientExport patientExport = new PatientExport(Constants.Runtime.INVALID_VALUE);
+		PatientModel patientModel = new CreatePatient(Constants.Runtime.INVALID_VALUE).getPatientModel();
 		CE<String> code = Constants.EMRConversionDocument.CODE;
 		II templateId = new II(Constants.EMRConversionDocument.TEMPLATE_ID);
 
-		AbstractPopulator populator = new EmrExportPopulator(patientExport, code, templateId);
+		AbstractPopulator populator = new EmrExportPopulator(patientModel, code, templateId);
 		populator.populate();
 		assertNotNull(populator);
 

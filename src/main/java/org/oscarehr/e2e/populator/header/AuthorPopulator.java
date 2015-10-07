@@ -8,7 +8,7 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AssignedAuthor;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Author;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.e2e.model.PatientExport;
+import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.model.export.header.AuthorModel;
 import org.oscarehr.e2e.populator.AbstractPopulator;
 import org.oscarehr.e2e.util.EverestUtils;
@@ -16,8 +16,8 @@ import org.oscarehr.e2e.util.EverestUtils;
 class AuthorPopulator extends AbstractPopulator {
 	private final AuthorModel authorModel;
 
-	AuthorPopulator(PatientExport patientExport) {
-		Provider provider = EverestUtils.getProviderFromString(patientExport.getDemographic().getProviderNo());
+	AuthorPopulator(PatientModel patientModel) {
+		Provider provider = EverestUtils.getProviderFromString(patientModel.getDemographic().getProviderNo());
 		authorModel = new AuthorModel(provider);
 	}
 

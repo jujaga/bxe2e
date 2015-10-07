@@ -8,12 +8,12 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.StructuredBody;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ActRelationshipHasComponent;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_BasicConfidentialityKind;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.model.PatientExport;
+import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.populator.AbstractPopulator;
 
 public class DocumentBodyPopulator extends AbstractPopulator {
-	public DocumentBodyPopulator(PatientExport patientExport) {
-		patientExport.isLoaded(); // Avoid PMD Failure
+	public DocumentBodyPopulator(PatientModel patientModel) {
+		patientModel.isLoaded(); // Avoid PMD Failure
 		populators.add(new AdvanceDirectivesPopulator());
 	}
 

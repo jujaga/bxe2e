@@ -12,6 +12,7 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.ClinicDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxresearchDao;
@@ -45,6 +46,7 @@ public class CreatePatient {
 	private PatientModel patientModel = null;
 
 	private DemographicDao demographicDao = null;
+	private ClinicDao clinicDao = null;
 	private AllergyDao allergyDao = null;
 	private MeasurementDao measurementDao = null;
 	private MeasurementsExtDao measurementsExtDao = null;
@@ -62,18 +64,13 @@ public class CreatePatient {
 	// Optimization for Measurements since both Labs and CMOs use the same table
 	private List<Measurement> rawMeasurements = null;
 
-	public CreatePatient() {
-		if(context == null) {
-			context = new ClassPathXmlApplicationContext(Constants.Runtime.SPRING_APPLICATION_CONTEXT);
-		}
-	}
-
 	public CreatePatient(Integer demographicNo) {
 		if(context == null) {
 			context = new ClassPathXmlApplicationContext(Constants.Runtime.SPRING_APPLICATION_CONTEXT);
 		}
 
 		demographicDao = context.getBean(DemographicDao.class);
+		clinicDao = context.getBean(ClinicDao.class);
 		allergyDao = context.getBean(AllergyDao.class);
 		measurementDao = context.getBean(MeasurementDao.class);
 		measurementsExtDao = context.getBean(MeasurementsExtDao.class);
@@ -88,24 +85,37 @@ public class CreatePatient {
 		drugDao = context.getBean(DrugDao.class);
 		dxResearchDao = context.getBean(DxresearchDao.class);
 
-		patientModel = loadPatient(demographicNo);
-	}
-
-	public ApplicationContext getApplicationContext() {
-		return context;
+		patientModel = new PatientModel();
+		patientModel.setLoaded(loadPatient(demographicNo));
 	}
 
 	public PatientModel getPatientModel() {
 		return patientModel;
 	}
 
-	private PatientModel loadPatient(Integer demographicNo) {
-		PatientModel patientModel = new PatientModel();
+	public static ApplicationContext getApplicationContext() {
+		if(context == null) {
+			context = new ClassPathXmlApplicationContext(Constants.Runtime.SPRING_APPLICATION_CONTEXT);
+		}
+		return context;
+	}
+
+	private Boolean loadPatient(Integer demographicNo) {
+		if(demographicNo == null) {
+			log.error("demographicNo is Null");
+			return false;
+		}
 		patientModel.setDemographic(demographicDao.find(demographicNo));
 		if(patientModel.getDemographic() == null) {
 			log.error("Demographic ".concat(demographicNo.toString()).concat(" can't be loaded"));
-			patientModel.setLoaded(false);
-			return patientModel;
+			return false;
+		}
+
+		try {
+			patientModel.setClinic(clinicDao.find(Constants.Runtime.VALID_CLINIC));
+		} catch (Exception e) {
+			log.error("loadPatient - Failed to load Clinic", e);
+			patientModel.setClinic(null);
 		}
 
 		try {
@@ -165,8 +175,7 @@ public class CreatePatient {
 
 		parseCaseManagement(demographicNo);
 
-		patientModel.setLoaded(true);
-		return patientModel;
+		return true;
 	}
 
 	private void parseCaseManagement(Integer demographicNo) {

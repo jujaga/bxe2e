@@ -13,7 +13,7 @@ import org.marc.everest.rmim.uv.cdar2.vocabulary.BindingRealm;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_BasicConfidentialityKind;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.model.PatientExport;
+import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.populator.AbstractPopulator;
 
 public class HeaderPopulator extends AbstractPopulator {
@@ -21,14 +21,14 @@ public class HeaderPopulator extends AbstractPopulator {
 	private final CE<String> code;
 	private final II templateId;
 
-	public HeaderPopulator(PatientExport patientExport, CE<String> code, II templateId) {
-		this.demographic = patientExport.getDemographic();
+	public HeaderPopulator(PatientModel patientModel, CE<String> code, II templateId) {
+		this.demographic = patientModel.getDemographic();
 		this.code = code;
 		this.templateId = templateId;
 
-		populators.add(new RecordTargetPopulator(patientExport));
-		populators.add(new AuthorPopulator(patientExport));
-		populators.add(new CustodianPopulator(patientExport));
+		populators.add(new RecordTargetPopulator(patientModel));
+		populators.add(new AuthorPopulator(patientModel));
+		populators.add(new CustodianPopulator(patientModel));
 		populators.add(new InformationRecipientPopulator());
 	}
 

@@ -53,7 +53,7 @@ import org.oscarehr.e2e.constant.Constants.IdPrefixes;
 import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.constant.Mappings;
 import org.oscarehr.e2e.extension.ObservationWithConfidentialityCode;
-import org.oscarehr.e2e.model.PatientExport;
+import org.oscarehr.e2e.model.CreatePatient;
 
 public class EverestUtils {
 	private static Logger log = Logger.getLogger(EverestUtils.class.getName());
@@ -270,7 +270,7 @@ public class EverestUtils {
 			if(demographicCache.containsKey(demographicNo)) {
 				providerNo =  demographicCache.get(demographicNo).getProviderNo();
 			} else {
-				DemographicDao demographicDao = new PatientExport().getApplicationContext().getBean(DemographicDao.class);
+				DemographicDao demographicDao = CreatePatient.getApplicationContext().getBean(DemographicDao.class);
 				Demographic demographic = demographicDao.find(demographicNo);
 				demographicCache.put(demographicNo, demographic);
 				providerNo = demographic.getProviderNo();
@@ -290,7 +290,7 @@ public class EverestUtils {
 			if(providerCache.containsKey(providerId)) {
 				provider = providerCache.get(providerId);
 			} else {
-				ProviderDao providerDao = new PatientExport().getApplicationContext().getBean(ProviderDao.class);
+				ProviderDao providerDao = CreatePatient.getApplicationContext().getBean(ProviderDao.class);
 				provider = providerDao.find(providerId);
 				providerCache.put(providerId, provider);
 			}
