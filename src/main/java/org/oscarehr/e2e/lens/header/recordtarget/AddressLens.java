@@ -16,7 +16,7 @@ class AddressLens implements ZipperLens<Demographic, SET<AD>> {
 	@Override
 	public SET<AD> get(Demographic demographic) {
 		SET<AD> addresses = null;
-		ArrayList<ADXP> addrParts = new ArrayList<ADXP>();
+		List<ADXP> addrParts = new ArrayList<>();
 
 		addrParts.add(new DelimiterLens().get(demographic.getAddress()));
 		addrParts.add(new CityLens().get(demographic.getCity()));
@@ -37,7 +37,7 @@ class AddressLens implements ZipperLens<Demographic, SET<AD>> {
 			AD addr = addresses.get(0);
 			if(!addr.isNull()) {
 				List<ADXP> addrParts = addr.getPart();
-				addrParts.forEach(addrPart -> {
+				for(ADXP addrPart : addrParts) {
 					AddressPartType addressPartType = addrPart.getPartType();
 					if(addressPartType == AddressPartType.Delimiter) {
 						demographic.setAddress(new DelimiterLens().put(addrPart));
@@ -48,7 +48,7 @@ class AddressLens implements ZipperLens<Demographic, SET<AD>> {
 					} else if(addressPartType == AddressPartType.PostalCode) {
 						demographic.setPostal(new PostalLens().put(addrPart));
 					}
-				});
+				}
 			}
 		}
 	}
