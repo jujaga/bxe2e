@@ -75,7 +75,7 @@ public class HeaderLens implements Lens<PatientModel, ClinicalDocument>{
 	}
 
 	@Override
-	public PatientModel put(ClinicalDocument clinicalDocument) {
+	public PatientModel put(PatientModel patientModel, ClinicalDocument clinicalDocument) {
 		// TODO Auto-generated method stub
 		return null;
 	}

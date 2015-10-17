@@ -18,8 +18,7 @@ class FirstNameLens implements Lens<String, ENXP> {
 	}
 
 	@Override
-	public String put(ENXP namePart) {
-		String name = null;
+	public String put(String name, ENXP namePart) {
 		if(namePart != null && !namePart.isNull() && namePart.getType().getCode() == entityNamePartType) {
 			name = namePart.getValue();
 		}

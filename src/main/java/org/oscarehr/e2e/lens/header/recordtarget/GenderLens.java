@@ -30,8 +30,7 @@ class GenderLens implements Lens<String, CE<AdministrativeGender>> {
 	}
 
 	@Override
-	public String put(CE<AdministrativeGender> gender) {
-		String sex = null;
+	public String put(String sex, CE<AdministrativeGender> gender) {
 		if(!gender.isNull()) {
 			AdministrativeGender administrativeGender = gender.getCode();
 			for(Entry<String, AdministrativeGender> entry : Mappings.genderCode.entrySet()) {

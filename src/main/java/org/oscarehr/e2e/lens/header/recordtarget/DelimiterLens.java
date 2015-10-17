@@ -18,8 +18,7 @@ class DelimiterLens implements Lens<String, ADXP> {
 	}
 
 	@Override
-	public String put(ADXP addrPart) {
-		String delimiter = null;
+	public String put(String delimiter, ADXP addrPart) {
 		if(addrPart != null && !addrPart.isNull() && addrPart.getPartType() == addressPartType) {
 			delimiter = addrPart.getValue();
 		}

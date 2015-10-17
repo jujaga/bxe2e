@@ -18,8 +18,7 @@ class CityLens implements Lens<String, ADXP> {
 	}
 
 	@Override
-	public String put(ADXP addrPart) {
-		String city = null;
+	public String put(String city, ADXP addrPart) {
 		if(addrPart != null && !addrPart.isNull() && addrPart.getPartType() == addressPartType) {
 			city = addrPart.getValue();
 		}

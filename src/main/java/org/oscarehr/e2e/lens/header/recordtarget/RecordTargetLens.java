@@ -34,9 +34,8 @@ public class RecordTargetLens implements Lens<Demographic, RecordTarget>{
 	}
 
 	@Override
-	public Demographic put(RecordTarget recordTarget) {
+	public Demographic put(Demographic demographic, RecordTarget recordTarget) {
 		// TODO Auto-generated method stub
-		Demographic demographic = new Demographic();
 		return demographic;
 	}
 }

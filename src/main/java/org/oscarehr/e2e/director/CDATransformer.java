@@ -17,6 +17,6 @@ public abstract class CDATransformer<M> {
 	}
 
 	public M doImport(ClinicalDocument clinicalDocument) {
-		return lens.put(clinicalDocument);
+		return lens.put(null, clinicalDocument);
 	}
 }

@@ -18,8 +18,7 @@ class StateLens implements Lens<String, ADXP> {
 	}
 
 	@Override
-	public String put(ADXP addrPart) {
-		String state = null;
+	public String put(String state, ADXP addrPart) {
 		if(addrPart != null && !addrPart.isNull() && addrPart.getPartType() == addressPartType) {
 			state = addrPart.getValue();
 		}

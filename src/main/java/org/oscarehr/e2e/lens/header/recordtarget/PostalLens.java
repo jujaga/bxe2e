@@ -18,8 +18,7 @@ class PostalLens implements Lens<String, ADXP> {
 	}
 
 	@Override
-	public String put(ADXP addrPart) {
-		String postal = null;
+	public String put(String postal, ADXP addrPart) {
 		if(addrPart != null && !addrPart.isNull() && addrPart.getPartType() == addressPartType) {
 			postal = addrPart.getValue();
 		}

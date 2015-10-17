@@ -22,8 +22,7 @@ class HinIdLens implements Lens<String, SET<II>> {
 	}
 
 	@Override
-	public String put(SET<II> id) {
-		String hin = null;
+	public String put(String hin, SET<II> id) {
 		if(!id.isNull() && !id.isEmpty()) {
 			II ii = id.get(0);
 			if(!ii.isNull()) {

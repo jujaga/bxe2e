@@ -10,9 +10,9 @@ import org.marc.everest.datatypes.PostalAddressUse;
 import org.marc.everest.datatypes.generic.CS;
 import org.marc.everest.datatypes.generic.SET;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.e2e.lens.ZipperLens;
+import org.oscarehr.e2e.lens.Lens;
 
-class AddressLens implements ZipperLens<Demographic, SET<AD>> {
+class AddressLens implements Lens<Demographic, SET<AD>> {
 	@Override
 	public SET<AD> get(Demographic demographic) {
 		SET<AD> addresses = null;
@@ -32,7 +32,7 @@ class AddressLens implements ZipperLens<Demographic, SET<AD>> {
 	}
 
 	@Override
-	public void put(Demographic demographic, SET<AD> addresses) {
+	public Demographic put(Demographic demographic, SET<AD> addresses) {
 		if(!addresses.isNull() && !addresses.isEmpty()) {
 			AD addr = addresses.get(0);
 			if(!addr.isNull()) {
@@ -40,16 +40,18 @@ class AddressLens implements ZipperLens<Demographic, SET<AD>> {
 				for(ADXP addrPart : addrParts) {
 					AddressPartType addressPartType = addrPart.getPartType();
 					if(addressPartType == AddressPartType.Delimiter) {
-						demographic.setAddress(new DelimiterLens().put(addrPart));
+						demographic.setAddress(new DelimiterLens().put(null, addrPart));
 					} else if(addressPartType == AddressPartType.City) {
-						demographic.setCity(new CityLens().put(addrPart));
+						demographic.setCity(new CityLens().put(null, addrPart));
 					} else if(addressPartType == AddressPartType.State) {
-						demographic.setProvince(new StateLens().put(addrPart));
+						demographic.setProvince(new StateLens().put(null, addrPart));
 					} else if(addressPartType == AddressPartType.PostalCode) {
-						demographic.setPostal(new PostalLens().put(addrPart));
+						demographic.setPostal(new PostalLens().put(null, addrPart));
 					}
 				}
 			}
 		}
+
+		return demographic;
 	}
 }

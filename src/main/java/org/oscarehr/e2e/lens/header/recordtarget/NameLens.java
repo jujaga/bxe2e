@@ -9,10 +9,10 @@ import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.generic.SET;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.e2e.lens.ZipperLens;
+import org.oscarehr.e2e.lens.Lens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-class NameLens implements ZipperLens<Demographic, SET<PN>> {
+class NameLens implements Lens<Demographic, SET<PN>> {
 	@Override
 	public SET<PN> get(Demographic demographic) {
 		SET<PN> names = null;
@@ -31,7 +31,7 @@ class NameLens implements ZipperLens<Demographic, SET<PN>> {
 	}
 
 	@Override
-	public void put(Demographic demographic, SET<PN> names) {
+	public Demographic put(Demographic demographic, SET<PN> names) {
 		if(!names.isNull() && !names.isEmpty()) {
 			PN name = names.get(0);
 			if(!name.isNull()) {
@@ -39,12 +39,14 @@ class NameLens implements ZipperLens<Demographic, SET<PN>> {
 				for(ENXP namePart : nameParts) {
 					EntityNamePartType entityNamePartType = namePart.getType().getCode();
 					if(entityNamePartType == EntityNamePartType.Given) {
-						demographic.setFirstName(new FirstNameLens().put(namePart));
+						demographic.setFirstName(new FirstNameLens().put(null, namePart));
 					} else if(entityNamePartType == EntityNamePartType.Family) {
-						demographic.setLastName(new LastNameLens().put(namePart));
+						demographic.setLastName(new LastNameLens().put(null, namePart));
 					}
 				}
 			}
 		}
+
+		return demographic;
 	}
 }
