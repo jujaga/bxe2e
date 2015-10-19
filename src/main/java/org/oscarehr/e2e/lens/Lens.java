@@ -1,6 +1,7 @@
 package org.oscarehr.e2e.lens;
 
-public interface Lens<S, T> {
-	T get(S s);
-	S put(S s, T t);
+public interface Lens<S, T> extends Get<S, T>, Put<S, T> {
+	/*default Lens<?,?> concat(Lens<?,?> lens) {
+		return lens;
+	}*/
 }

@@ -2,19 +2,24 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 
 import org.marc.everest.datatypes.ADXP;
 import org.marc.everest.datatypes.AddressPartType;
+import org.oscarehr.e2e.lens.Get;
 import org.oscarehr.e2e.lens.Lens;
 import org.oscarehr.e2e.util.EverestUtils;
 
 class DelimiterLens implements Lens<String, ADXP> {
 	private static final AddressPartType addressPartType = AddressPartType.Delimiter;
 
-	@Override
-	public ADXP get(String delimiter) {
+	private Get<String, ADXP> get = s -> {
 		ADXP addrPart = null;
-		if(!EverestUtils.isNullorEmptyorWhitespace(delimiter)) {
-			addrPart = new ADXP(delimiter, addressPartType);
+		if(!EverestUtils.isNullorEmptyorWhitespace(s)) {
+			addrPart = new ADXP(s, addressPartType);
 		}
 		return addrPart;
+	};
+
+	@Override
+	public ADXP get(String delimiter) {
+		return get.get(delimiter);
 	}
 
 	@Override
