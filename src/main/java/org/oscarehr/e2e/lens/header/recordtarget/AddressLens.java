@@ -3,6 +3,7 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.marc.everest.datatypes.AD;
 import org.marc.everest.datatypes.ADXP;
 import org.marc.everest.datatypes.AddressPartType;
@@ -10,48 +11,52 @@ import org.marc.everest.datatypes.PostalAddressUse;
 import org.marc.everest.datatypes.generic.CS;
 import org.marc.everest.datatypes.generic.SET;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.e2e.lens.Lens;
+import org.oscarehr.e2e.lens.AbstractLens;
 
-class AddressLens implements Lens<Demographic, SET<AD>> {
-	@Override
-	public SET<AD> get(Demographic demographic) {
-		SET<AD> addresses = null;
-		List<ADXP> addrParts = new ArrayList<>();
+class AddressLens extends AbstractLens<Demographic, SET<AD>> {
+	AddressLens() {
+		log = Logger.getLogger(AddressPartLens.class.getName());
 
-		addrParts.add(new DelimiterLens().get(demographic.getAddress()));
-		addrParts.add(new CityLens().get(demographic.getCity()));
-		addrParts.add(new StateLens().get(demographic.getProvince()));
-		addrParts.add(new PostalLens().get(demographic.getPostal()));
-		if(!addrParts.isEmpty()) {
-			CS<PostalAddressUse> use = new CS<PostalAddressUse>(PostalAddressUse.HomeAddress);
-			AD addr = new AD(use, addrParts);
-			addresses = new SET<AD>(addr);
-		}
+		get = demographic -> {
+			SET<AD> addresses = null;
+			List<ADXP> addrParts = new ArrayList<>();
 
-		return addresses;
-	}
+			addrParts.add(new AddressPartLens(AddressPartType.Delimiter).get(demographic.getAddress()));
+			addrParts.add(new AddressPartLens(AddressPartType.City).get(demographic.getCity()));
+			addrParts.add(new AddressPartLens(AddressPartType.State).get(demographic.getProvince()));
+			addrParts.add(new AddressPartLens(AddressPartType.PostalCode).get(demographic.getPostal()));
+			if(!addrParts.isEmpty()) {
+				CS<PostalAddressUse> use = new CS<PostalAddressUse>(PostalAddressUse.HomeAddress);
+				AD addr = new AD(use, addrParts);
+				addresses = new SET<AD>(addr);
+			}
 
-	@Override
-	public Demographic put(Demographic demographic, SET<AD> addresses) {
-		if(!addresses.isNull() && !addresses.isEmpty()) {
-			AD addr = addresses.get(0);
-			if(!addr.isNull()) {
-				List<ADXP> addrParts = addr.getPart();
-				for(ADXP addrPart : addrParts) {
-					AddressPartType addressPartType = addrPart.getPartType();
-					if(addressPartType == AddressPartType.Delimiter) {
-						demographic.setAddress(new DelimiterLens().put(null, addrPart));
-					} else if(addressPartType == AddressPartType.City) {
-						demographic.setCity(new CityLens().put(null, addrPart));
-					} else if(addressPartType == AddressPartType.State) {
-						demographic.setProvince(new StateLens().put(null, addrPart));
-					} else if(addressPartType == AddressPartType.PostalCode) {
-						demographic.setPostal(new PostalLens().put(null, addrPart));
+			return addresses;
+		};
+
+		put = (demographic, addresses) -> {
+			if(!addresses.isNull() && !addresses.isEmpty()) {
+				AD addr = addresses.get(0);
+				if(!addr.isNull()) {
+					List<ADXP> addrParts = addr.getPart();
+					for(ADXP addrPart : addrParts) {
+						AddressPartType addressPartType = addrPart.getPartType();
+						String value = new AddressPartLens(addressPartType).put(addrPart);
+
+						if(addressPartType == AddressPartType.Delimiter) {
+							demographic.setAddress(value);
+						} else if(addressPartType == AddressPartType.City) {
+							demographic.setCity(value);
+						} else if(addressPartType == AddressPartType.State) {
+							demographic.setProvince(value);
+						} else if(addressPartType == AddressPartType.PostalCode) {
+							demographic.setPostal(value);
+						}
 					}
 				}
 			}
-		}
 
-		return demographic;
+			return demographic;
+		};
 	}
 }

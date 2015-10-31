@@ -1,6 +1,6 @@
 package org.oscarehr.e2e.lens;
 
 @FunctionalInterface
-public interface Get<S, T> {
+public interface IGet<S, T> {
 	T get(S s);
 }
