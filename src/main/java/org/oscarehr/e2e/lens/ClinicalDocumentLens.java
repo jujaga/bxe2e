@@ -8,24 +8,21 @@ import org.oscarehr.e2e.lens.header.HeaderLens;
 import org.oscarehr.e2e.model.PatientModel;
 
 // TODO Refactor this lens to allow multiple E2E use cases
-public class ClinicalDocumentLens implements Lens<PatientModel, ClinicalDocument> {
-	@Override
-	public ClinicalDocument get(PatientModel patientModel) {
-		CE<String> code = Constants.EMRConversionDocument.CODE;
-		II templateId = new II(Constants.EMRConversionDocument.TEMPLATE_ID);
+public class ClinicalDocumentLens extends AbstractLens<PatientModel, ClinicalDocument> {
+	public ClinicalDocumentLens() {
+		get = patientModel -> {
+			CE<String> code = Constants.EMRConversionDocument.CODE;
+			II templateId = new II(Constants.EMRConversionDocument.TEMPLATE_ID);
 
-		ClinicalDocument clinicalDocument = new HeaderLens(code, templateId).get(patientModel);
-		return clinicalDocument;
+			ClinicalDocument clinicalDocument = new HeaderLens(code, templateId).get(patientModel);
+			return clinicalDocument;
 
-		/*EmrExportPopulator emrExportPopulator = new EmrExportPopulator(patientModel, code, templateId);
-		emrExportPopulator.populate();
+			/*EmrExportPopulator emrExportPopulator = new EmrExportPopulator(patientModel, code, templateId);
+			emrExportPopulator.populate();
 
-		return emrExportPopulator.getClinicalDocument();*/
-	}
+			return emrExportPopulator.getClinicalDocument();*/
+		};
 
-	@Override
-	public PatientModel put(PatientModel patientModel, ClinicalDocument clinicalDocument) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO Put Function
 	}
 }
