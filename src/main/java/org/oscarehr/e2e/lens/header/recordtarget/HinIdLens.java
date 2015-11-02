@@ -1,6 +1,5 @@
 package org.oscarehr.e2e.lens.header.recordtarget;
 
-import org.apache.log4j.Logger;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.generic.SET;
@@ -10,8 +9,6 @@ import org.oscarehr.e2e.util.EverestUtils;
 
 class HinIdLens extends AbstractLens<String, SET<II>> {
 	HinIdLens() {
-		log = Logger.getLogger(HinIdLens.class.getName());
-
 		get = hin -> {
 			II id = new II();
 			if(!EverestUtils.isNullorEmptyorWhitespace(hin)) {

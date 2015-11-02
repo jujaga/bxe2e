@@ -3,7 +3,6 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.marc.everest.datatypes.AD;
 import org.marc.everest.datatypes.ADXP;
 import org.marc.everest.datatypes.AddressPartType;
@@ -15,8 +14,6 @@ import org.oscarehr.e2e.lens.AbstractLens;
 
 class AddressLens extends AbstractLens<Demographic, SET<AD>> {
 	AddressLens() {
-		log = Logger.getLogger(AddressPartLens.class.getName());
-
 		get = demographic -> {
 			SET<AD> addresses = null;
 			List<ADXP> addrParts = new ArrayList<>();

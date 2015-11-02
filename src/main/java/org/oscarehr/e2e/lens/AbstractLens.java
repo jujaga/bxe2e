@@ -6,7 +6,7 @@ import java.util.function.Function;
 import org.apache.log4j.Logger;
 
 public abstract class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
-	protected static Logger log = Logger.getLogger(AbstractLens.class.getName());
+	protected Logger log = Logger.getLogger(this.getClass().getName());
 	protected Function<S, T> get = null;
 	protected BiFunction<S, T, S> put = null;
 
@@ -28,10 +28,5 @@ public abstract class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
 			log.error("Put function undefined");
 			return null;
 		}
-	}
-
-	// Put Function without Complement
-	public S put(T t) {
-		return put(null, t);
 	}
 }

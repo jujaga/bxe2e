@@ -3,7 +3,6 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.EntityNameUse;
@@ -15,8 +14,6 @@ import org.oscarehr.e2e.util.EverestUtils;
 
 class NameLens extends AbstractLens<Demographic, SET<PN>> {
 	NameLens() {
-		log = Logger.getLogger(NamePartLens.class.getName());
-
 		get = demographic -> {
 			SET<PN> names = null;
 			List<ENXP> name = new ArrayList<>();

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.TS;
 import org.marc.everest.datatypes.generic.CE;
@@ -23,8 +22,6 @@ import org.oscarehr.e2e.model.PatientModel;
 
 public class HeaderLens extends AbstractLens<PatientModel, ClinicalDocument> {
 	public HeaderLens(CE<String> code, II templateId) {
-		log = Logger.getLogger(HeaderLens.class.getName());
-
 		get = patientModel -> {
 			ClinicalDocument clinicalDocument = new ClinicalDocument();
 

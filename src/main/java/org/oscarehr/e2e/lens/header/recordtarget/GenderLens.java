@@ -2,7 +2,6 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.generic.CE;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.AdministrativeGender;
@@ -12,8 +11,6 @@ import org.oscarehr.e2e.util.EverestUtils;
 
 class GenderLens extends AbstractLens<String, CE<AdministrativeGender>> {
 	GenderLens() {
-		log = Logger.getLogger(GenderLens.class.getName());
-
 		get = sex -> {
 			CE<AdministrativeGender> gender = new CE<AdministrativeGender>();
 			if(EverestUtils.isNullorEmptyorWhitespace(sex)) {
