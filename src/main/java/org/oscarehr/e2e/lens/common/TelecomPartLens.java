@@ -1,14 +1,13 @@
-package org.oscarehr.e2e.lens.header.recordtarget;
+package org.oscarehr.e2e.lens.common;
 
 import org.marc.everest.datatypes.TEL;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.constant.Constants.TelecomType;
-import org.oscarehr.e2e.lens.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-class TelecomPartLens extends AbstractLens<String, TEL> {
-	TelecomPartLens(TelecommunicationsAddressUse telecomAddressUse, TelecomType telecomType) {
+public class TelecomPartLens extends AbstractLens<String, TEL> {
+	public TelecomPartLens(TelecommunicationsAddressUse telecomAddressUse, TelecomType telecomType) {
 		get = value -> {
 			TEL tel = null;
 			if(!EverestUtils.isNullorEmptyorWhitespace(value)) {

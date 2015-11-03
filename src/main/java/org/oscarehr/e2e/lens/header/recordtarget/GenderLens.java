@@ -6,7 +6,7 @@ import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.generic.CE;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.AdministrativeGender;
 import org.oscarehr.e2e.constant.Mappings;
-import org.oscarehr.e2e.lens.AbstractLens;
+import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
 class GenderLens extends AbstractLens<String, CE<AdministrativeGender>> {

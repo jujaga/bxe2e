@@ -1,12 +1,11 @@
-package org.oscarehr.e2e.lens.header.recordtarget;
+package org.oscarehr.e2e.lens.common;
 
 import org.marc.everest.datatypes.ADXP;
 import org.marc.everest.datatypes.AddressPartType;
-import org.oscarehr.e2e.lens.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-class AddressPartLens extends AbstractLens<String, ADXP> {
-	AddressPartLens(AddressPartType addressPartType) {
+public class AddressPartLens extends AbstractLens<String, ADXP> {
+	public AddressPartLens(AddressPartType addressPartType) {
 		get = value -> {
 			ADXP addrPart = null;
 			if(!EverestUtils.isNullorEmptyorWhitespace(value)) {

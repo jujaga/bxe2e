@@ -9,7 +9,8 @@ import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.generic.SET;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.e2e.lens.AbstractLens;
+import org.oscarehr.e2e.lens.common.AbstractLens;
+import org.oscarehr.e2e.lens.common.NamePartLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
 class NameLens extends AbstractLens<Demographic, SET<PN>> {

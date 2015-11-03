@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.LanguageCommunication;
 import org.oscarehr.e2e.constant.Mappings;
-import org.oscarehr.e2e.lens.AbstractLens;
+import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
 class LanguageLens extends AbstractLens<String, ArrayList<LanguageCommunication>> {

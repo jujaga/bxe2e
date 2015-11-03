@@ -1,4 +1,4 @@
-package org.oscarehr.e2e.lens;
+package org.oscarehr.e2e.lens.common;
 
 @FunctionalInterface
 public interface IGet<S, T> {

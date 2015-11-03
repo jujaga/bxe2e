@@ -6,7 +6,7 @@ import java.util.Calendar;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.TS;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.e2e.lens.AbstractLens;
+import org.oscarehr.e2e.lens.common.AbstractLens;
 
 class BirthDateLens extends AbstractLens<Demographic, TS> {
 	BirthDateLens() {

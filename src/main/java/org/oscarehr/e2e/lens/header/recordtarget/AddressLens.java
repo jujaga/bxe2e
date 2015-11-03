@@ -10,7 +10,8 @@ import org.marc.everest.datatypes.PostalAddressUse;
 import org.marc.everest.datatypes.generic.CS;
 import org.marc.everest.datatypes.generic.SET;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.e2e.lens.AbstractLens;
+import org.oscarehr.e2e.lens.common.AbstractLens;
+import org.oscarehr.e2e.lens.common.AddressPartLens;
 
 class AddressLens extends AbstractLens<Demographic, SET<AD>> {
 	AddressLens() {
