@@ -2,8 +2,9 @@ package org.oscarehr.e2e.director;
 
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.e2e.lens.common.AbstractLens;
+import org.oscarehr.e2e.model.Model;
 
-public abstract class CDATransformer<M> {
+public abstract class CDATransformer<M extends Model> {
 	protected final M model;
 	protected final AbstractLens<M, ClinicalDocument> lens;
 

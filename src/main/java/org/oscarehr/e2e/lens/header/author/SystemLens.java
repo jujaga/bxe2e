@@ -26,7 +26,7 @@ public class SystemLens extends AbstractLens<Object, Author> {
 
 			II id = new II();
 			id.setNullFlavor(NullFlavor.NoInformation);
-			assignedSystem.setId(new SET<II>(id));
+			assignedSystem.setId(new SET<>(id));
 
 			AuthoringDevice device = new AuthoringDevice();
 			device.setSoftwareName(new SC(Constants.EMR.EMR_VERSION));

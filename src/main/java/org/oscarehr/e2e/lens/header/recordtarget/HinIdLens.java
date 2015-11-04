@@ -18,7 +18,7 @@ class HinIdLens extends AbstractLens<String, SET<II>> {
 			} else {
 				id.setNullFlavor(NullFlavor.NoInformation);
 			}
-			return new SET<II>(id);
+			return new SET<>(id);
 		};
 
 		put = (hin, id) -> {

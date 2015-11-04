@@ -12,7 +12,7 @@ import org.oscarehr.e2e.util.EverestUtils;
 class GenderLens extends AbstractLens<String, CE<AdministrativeGender>> {
 	GenderLens() {
 		get = sex -> {
-			CE<AdministrativeGender> gender = new CE<AdministrativeGender>();
+			CE<AdministrativeGender> gender = new CE<>();
 			if(EverestUtils.isNullorEmptyorWhitespace(sex)) {
 				gender.setNullFlavor(NullFlavor.NoInformation);
 			}

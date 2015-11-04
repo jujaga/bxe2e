@@ -25,7 +25,7 @@ public class Mappings {
 
 	public static final Map<String, AdministrativeGender> genderCode;
 	static {
-		Map<String, AdministrativeGender> map = new HashMap<String, AdministrativeGender>();
+		Map<String, AdministrativeGender> map = new HashMap<>();
 		map.put(Constants.DocumentHeader.MALE_ADMINISTRATIVE_GENDER_CODE, AdministrativeGender.Male);
 		map.put(Constants.DocumentHeader.FEMALE_ADMINISTRATIVE_GENDER_CODE, AdministrativeGender.Female);
 		map.put(Constants.DocumentHeader.UNDIFFERENTIATED_ADMINISTRATIVE_GENDER_CODE, AdministrativeGender.Undifferentiated);
@@ -34,7 +34,7 @@ public class Mappings {
 
 	public static final Map<String, String> genderDescription;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put(Constants.DocumentHeader.MALE_ADMINISTRATIVE_GENDER_CODE, Constants.DocumentHeader.MALE_ADMINISTRATIVE_GENDER_DESCRIPTION);
 		map.put(Constants.DocumentHeader.FEMALE_ADMINISTRATIVE_GENDER_CODE, Constants.DocumentHeader.FEMALE_ADMINISTRATIVE_GENDER_DESCRIPTION);
 		map.put(Constants.DocumentHeader.UNDIFFERENTIATED_ADMINISTRATIVE_GENDER_CODE, Constants.DocumentHeader.UNDIFFERENTIATED_ADMINISTRATIVE_GENDER_DESCRIPTION);
@@ -43,7 +43,7 @@ public class Mappings {
 
 	public static final Map<String, String> languageCode;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put(Constants.DocumentHeader.HUMANLANGUAGE_ENGLISH_DESCRIPTION, Constants.DocumentHeader.HUMANLANGUAGE_ENGLISH_CODE);
 		map.put(Constants.DocumentHeader.HUMANLANGUAGE_FRENCH_DESCRIPTION, Constants.DocumentHeader.HUMANLANGUAGE_FRENCH_CODE);
 		languageCode = Collections.unmodifiableMap(map);
@@ -51,7 +51,7 @@ public class Mappings {
 
 	public static final Map<Integer, String> reactionTypeCode;
 	static {
-		Map<Integer, String> map = new HashMap<Integer, String>();
+		Map<Integer, String> map = new HashMap<>();
 		map.put(8, Constants.ReactionTypeCode.DALG.toString());
 		map.put(10, Constants.ReactionTypeCode.DALG.toString());
 		map.put(11, Constants.ReactionTypeCode.DALG.toString());
@@ -63,7 +63,7 @@ public class Mappings {
 
 	public static final Map<String, String> lifeStageCode;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("N", "133933007");
 		map.put("I", "133931009");
 		map.put("C", "410601007");
@@ -74,7 +74,7 @@ public class Mappings {
 
 	public static final Map<String, String> lifeStageName;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("N", "Newborn");
 		map.put("I", "Infant");
 		map.put("C", "Child");
@@ -85,7 +85,7 @@ public class Mappings {
 
 	public static final Map<String, String> allergyTestValue;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("1", "A2");
 		map.put("2", "A3");
 		map.put("3", "A4");
@@ -94,7 +94,7 @@ public class Mappings {
 
 	public static final Map<String, String> allergyTestName;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("1", "mild reaction");
 		map.put("2", "moderate reaction");
 		map.put("3", "severe reaction");
@@ -104,7 +104,7 @@ public class Mappings {
 	// Mock issueId mapping
 	public static final Map<IssueCodes, Long> issueId;
 	static {
-		Map<IssueCodes, Long> map = new HashMap<IssueCodes, Long>();
+		Map<IssueCodes, Long> map = new HashMap<>();
 		map.put(Constants.IssueCodes.OMeds, 65L);
 		map.put(Constants.IssueCodes.SocHistory, 66L);
 		map.put(Constants.IssueCodes.MedHistory, 67L);
@@ -118,7 +118,7 @@ public class Mappings {
 	// Mock icd9 description mapping
 	public static final Map<String, String> icd9Map;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("428", "HEART FAILURE*");
 		map.put("401", "ESSENTIAL HYPERTENSION*");
 		map.put("250", "DIABETES MELLITUS*");
@@ -128,7 +128,7 @@ public class Mappings {
 
 	public static final Map <String, String> formCode;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("AEROSOL", Constants.FormCodes.AER.toString());
 		map.put("AEROSOL, FOAM", Constants.FormCodes.FOAM.toString());
 		map.put("AEROSOL, METERED DOSE", Constants.FormCodes.AER.toString());
@@ -222,81 +222,81 @@ public class Mappings {
 
 	public static final Map<String, ISetComponent<TS>> frequencyInterval;
 	static {
-		Map<String, ISetComponent<TS>> map = new TreeMap<String, ISetComponent<TS>>(String.CASE_INSENSITIVE_ORDER);
+		Map<String, ISetComponent<TS>> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-		PIVL<TS> onedt = new PIVL<TS>(null, new PQ(BigDecimal.ONE, Constants.TimeUnit.d.toString()));
+		PIVL<TS> onedt = new PIVL<>(null, new PQ(BigDecimal.ONE, Constants.TimeUnit.d.toString()));
 		onedt.setOperator(SetOperator.Intersect);
 		onedt.setInstitutionSpecified(true);
 
-		PIVL<TS> onehf = new PIVL<TS>(null, new PQ(BigDecimal.ONE, Constants.TimeUnit.h.toString()));
+		PIVL<TS> onehf = new PIVL<>(null, new PQ(BigDecimal.ONE, Constants.TimeUnit.h.toString()));
 		onehf.setOperator(SetOperator.Intersect);
 		onehf.setInstitutionSpecified(false);
 
-		PIVL<TS> onemot = new PIVL<TS>(null, new PQ(BigDecimal.ONE, Constants.TimeUnit.mo.toString()));
+		PIVL<TS> onemot = new PIVL<>(null, new PQ(BigDecimal.ONE, Constants.TimeUnit.mo.toString()));
 		onemot.setOperator(SetOperator.Intersect);
 		onemot.setInstitutionSpecified(true);
 
-		PIVL<TS> onewkt = new PIVL<TS>(null, new PQ(BigDecimal.ONE, Constants.TimeUnit.wk.toString()));
+		PIVL<TS> onewkt = new PIVL<>(null, new PQ(BigDecimal.ONE, Constants.TimeUnit.wk.toString()));
 		onewkt.setOperator(SetOperator.Intersect);
 		onewkt.setInstitutionSpecified(true);
 
-		PIVL<TS> twodt = new PIVL<TS>(null, new PQ(new BigDecimal(2), Constants.TimeUnit.d.toString()));
+		PIVL<TS> twodt = new PIVL<>(null, new PQ(new BigDecimal(2), Constants.TimeUnit.d.toString()));
 		twodt.setOperator(SetOperator.Intersect);
 		twodt.setInstitutionSpecified(true);
 
-		PIVL<TS> twohf = new PIVL<TS>(null, new PQ(new BigDecimal(2), Constants.TimeUnit.h.toString()));
+		PIVL<TS> twohf = new PIVL<>(null, new PQ(new BigDecimal(2), Constants.TimeUnit.h.toString()));
 		twohf.setOperator(SetOperator.Intersect);
 		twohf.setInstitutionSpecified(false);
 
-		PIVL<TS> twowkt = new PIVL<TS>(null, new PQ(new BigDecimal(2), Constants.TimeUnit.wk.toString()));
+		PIVL<TS> twowkt = new PIVL<>(null, new PQ(new BigDecimal(2), Constants.TimeUnit.wk.toString()));
 		twowkt.setOperator(SetOperator.Intersect);
 		twowkt.setInstitutionSpecified(true);
 
-		PIVL<TS> threehf = new PIVL<TS>(null, new PQ(new BigDecimal(3), Constants.TimeUnit.h.toString()));
+		PIVL<TS> threehf = new PIVL<>(null, new PQ(new BigDecimal(3), Constants.TimeUnit.h.toString()));
 		threehf.setOperator(SetOperator.Intersect);
 		threehf.setInstitutionSpecified(false);
 
-		PIVL<TS> threemot = new PIVL<TS>(null, new PQ(new BigDecimal(3), Constants.TimeUnit.mo.toString()));
+		PIVL<TS> threemot = new PIVL<>(null, new PQ(new BigDecimal(3), Constants.TimeUnit.mo.toString()));
 		threemot.setOperator(SetOperator.Intersect);
 		threemot.setInstitutionSpecified(true);
 
-		PIVL<TS> fourhf = new PIVL<TS>(null, new PQ(new BigDecimal(4), Constants.TimeUnit.h.toString()));
+		PIVL<TS> fourhf = new PIVL<>(null, new PQ(new BigDecimal(4), Constants.TimeUnit.h.toString()));
 		fourhf.setOperator(SetOperator.Intersect);
 		fourhf.setInstitutionSpecified(false);
 
-		PIVL<TS> sixht = new PIVL<TS>(null, new PQ(new BigDecimal(6), Constants.TimeUnit.h.toString()));
+		PIVL<TS> sixht = new PIVL<>(null, new PQ(new BigDecimal(6), Constants.TimeUnit.h.toString()));
 		sixht.setOperator(SetOperator.Intersect);
 		sixht.setInstitutionSpecified(true);
 
-		PIVL<TS> sixhf = new PIVL<TS>(null, new PQ(new BigDecimal(6), Constants.TimeUnit.h.toString()));
+		PIVL<TS> sixhf = new PIVL<>(null, new PQ(new BigDecimal(6), Constants.TimeUnit.h.toString()));
 		sixhf.setOperator(SetOperator.Intersect);
 		sixhf.setInstitutionSpecified(false);
 
-		PIVL<TS> eightht = new PIVL<TS>(null, new PQ(new BigDecimal(8), Constants.TimeUnit.h.toString()));
+		PIVL<TS> eightht = new PIVL<>(null, new PQ(new BigDecimal(8), Constants.TimeUnit.h.toString()));
 		eightht.setOperator(SetOperator.Intersect);
 		eightht.setInstitutionSpecified(true);
 
-		PIVL<TS> eighthf = new PIVL<TS>(null, new PQ(new BigDecimal(8), Constants.TimeUnit.h.toString()));
+		PIVL<TS> eighthf = new PIVL<>(null, new PQ(new BigDecimal(8), Constants.TimeUnit.h.toString()));
 		eighthf.setOperator(SetOperator.Intersect);
 		eighthf.setInstitutionSpecified(false);
 
-		PIVL<TS> twelveht = new PIVL<TS>(null, new PQ(new BigDecimal(12), Constants.TimeUnit.h.toString()));
+		PIVL<TS> twelveht = new PIVL<>(null, new PQ(new BigDecimal(12), Constants.TimeUnit.h.toString()));
 		twelveht.setOperator(SetOperator.Intersect);
 		twelveht.setInstitutionSpecified(true);
 
-		PIVL<TS> twelvehf = new PIVL<TS>(null, new PQ(new BigDecimal(12), Constants.TimeUnit.h.toString()));
+		PIVL<TS> twelvehf = new PIVL<>(null, new PQ(new BigDecimal(12), Constants.TimeUnit.h.toString()));
 		twelvehf.setOperator(SetOperator.Intersect);
 		twelvehf.setInstitutionSpecified(false);
 
-		PIVL<TS> twentyfourhf = new PIVL<TS>(null, new PQ(new BigDecimal(24), Constants.TimeUnit.h.toString()));
+		PIVL<TS> twentyfourhf = new PIVL<>(null, new PQ(new BigDecimal(24), Constants.TimeUnit.h.toString()));
 		twentyfourhf.setOperator(SetOperator.Intersect);
 		twentyfourhf.setInstitutionSpecified(false);
 
-		EIVL<TS> hourOfSleep = new EIVL<TS>(DomainTimingEvent.HourOfSleep, null, SetOperator.Intersect);
+		EIVL<TS> hourOfSleep = new EIVL<>(DomainTimingEvent.HourOfSleep, null, SetOperator.Intersect);
 		// TODO [MARC-HI] Notify about error "When the Event property implies before, after or between meals the Offset property must not be populated"
 		hourOfSleep.setOffset(new IVL<PQ>() {{setNullFlavor(NullFlavor.NotApplicable);}});
 
-		EIVL<TS> betweenDinnerAndSleep = new EIVL<TS>(DomainTimingEvent.BetweenDinnerAndSleep, null, SetOperator.Intersect);
+		EIVL<TS> betweenDinnerAndSleep = new EIVL<>(DomainTimingEvent.BetweenDinnerAndSleep, null, SetOperator.Intersect);
 
 		map.put("daily", onedt);
 		map.put("once daily", onedt);
@@ -340,7 +340,7 @@ public class Mappings {
 
 	public static final Map<String, String> measurementCodeMap;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("BMI", "39156-5");
 		map.put("BP", "55284-4");
 		map.put("DIAS", "8462-4");
@@ -359,7 +359,7 @@ public class Mappings {
 	// TODO [OSCAR] Replace this mapping with measurementTypeDao
 	public static final Map<String, String> measurementTypeMap;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("BMI", "Body Mass Index");
 		map.put("BP", "Blood Pressure");
 		map.put("DIAS", "Diastolic Blood Pressure");
@@ -377,7 +377,7 @@ public class Mappings {
 
 	public static final Map<String, String> measurementUnitMap;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("02", "%");
 		map.put("02SA", "%");
 		map.put("24UA", "mg/24h");
@@ -429,7 +429,7 @@ public class Mappings {
 
 	public static final Map<String, String> personalRelationshipRole;
 	static {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("aunt", "AUNT");
 		map.put("brother", "BRO");
 		map.put("brother-in-law", "BROINLAW");

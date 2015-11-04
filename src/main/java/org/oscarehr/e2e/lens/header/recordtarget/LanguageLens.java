@@ -15,7 +15,7 @@ class LanguageLens extends AbstractLens<String, ArrayList<LanguageCommunication>
 			if(!EverestUtils.isNullorEmptyorWhitespace(value) && Mappings.languageCode.containsKey(value)) {
 				LanguageCommunication language = new LanguageCommunication();
 				language.setLanguageCode(Mappings.languageCode.get(value));
-				languages = new ArrayList<LanguageCommunication>(Arrays.asList(language));
+				languages = new ArrayList<>(Arrays.asList(language));
 			}
 
 			return languages;

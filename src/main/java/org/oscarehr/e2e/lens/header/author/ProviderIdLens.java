@@ -28,7 +28,7 @@ public class ProviderIdLens extends AbstractLens<Provider, SET<II>> {
 				id.setNullFlavor(NullFlavor.NoInformation);
 			}
 
-			return new SET<II>(id);
+			return new SET<>(id);
 		};
 
 		// TODO Put Function

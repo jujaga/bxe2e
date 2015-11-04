@@ -10,7 +10,7 @@ public class BodyConstants {
 	}
 
 	public abstract static class AbstractBodyConstants {
-		public SectionPriority SECTION_PRIORITY;
+		public SectionPriority EMR_CONVERSION_SECTION_PRIORITY;
 		public String WITH_ENTRIES_TITLE;
 		public String WITHOUT_ENTRIES_TITLE;
 		public String WITH_ENTRIES_TEMPLATE_ID;
@@ -26,7 +26,7 @@ public class BodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
 		private AdvanceDirectives() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Advance Directives Section [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Advance Directives Section [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.2.1";
@@ -50,7 +50,7 @@ public class BodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
 		private Alerts() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Alerts [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Alerts [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.3.1";
@@ -74,7 +74,7 @@ public class BodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
 		private Allergies() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Allergies and Intolerances (Reaction List) [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Allergies and Intolerances (Reaction List) [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.4.1";
@@ -102,7 +102,7 @@ public class BodyConstants {
 		public static final String SYSTOLIC_CODE = "DIAS";
 
 		private ClinicallyMeasuredObservations() {
-			SECTION_PRIORITY = SectionPriority.SHOULD;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHOULD;
 			WITH_ENTRIES_TITLE = "Clinical Measured Observations [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Clinical Measured Observations [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.8.1";
@@ -126,7 +126,7 @@ public class BodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
 		private Encounters() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Encounter History & Notes [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Encounter History & Notes [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.12.1";
@@ -150,7 +150,7 @@ public class BodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
 		private FamilyHistory() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Family History [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Family History [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.13.1";
@@ -174,7 +174,7 @@ public class BodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
 		private Immunizations() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Immunizations List [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Immunizations List [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.14.1";
@@ -203,7 +203,7 @@ public class BodyConstants {
 		public static final String NORMAL_CODE = "N";
 
 		private Labs() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Laboratory Results and Reports [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Laboratory Results and Reports [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.16.1";
@@ -231,7 +231,7 @@ public class BodyConstants {
 		public static final String SHORT_TERM = "Short Term";
 
 		private Medications() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Medications and Prescriptions - Medication List [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Medications and Prescriptions - Medication List [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.19.1";
@@ -255,7 +255,7 @@ public class BodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
 		private OrdersAndRequests() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Orders and Requests [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Orders and Requests [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.20.1";
@@ -279,7 +279,7 @@ public class BodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
 		private Problems() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Problems and Conditions - Problem List [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Problems and Conditions - Problem List [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.21.1";
@@ -303,7 +303,7 @@ public class BodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
 		private RiskFactors() {
-			SECTION_PRIORITY = SectionPriority.SHALL;
+			EMR_CONVERSION_SECTION_PRIORITY = SectionPriority.SHALL;
 			WITH_ENTRIES_TITLE = "Risk Factors [with entries]";
 			WITHOUT_ENTRIES_TITLE = "Risk Factors [without entries]";
 			WITH_ENTRIES_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.2.24.1";

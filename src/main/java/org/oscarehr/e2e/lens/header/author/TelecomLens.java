@@ -15,14 +15,14 @@ class TelecomLens extends AbstractLens<Provider, SET<TEL>> {
 	TelecomLens() {
 		get = provider -> {
 			SET<TEL> telecoms = null;
-			ArrayList<TEL> tels = new ArrayList<TEL>();
+			ArrayList<TEL> tels = new ArrayList<>();
 			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.TELEPHONE).get(provider.getPhone()));
 			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.WorkPlace, TelecomType.TELEPHONE).get(provider.getWorkPhone()));
 			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.EMAIL).get(provider.getEmail()));
 			tels.removeAll(Collections.singleton(null));
 
 			if(!tels.isEmpty()) {
-				telecoms = new SET<TEL>(tels);
+				telecoms = new SET<>(tels);
 			}
 			return telecoms;
 		};

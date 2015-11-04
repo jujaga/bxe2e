@@ -25,7 +25,7 @@ class NameLens extends AbstractLens<Demographic, SET<PN>> {
 				name.add(new NamePartLens(EntityNamePartType.Family).get(demographic.getLastName()));
 			}
 			if(!name.isEmpty()) {
-				names = new SET<PN>(new PN(EntityNameUse.Legal, name));
+				names = new SET<>(new PN(EntityNameUse.Legal, name));
 			}
 
 			return names;

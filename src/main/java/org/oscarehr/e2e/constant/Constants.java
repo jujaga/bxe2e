@@ -76,7 +76,7 @@ public class Constants {
 		public static final String CODE_SYSTEM_LOINC = Constants.CodeSystems.LOINC_OID;
 		public static final String CODE_LOINC = "11503-0";
 
-		public static final CE<String> CODE = new CE<String>(
+		public static final CE<String> CODE = new CE<>(
 				Constants.EMRConversionDocument.CODE_LOINC, Constants.CodeSystems.LOINC_OID,
 				Constants.CodeSystems.LOINC_NAME, Constants.CodeSystems.LOINC_VERSION);
 	}

@@ -24,9 +24,9 @@ class AddressLens extends AbstractLens<Demographic, SET<AD>> {
 			addrParts.add(new AddressPartLens(AddressPartType.State).get(demographic.getProvince()));
 			addrParts.add(new AddressPartLens(AddressPartType.PostalCode).get(demographic.getPostal()));
 			if(!addrParts.isEmpty()) {
-				CS<PostalAddressUse> use = new CS<PostalAddressUse>(PostalAddressUse.HomeAddress);
+				CS<PostalAddressUse> use = new CS<>(PostalAddressUse.HomeAddress);
 				AD addr = new AD(use, addrParts);
-				addresses = new SET<AD>(addr);
+				addresses = new SET<>(addr);
 			}
 
 			return addresses;

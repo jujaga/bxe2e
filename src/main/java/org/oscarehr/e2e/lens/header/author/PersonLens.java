@@ -19,7 +19,7 @@ public class PersonLens extends AbstractLens<Provider, Person> {
 	PersonLens() {
 		get = provider -> {
 			Person person = new Person();
-			SET<PN> names = new SET<PN>();
+			SET<PN> names = new SET<>();
 			List<ENXP> name = new ArrayList<>();
 			if(!EverestUtils.isNullorEmptyorWhitespace(provider.getFirstName())) {
 				name.add(new NamePartLens(EntityNamePartType.Given).get(provider.getFirstName()));
@@ -29,7 +29,7 @@ public class PersonLens extends AbstractLens<Provider, Person> {
 			}
 
 			if(!name.isEmpty()) {
-				names = new SET<PN>(new PN(EntityNameUse.OfficialRecord, name));
+				names = new SET<>(new PN(EntityNameUse.OfficialRecord, name));
 			} else {
 				PN pn = new PN();
 				pn.setNullFlavor(NullFlavor.NoInformation);

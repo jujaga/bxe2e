@@ -17,15 +17,14 @@ public class Main {
 	public static void main(String[] args) {
 		Integer demographicNo = Constants.Runtime.VALID_DEMOGRAPHIC;
 
-		doExport(demographicNo);
-		doImport();
+		ClinicalDocument clinicalDocument = doExport(demographicNo);
+		doImport(clinicalDocument);
 	}
 
-	private static void doExport(Integer demographicNo) {
+	private static ClinicalDocument doExport(Integer demographicNo) {
 		// Define Model and Lens
 		PatientModel patientModel = new CreatePatient(demographicNo).getPatientModel();
 		AbstractLens<PatientModel, ClinicalDocument> lens = new ClinicalDocumentLens();
-
 		E2ETransformer e2eTransformer = new E2ETransformer(patientModel, lens);
 
 		// Populate Clinical Document
@@ -35,10 +34,23 @@ public class Main {
 		String output = EverestUtils.generateDocumentToString(clinicalDocument, true);
 		if(!EverestUtils.isNullorEmptyorWhitespace(output)) {
 			System.out.println(output);
+			System.out.println("Exported");
 		}
+
+		return clinicalDocument;
 	}
 
-	private static void doImport() {
-		// TODO Auto-generated method stub
+	private static PatientModel doImport(ClinicalDocument clinicalDocument) {
+		// Define Model and Lens;
+		AbstractLens<PatientModel, ClinicalDocument> lens = new ClinicalDocumentLens();
+		E2ETransformer e2eTransformer = new E2ETransformer(null, lens);
+
+		// Populate Patient Model
+		PatientModel patientModel = e2eTransformer.doImport(clinicalDocument);
+		if(patientModel.isLoaded()) {
+			System.out.println("Imported");
+		}
+
+		return patientModel;
 	}
 }

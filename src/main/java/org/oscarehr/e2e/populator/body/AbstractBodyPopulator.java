@@ -30,7 +30,7 @@ public abstract class AbstractBodyPopulator<T> extends AbstractPopulator {
 		Component3 component = makeSectionComponent();
 
 		//entries = new ArrayList<Entry>(); // Null Entry Cascade test line override
-		if(entries.isEmpty() && bodyConstants.SECTION_PRIORITY == SectionPriority.SHALL) {
+		if(entries.isEmpty() && bodyConstants.EMR_CONVERSION_SECTION_PRIORITY == SectionPriority.SHALL) {
 			ClinicalStatement clinicalStatement = populateNullFlavorClinicalStatement();
 			if(clinicalStatement != null) {
 				Entry entry = new Entry(x_ActRelationshipEntry.DRIV, new BL(true), clinicalStatement);
