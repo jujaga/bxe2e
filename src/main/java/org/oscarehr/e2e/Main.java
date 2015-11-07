@@ -5,6 +5,8 @@ import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.director.E2ETransformer;
 import org.oscarehr.e2e.lens.ClinicalDocumentLens;
 import org.oscarehr.e2e.lens.common.AbstractLens;
+import org.oscarehr.e2e.lens.temp.Test1Lens;
+import org.oscarehr.e2e.lens.temp.Test2Lens;
 import org.oscarehr.e2e.model.CreatePatient;
 import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.util.EverestUtils;
@@ -17,6 +19,10 @@ public class Main {
 	public static void main(String[] args) {
 		Integer demographicNo = Constants.Runtime.VALID_DEMOGRAPHIC;
 
+		AbstractLens<String, Boolean> test = AbstractLens.compose(new Test1Lens(), new Test2Lens());
+		System.out.println(test.get("1"));
+		//System.out.println(test.put(false));
+		
 		ClinicalDocument clinicalDocument = doExport(demographicNo);
 		doImport(clinicalDocument);
 	}

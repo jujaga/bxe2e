@@ -21,6 +21,7 @@ public class ClinicalDocumentLens extends AbstractLens<PatientModel, ClinicalDoc
 			return clinicalDocument;
 		};
 
+		// TODO Create proper put function for importing E2E
 		put = (patientModel, clinicalDocument) -> {
 			patientModel = new PatientModel();
 			patientModel.setLoaded(true);

@@ -11,7 +11,7 @@ public class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
 	protected BiFunction<S, T, S> put = null;
 
 	protected AbstractLens() {
-		// This abstract class shouldn't be instantiated unless it's built from other lenses
+		// Should only be instantiated directly when performing a lens concatenation
 	}
 
 	// Standard Get Function
@@ -35,11 +35,27 @@ public class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
 	}
 
 	// TODO Figure out Templating issue
-	@SuppressWarnings("unchecked")
-	public <V> AbstractLens<S, T> concat(AbstractLens<?, T> innerLens) {
-		AbstractLens<S, T> newLens = new AbstractLens<>();
-		Function<?, T> innerGet = innerLens.get;
-		newLens.get = (Function<S, T>) innerGet.andThen((Function<? super T, ? extends V>) this.get);
+	public static <A, B, C, V> AbstractLens<A, C> compose(AbstractLens<A, B> outerLens, AbstractLens<B, C> innerLens) {
+		AbstractLens<A, C> newLens = new AbstractLens<>();
+
+		try {
+			Function<B, C> innerGet = innerLens.get;
+			Function<A, B> outerGet = outerLens.get;
+			newLens.get = outerGet.andThen(innerGet);
+		} catch (NullPointerException e) {
+			//log.error("Concatenation Error: Get subfunction(s) undefined");
+			return null;
+		}
+
+		/*try {
+			BiFunction<B, C, B> innerPut = innerLens.put;
+			BiFunction<A, B, A> outerPut = (BiFunction<A, B, A>) this.put;
+			newLens.put = (BiFunction<A, C, A>) innerPut.andThen((Function<? super B, ? extends V>) outerPut);
+		} catch (NullPointerException e) {
+			log.error("Concatenation Error: Put subfunction(s) undefined");
+			return null;
+		}*/
+
 		return newLens;
 	}
 }
