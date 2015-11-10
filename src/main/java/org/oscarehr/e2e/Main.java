@@ -19,9 +19,9 @@ public class Main {
 	public static void main(String[] args) {
 		Integer demographicNo = Constants.Runtime.VALID_DEMOGRAPHIC;
 
-		AbstractLens<String, Boolean> test = AbstractLens.compose(new Test1Lens(), new Test2Lens());
-		System.out.println(test.get("1"));
-		//System.out.println(test.put(false));
+		AbstractLens<String, Boolean> test = new Test1Lens().compose(new Test2Lens());
+		System.out.println(test.get("0"));
+		System.out.println(test.put(true));
 		
 		ClinicalDocument clinicalDocument = doExport(demographicNo);
 		doImport(clinicalDocument);

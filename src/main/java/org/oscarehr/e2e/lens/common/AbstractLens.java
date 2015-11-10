@@ -19,7 +19,7 @@ public class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
 		try {
 			return get.apply(s);
 		} catch (NullPointerException e) {
-			log.error("Get function undefined");
+			log.error("Transformation Error: Get function undefined");
 			return null;
 		}
 	}
@@ -29,32 +29,43 @@ public class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
 		try {
 			return put.apply(s, t);
 		} catch (NullPointerException e) {
-			log.error("Put function undefined");
+			log.error("Transformation Error: Put function undefined");
 			return null;
 		}
 	}
 
-	// TODO Figure out Templating issue
-	public static <A, B, C, V> AbstractLens<A, C> compose(AbstractLens<A, B> outerLens, AbstractLens<B, C> innerLens) {
-		AbstractLens<A, C> newLens = new AbstractLens<>();
+	@SuppressWarnings("unchecked")
+	public <U> AbstractLens<S, U> compose(AbstractLens<T, U> innerLens) {
+		AbstractLens<S, U> newLens = new AbstractLens<>();
 
 		try {
-			Function<B, C> innerGet = innerLens.get;
-			Function<A, B> outerGet = outerLens.get;
-			newLens.get = outerGet.andThen(innerGet);
+			newLens.get = this.get.andThen(innerLens.get);
 		} catch (NullPointerException e) {
-			//log.error("Concatenation Error: Get subfunction(s) undefined");
-			return null;
+			log.error("Composition Error: Get subfunction(s) undefined");
 		}
+		try {
+			// TODO Figure out if functional currying is appropriate here
+			newLens.put = (s, u) -> {
+				T t = null;
+				if(s instanceof String && t instanceof String) {
+					t = innerLens.put((T) s, u);
+				} else {
+					t = innerLens.put(u);
+					log.warn("Composed lens types are not all of Type String - Put functions falling back to null inputs");
+				}
 
-		/*try {
-			BiFunction<B, C, B> innerPut = innerLens.put;
-			BiFunction<A, B, A> outerPut = (BiFunction<A, B, A>) this.put;
-			newLens.put = (BiFunction<A, C, A>) innerPut.andThen((Function<? super B, ? extends V>) outerPut);
+				/*try { // Try casting s as intermediary t for bifunction apply
+					T temp = (T) s;
+					t = innerLens.put(temp, u);
+				} catch (Exception e) {
+					log.warn("Cannot cast " + s.getClass().getSimpleName() + " as " + t.getClass().getSimpleName());
+					t = innerLens.put(u);
+				}*/
+				return this.put.apply(s, t);
+			};
 		} catch (NullPointerException e) {
-			log.error("Concatenation Error: Put subfunction(s) undefined");
-			return null;
-		}*/
+			log.error("Composition Error: Put subfunction(s) undefined");
+		}
 
 		return newLens;
 	}
