@@ -6,7 +6,23 @@ public abstract class AbstractRule<S, T> {
 	// After construction, the object is fully populated and binds the source and target
 	// Standard use should be a simple no-parameter get and put to access the objects
 	// The object itself should represent the entire TGG including the correspondence
-	
-	abstract T get();
-	abstract S put();
+
+	protected S source = null;
+	protected T target = null;
+
+	public AbstractRule(S s, T t) {
+		this.source = s;
+		this.target = t;
+
+		apply();
+	}
+
+	public T get() {
+		return target;
+	}
+	public S put() {
+		return source;
+	}
+
+	protected abstract void apply(); // Apply rule between S and T
 }
