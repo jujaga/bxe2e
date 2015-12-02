@@ -9,7 +9,7 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class ProviderIdLens extends AbstractLens<Provider, SET<II>> {
-	ProviderIdLens() {
+	public ProviderIdLens() {
 		get = provider -> {
 			II id = new II();
 			if(!EverestUtils.isNullorEmptyorWhitespace(provider.getPractitionerNo())) {

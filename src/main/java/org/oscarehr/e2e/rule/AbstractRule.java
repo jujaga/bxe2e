@@ -10,18 +10,19 @@ public abstract class AbstractRule<S, T> {
 	protected S source = null;
 	protected T target = null;
 
-	public AbstractRule(S s, T t) {
-		this.source = s;
-		this.target = t;
+	public AbstractRule(S source, T target) {
+		this.source = source;
+		this.target = target;
 
 		apply();
 	}
 
-	public T get() {
-		return target;
-	}
-	public S put() {
+	public S getSource() {
 		return source;
+	}
+
+	public T getTarget() {
+		return target;
 	}
 
 	protected abstract void apply(); // Apply rule between S and T

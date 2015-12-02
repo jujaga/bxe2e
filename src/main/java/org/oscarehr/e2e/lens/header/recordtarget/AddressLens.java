@@ -13,8 +13,8 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.AddressPartLens;
 
-class AddressLens extends AbstractLens<Demographic, SET<AD>> {
-	AddressLens() {
+public class AddressLens extends AbstractLens<Demographic, SET<AD>> {
+	public AddressLens() {
 		get = demographic -> {
 			SET<AD> addresses = null;
 			List<ADXP> addrParts = new ArrayList<>();

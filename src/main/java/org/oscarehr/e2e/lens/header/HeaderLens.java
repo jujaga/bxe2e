@@ -17,10 +17,10 @@ import org.marc.everest.rmim.uv.cdar2.vocabulary.BindingRealm;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_BasicConfidentialityKind;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
-import org.oscarehr.e2e.lens.header.author.AuthorLens;
 import org.oscarehr.e2e.lens.header.custodian.CustodianLens;
-import org.oscarehr.e2e.lens.header.recordtarget.RecordTargetLens;
 import org.oscarehr.e2e.model.PatientModel;
+import org.oscarehr.e2e.rule.AuthorRule;
+import org.oscarehr.e2e.rule.RecordTargetRule;
 
 public class HeaderLens extends AbstractLens<PatientModel, ClinicalDocument> {
 	public HeaderLens(CE<String> code, II templateId) {
@@ -49,11 +49,11 @@ public class HeaderLens extends AbstractLens<PatientModel, ClinicalDocument> {
 			clinicalDocument.setLanguageCode(Constants.DocumentHeader.LANGUAGE_ENGLISH_CANADIAN);
 
 			// Record Target
-			RecordTarget recordTarget = new RecordTargetLens().get(patientModel.getDemographic());
+			RecordTarget recordTarget = new RecordTargetRule(patientModel.getDemographic(), null).getTarget();
 			clinicalDocument.setRecordTarget(new ArrayList<>(Arrays.asList(recordTarget)));
 
 			// Author
-			clinicalDocument.setAuthor(new AuthorLens().get(patientModel.getDemographic().getProviderNo()));
+			clinicalDocument.setAuthor(new AuthorRule(patientModel.getDemographic().getProviderNo(), null).getTarget());
 
 			// Custodian
 			clinicalDocument.setCustodian(new CustodianLens().get(patientModel.getClinic()));

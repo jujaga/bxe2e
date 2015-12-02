@@ -11,7 +11,7 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class ProviderLens extends AbstractLens<String, Author> {
-	ProviderLens() {
+	public ProviderLens() {
 		get = providerNo -> {
 			Provider provider = EverestUtils.getProviderFromString(providerNo);
 

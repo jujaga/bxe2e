@@ -15,7 +15,7 @@ import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
 public class SystemLens extends AbstractLens<Object, Author> {
-	SystemLens() {
+	public SystemLens() {
 		get = object -> {
 			Author system = new Author();
 			AssignedAuthor assignedSystem = new AssignedAuthor();

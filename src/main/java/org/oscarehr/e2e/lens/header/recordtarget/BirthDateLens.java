@@ -8,8 +8,8 @@ import org.marc.everest.datatypes.TS;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
-class BirthDateLens extends AbstractLens<Demographic, TS> {
-	BirthDateLens() {
+public class BirthDateLens extends AbstractLens<Demographic, TS> {
+	public BirthDateLens() {
 		get = demographic -> {
 			TS birthDate = new TS();
 

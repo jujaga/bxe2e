@@ -7,8 +7,8 @@ import org.marc.everest.datatypes.ON;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-class CustodianNameLens extends AbstractLens<String, ON> {
-	CustodianNameLens() {
+public class CustodianNameLens extends AbstractLens<String, ON> {
+	public CustodianNameLens() {
 		get = value -> {
 			ON on = null;
 			ArrayList<ENXP> name = new ArrayList<>();

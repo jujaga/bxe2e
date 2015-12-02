@@ -16,7 +16,7 @@ import org.oscarehr.e2e.lens.common.NamePartLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class PersonLens extends AbstractLens<Provider, Person> {
-	PersonLens() {
+	public PersonLens() {
 		get = provider -> {
 			Person person = new Person();
 			SET<PN> names = new SET<>();

@@ -13,8 +13,8 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.NamePartLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-class NameLens extends AbstractLens<Demographic, SET<PN>> {
-	NameLens() {
+public class NameLens extends AbstractLens<Demographic, SET<PN>> {
+	public NameLens() {
 		get = demographic -> {
 			SET<PN> names = null;
 			List<ENXP> name = new ArrayList<>();

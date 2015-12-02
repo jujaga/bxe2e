@@ -11,8 +11,8 @@ import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.TelecomPartLens;
 
-class TelecomLens extends AbstractLens<Demographic, SET<TEL>> {
-	TelecomLens() {
+public class TelecomLens extends AbstractLens<Demographic, SET<TEL>> {
+	public TelecomLens() {
 		get = demographic -> {
 			SET<TEL> telecoms = null;
 			ArrayList<TEL> tels = new ArrayList<>();

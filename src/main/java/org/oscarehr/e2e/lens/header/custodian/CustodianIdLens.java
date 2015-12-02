@@ -8,7 +8,7 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class CustodianIdLens extends AbstractLens<Integer, SET<II>> {
-	CustodianIdLens() {
+	public CustodianIdLens() {
 		get = clinicId -> {
 			II id = new II();
 			if(clinicId != null && !EverestUtils.isNullorEmptyorWhitespace(clinicId.toString())) {

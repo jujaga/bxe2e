@@ -5,10 +5,17 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.PatientRole;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.e2e.lens.header.recordtarget.AddressLens;
+import org.oscarehr.e2e.lens.header.recordtarget.BirthDateLens;
+import org.oscarehr.e2e.lens.header.recordtarget.GenderLens;
+import org.oscarehr.e2e.lens.header.recordtarget.HinIdLens;
+import org.oscarehr.e2e.lens.header.recordtarget.LanguageLens;
+import org.oscarehr.e2e.lens.header.recordtarget.NameLens;
+import org.oscarehr.e2e.lens.header.recordtarget.TelecomLens;
 
 public class RecordTargetRule extends AbstractRule<Demographic, RecordTarget> {
-	public RecordTargetRule(Demographic s, RecordTarget t) {
-		super(s, t);
+	public RecordTargetRule(Demographic source, RecordTarget target) {
+		super(source, target);
 	}
 
 	@Override
@@ -22,15 +29,15 @@ public class RecordTargetRule extends AbstractRule<Demographic, RecordTarget> {
 			recordTarget.setContextControlCode(ContextControl.OverridingPropagating);
 			recordTarget.setPatientRole(patientRole);
 
-			//patientRole.setId(new HinIdLens().get(demographic.getHin()));
-			//patientRole.setAddr(new AddressLens().get(demographic));
-			//patientRole.setTelecom(new TelecomLens().get(demographic));
+			patientRole.setId(new HinIdLens().get(source.getHin()));
+			patientRole.setAddr(new AddressLens().get(source));
+			patientRole.setTelecom(new TelecomLens().get(source));
 			patientRole.setPatient(patient);
 
-			//patient.setName(new NameLens().get(demographic));
-			//patient.setAdministrativeGenderCode(new GenderLens().get(demographic.getSex()));
-			//patient.setBirthTime(new BirthDateLens().get(demographic));
-			//patient.setLanguageCommunication(new LanguageLens().get(demographic.getOfficialLanguage()));
+			patient.setName(new NameLens().get(source));
+			patient.setAdministrativeGenderCode(new GenderLens().get(source.getSex()));
+			patient.setBirthTime(new BirthDateLens().get(source));
+			patient.setLanguageCommunication(new LanguageLens().get(source.getOfficialLanguage()));
 
 			target = recordTarget;
 		}

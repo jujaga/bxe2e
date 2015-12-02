@@ -9,8 +9,8 @@ import org.oscarehr.e2e.constant.Mappings;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-class GenderLens extends AbstractLens<String, CE<AdministrativeGender>> {
-	GenderLens() {
+public class GenderLens extends AbstractLens<String, CE<AdministrativeGender>> {
+	public GenderLens() {
 		get = sex -> {
 			CE<AdministrativeGender> gender = new CE<>();
 			if(EverestUtils.isNullorEmptyorWhitespace(sex)) {

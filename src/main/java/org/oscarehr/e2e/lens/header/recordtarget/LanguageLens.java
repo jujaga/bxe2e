@@ -8,8 +8,8 @@ import org.oscarehr.e2e.constant.Mappings;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-class LanguageLens extends AbstractLens<String, ArrayList<LanguageCommunication>> {
-	LanguageLens() {
+public class LanguageLens extends AbstractLens<String, ArrayList<LanguageCommunication>> {
+	public LanguageLens() {
 		get = value -> {
 			ArrayList<LanguageCommunication> languages = null;
 			if(!EverestUtils.isNullorEmptyorWhitespace(value) && Mappings.languageCode.containsKey(value)) {
