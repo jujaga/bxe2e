@@ -23,9 +23,9 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
-import org.jdom.Attribute;
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Attribute;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
 import org.marc.everest.datatypes.ADXP;
 import org.marc.everest.datatypes.AddressPartType;
 import org.marc.everest.datatypes.ENXP;
@@ -328,7 +328,6 @@ public class EverestUtils {
 			try {
 				InputStream is = EverestUtils.class.getResourceAsStream(OSCAR_PREVENTIONITEMS_FILE);
 				Element root = new SAXBuilder().build(is).getRootElement();
-				@SuppressWarnings("unchecked")
 				List<Element> items = root.getChildren("item");
 				for(Element e : items) {
 					Attribute name = e.getAttribute("name");
