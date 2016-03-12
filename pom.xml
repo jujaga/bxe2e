@@ -29,8 +29,8 @@ Based off of the E2E-DTC 1.4 specification</description>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<everest.version>1.1.0</everest.version>
-		<spring.version>4.1.6.RELEASE</spring.version>
-		<hibernate.version>4.3.9.Final</hibernate.version>
+		<spring.version>4.2.5.RELEASE</spring.version>
+		<hibernate.version>5.1.0.Final</hibernate.version>
 	</properties>
 	<repositories>
 		<!-- MARC-HI Everest Framework -->
@@ -44,7 +44,7 @@ Based off of the E2E-DTC 1.4 specification</description>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.5.1</version>
 				<configuration>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
@@ -68,7 +68,7 @@ Based off of the E2E-DTC 1.4 specification</description>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.5</version>
+				<version>3.6</version>
 				<executions>
 					<execution>
 						<phase>process-sources</phase>
@@ -107,7 +107,7 @@ Based off of the E2E-DTC 1.4 specification</description>
 			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>4.1.0</version>
 				<configuration>
 					<coberturaReports>
 						<coberturaReport>
@@ -126,7 +126,7 @@ Based off of the E2E-DTC 1.4 specification</description>
 		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom</artifactId>
-			<version>1.1</version>
+			<version>2.0.2</version>
 		</dependency>
 		<!-- MARC-HI Everest Framework -->
 		<dependency>
@@ -190,13 +190,13 @@ Based off of the E2E-DTC 1.4 specification</description>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
-			<version>2.3.2</version>
+			<version>2.3.3</version>
 		</dependency>
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.10</version>
+			<version>1.7.18</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
