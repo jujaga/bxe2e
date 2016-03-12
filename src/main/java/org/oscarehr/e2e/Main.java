@@ -16,14 +16,14 @@ public class Main {
 
 	public static void main(String[] args) {
 		Integer demographicNo = Constants.Runtime.VALID_DEMOGRAPHIC;
+		PatientModel patientModel = new CreatePatient(demographicNo).getPatientModel();
 
-		ClinicalDocument clinicalDocument = doExport(demographicNo);
+		ClinicalDocument clinicalDocument = doExport(patientModel);
 		doImport(clinicalDocument);
 	}
 
-	private static ClinicalDocument doExport(Integer demographicNo) {
+	private static ClinicalDocument doExport(PatientModel patientModel) {
 		// Define Model and Lens
-		PatientModel patientModel = new CreatePatient(demographicNo).getPatientModel();
 		AbstractLens<PatientModel, ClinicalDocument> lens = new ClinicalDocumentLens();
 		E2ETransformer e2eTransformer = new E2ETransformer(patientModel, lens);
 
