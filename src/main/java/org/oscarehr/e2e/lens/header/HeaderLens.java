@@ -19,8 +19,8 @@ import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.header.custodian.CustodianLens;
 import org.oscarehr.e2e.model.PatientModel;
-import org.oscarehr.e2e.rule.AuthorRule;
-import org.oscarehr.e2e.rule.RecordTargetRule;
+import org.oscarehr.e2e.rule.header.AuthorRule;
+import org.oscarehr.e2e.rule.header.RecordTargetRule;
 
 public class HeaderLens extends AbstractLens<PatientModel, ClinicalDocument> {
 	public HeaderLens(CE<String> code, II templateId) {

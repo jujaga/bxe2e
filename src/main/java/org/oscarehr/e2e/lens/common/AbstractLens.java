@@ -11,7 +11,7 @@ public class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
 	protected BiFunction<S, T, S> put = null;
 
 	protected AbstractLens() {
-		// Should only be instantiated directly when performing a lens concatenation
+		// Should only be instantiated directly when performing a lens composition
 	}
 
 	// Standard Get Function

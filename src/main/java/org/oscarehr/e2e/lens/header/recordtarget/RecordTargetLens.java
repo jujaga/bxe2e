@@ -16,16 +16,7 @@ public class RecordTargetLens extends AbstractLens<Demographic, RecordTarget> {
 
 			recordTarget.setContextControlCode(ContextControl.OverridingPropagating);
 			recordTarget.setPatientRole(patientRole);
-
-			patientRole.setId(new HinIdLens().get(demographic.getHin()));
-			patientRole.setAddr(new AddressLens().get(demographic));
-			patientRole.setTelecom(new TelecomLens().get(demographic));
 			patientRole.setPatient(patient);
-
-			patient.setName(new NameLens().get(demographic));
-			patient.setAdministrativeGenderCode(new GenderLens().get(demographic.getSex()));
-			patient.setBirthTime(new BirthDateLens().get(demographic));
-			patient.setLanguageCommunication(new LanguageLens().get(demographic.getOfficialLanguage()));
 
 			return recordTarget;
 		};
