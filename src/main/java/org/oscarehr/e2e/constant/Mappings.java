@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.apache.commons.collections4.bidimap.UnmodifiableBidiMap;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.PQ;
 import org.marc.everest.datatypes.SetOperator;
@@ -23,13 +26,13 @@ public class Mappings {
 		throw new UnsupportedOperationException();
 	}
 
-	public static final Map<String, AdministrativeGender> genderCode;
+	public static final BidiMap<String, AdministrativeGender> genderCode;
 	static {
-		Map<String, AdministrativeGender> map = new HashMap<>();
+		BidiMap<String, AdministrativeGender> map = new DualHashBidiMap<>();
 		map.put(Constants.DocumentHeader.MALE_ADMINISTRATIVE_GENDER_CODE, AdministrativeGender.Male);
 		map.put(Constants.DocumentHeader.FEMALE_ADMINISTRATIVE_GENDER_CODE, AdministrativeGender.Female);
 		map.put(Constants.DocumentHeader.UNDIFFERENTIATED_ADMINISTRATIVE_GENDER_CODE, AdministrativeGender.Undifferentiated);
-		genderCode = Collections.unmodifiableMap(map);
+		genderCode = UnmodifiableBidiMap.unmodifiableBidiMap(map);
 	}
 
 	public static final Map<String, String> genderDescription;
