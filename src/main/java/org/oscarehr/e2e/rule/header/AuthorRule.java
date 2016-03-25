@@ -19,16 +19,16 @@ public class AuthorRule extends AbstractRule<String, ArrayList<Author>> {
 
 	@Override
 	protected void apply() {
-		if(target == null) {
+		if(pair.right == null) {
 			// Do forward transformation
 			ArrayList<Author> authors = new ArrayList<>();
-			authors.add(new ProviderLens().get(source));
+			authors.add(new ProviderLens().get(pair.left));
 			authors.add(new SystemLens().get(null));
 
-			target = authors;
+			pair.right = authors;
 		}
 
-		if(source == null) {
+		if(pair.left == null) {
 			// Do backward transformation
 		}
 	}

@@ -1,17 +1,16 @@
 package org.oscarehr.e2e.rule;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.log4j.Logger;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
 public abstract class AbstractRule<S, T> {
 	protected Logger log = Logger.getLogger(this.getClass().getSimpleName());
-	protected S source = null;
-	protected T target = null;
-	protected AbstractLens<S, T> lens = null;
+	protected MutablePair<S, T> pair = null;
+	protected AbstractLens<MutablePair<S, T>, MutablePair<S, T>> lens = null;
 
 	public AbstractRule(S source, T target) {
-		this.source = source;
-		this.target = target;
+		pair = new MutablePair<S, T>(source, target);
 
 		// May need to look into Apache Commons Pair library
 		defineLens();
@@ -22,12 +21,12 @@ public abstract class AbstractRule<S, T> {
 
 	protected void apply() {
 		try {
-			if(target == null) {
-				target = lens.get(source);
-			} else if (source == null){
-				source = lens.put(target);
+			if(pair.right == null) {
+				pair = lens.get(pair);
+			} else if (pair.left == null){
+				pair = lens.put(pair);
 			} else {
-				source = lens.put(source, target);
+				pair = lens.put(pair, pair);
 			}
 		} catch (NullPointerException e) {
 			log.error("Rule Error: Lens undefined");
@@ -35,10 +34,10 @@ public abstract class AbstractRule<S, T> {
 	}
 
 	public S getSource() {
-		return source;
+		return pair.left;
 	}
 
 	public T getTarget() {
-		return target;
+		return pair.right;
 	}
 }

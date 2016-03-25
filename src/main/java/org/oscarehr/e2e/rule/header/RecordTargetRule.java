@@ -31,7 +31,7 @@ public class RecordTargetRule extends AbstractRule<Demographic, RecordTarget> {
 
 	@Override
 	protected void apply() {
-		if(target == null) {
+		if(pair.right == null) {
 			// Do forward transformation
 			RecordTarget recordTarget = new RecordTarget();
 			PatientRole patientRole = new PatientRole();
@@ -40,20 +40,20 @@ public class RecordTargetRule extends AbstractRule<Demographic, RecordTarget> {
 			recordTarget.setContextControlCode(ContextControl.OverridingPropagating);
 			recordTarget.setPatientRole(patientRole);
 
-			patientRole.setId(new HinIdLens().get(source.getHin()));
-			patientRole.setAddr(new AddressLens().get(source));
-			patientRole.setTelecom(new TelecomLens().get(source));
+			patientRole.setId(new HinIdLens().get(pair.left.getHin()));
+			patientRole.setAddr(new AddressLens().get(pair.left));
+			patientRole.setTelecom(new TelecomLens().get(pair.left));
 			patientRole.setPatient(patient);
 
-			patient.setName(new NameLens().get(source));
-			patient.setAdministrativeGenderCode(new GenderLens().get(source.getSex()));
-			patient.setBirthTime(new BirthDateLens().get(source));
-			patient.setLanguageCommunication(new LanguageLens().get(source.getOfficialLanguage()));
+			patient.setName(new NameLens().get(pair.left));
+			patient.setAdministrativeGenderCode(new GenderLens().get(pair.left.getSex()));
+			patient.setBirthTime(new BirthDateLens().get(pair.left));
+			patient.setLanguageCommunication(new LanguageLens().get(pair.left.getOfficialLanguage()));
 
-			target = recordTarget;
+			pair.right = recordTarget;
 		}
 
-		if(source == null) {
+		if(pair.left == null) {
 			// Do backward transformation
 		}
 	}

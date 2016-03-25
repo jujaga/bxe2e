@@ -44,12 +44,12 @@ public class Mappings {
 		genderDescription = Collections.unmodifiableMap(map);
 	}
 
-	public static final Map<String, String> languageCode;
+	public static final BidiMap<String, String> languageCode;
 	static {
-		Map<String, String> map = new HashMap<>();
+		BidiMap<String, String> map = new DualHashBidiMap<>();
 		map.put(Constants.DocumentHeader.HUMANLANGUAGE_ENGLISH_DESCRIPTION, Constants.DocumentHeader.HUMANLANGUAGE_ENGLISH_CODE);
 		map.put(Constants.DocumentHeader.HUMANLANGUAGE_FRENCH_DESCRIPTION, Constants.DocumentHeader.HUMANLANGUAGE_FRENCH_CODE);
-		languageCode = Collections.unmodifiableMap(map);
+		languageCode = UnmodifiableBidiMap.unmodifiableBidiMap(map);
 	}
 
 	public static final Map<Integer, String> reactionTypeCode;
@@ -64,26 +64,26 @@ public class Mappings {
 		reactionTypeCode = Collections.unmodifiableMap(map);
 	}
 
-	public static final Map<String, String> lifeStageCode;
+	public static final BidiMap<String, String> lifeStageCode;
 	static {
-		Map<String, String> map = new HashMap<>();
+		BidiMap<String, String> map = new DualHashBidiMap<>();
 		map.put("N", "133933007");
 		map.put("I", "133931009");
 		map.put("C", "410601007");
 		map.put("T", "133937008");
 		map.put("A", "133936004");
-		lifeStageCode = Collections.unmodifiableMap(map);
+		lifeStageCode = UnmodifiableBidiMap.unmodifiableBidiMap(map);
 	}
 
-	public static final Map<String, String> lifeStageName;
+	public static final BidiMap<String, String> lifeStageName;
 	static {
-		Map<String, String> map = new HashMap<>();
+		BidiMap<String, String> map = new DualHashBidiMap<>();
 		map.put("N", "Newborn");
 		map.put("I", "Infant");
 		map.put("C", "Child");
 		map.put("T", "Adolescent");
 		map.put("A", "Adult");
-		lifeStageName = Collections.unmodifiableMap(map);
+		lifeStageName = UnmodifiableBidiMap.unmodifiableBidiMap(map);
 	}
 
 	public static final Map<String, String> allergyTestValue;
