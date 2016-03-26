@@ -3,19 +3,23 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.marc.everest.datatypes.AD;
 import org.marc.everest.datatypes.ADXP;
 import org.marc.everest.datatypes.AddressPartType;
 import org.marc.everest.datatypes.PostalAddressUse;
 import org.marc.everest.datatypes.generic.CS;
 import org.marc.everest.datatypes.generic.SET;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.AddressPartLens;
 
-public class AddressLens extends AbstractLens<Demographic, SET<AD>> {
+public class AddressLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
 	public AddressLens() {
-		get = demographic -> {
+		get = source -> {
+			Demographic demographic = source.getLeft();
+
 			SET<AD> addresses = null;
 			List<ADXP> addrParts = new ArrayList<>();
 
@@ -29,10 +33,14 @@ public class AddressLens extends AbstractLens<Demographic, SET<AD>> {
 				addresses = new SET<>(addr);
 			}
 
-			return addresses;
+			source.getRight().getPatientRole().setAddr(addresses);
+			return source;
 		};
 
-		put = (demographic, addresses) -> {
+		put = (source, target) -> {
+			Demographic demographic = source.getLeft();
+			SET<AD> addresses = target.getRight().getPatientRole().getAddr();
+
 			if(!addresses.isNull() && !addresses.isEmpty()) {
 				AD addr = addresses.get(0);
 				if(!addr.isNull()) {
@@ -54,7 +62,8 @@ public class AddressLens extends AbstractLens<Demographic, SET<AD>> {
 				}
 			}
 
-			return demographic;
+			source.setLeft(demographic);
+			return source;
 		};
 	}
 }

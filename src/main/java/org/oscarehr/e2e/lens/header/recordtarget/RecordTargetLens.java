@@ -10,7 +10,7 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 
 public class RecordTargetLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
 	public RecordTargetLens() {
-		get = pair -> {
+		get = source -> {
 			RecordTarget recordTarget = new RecordTarget();
 			PatientRole patientRole = new PatientRole();
 			Patient patient = new Patient();
@@ -19,10 +19,23 @@ public class RecordTargetLens extends AbstractLens<MutablePair<Demographic, Reco
 			recordTarget.setPatientRole(patientRole);
 			patientRole.setPatient(patient);
 
-			pair.setRight(recordTarget);
-			return pair;
+			// Temporary
+			patientRole.setTelecom(new TelecomLens().get(source.left));
+			patient.setName(new NameLens().get(source.left));
+			// Gender
+			patient.setBirthTime(new BirthDateLens().get(source.left));
+			patient.setLanguageCommunication(new LanguageLens().get(source.left.getOfficialLanguage()));
+			// Temporary
+
+			source.setRight(recordTarget);
+			return source;
 		};
 
-		// TODO Put Function
+		put = (source, target) -> {
+			Demographic demographic = new Demographic();
+
+			source.setLeft(demographic);
+			return source;
+		};
 	}
 }

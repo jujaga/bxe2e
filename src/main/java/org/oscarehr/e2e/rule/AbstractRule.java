@@ -12,7 +12,6 @@ public abstract class AbstractRule<S, T> {
 	public AbstractRule(S source, T target) {
 		pair = new MutablePair<S, T>(source, target);
 
-		// May need to look into Apache Commons Pair library
 		defineLens();
 		apply();
 	}
@@ -21,9 +20,9 @@ public abstract class AbstractRule<S, T> {
 
 	protected void apply() {
 		try {
-			if(pair.right == null) {
+			if(pair.getRight() == null) {
 				pair = lens.get(pair);
-			} else if (pair.left == null){
+			} else if (pair.getLeft() == null){
 				pair = lens.put(pair);
 			} else {
 				pair = lens.put(pair, pair);
@@ -34,10 +33,15 @@ public abstract class AbstractRule<S, T> {
 	}
 
 	public S getSource() {
-		return pair.left;
+		return pair.getLeft();
 	}
 
 	public T getTarget() {
-		return pair.right;
+		return pair.getRight();
+	}
+
+	// TODO Determine if this should be used for aggregating rule pairs into a map
+	public MutablePair<S, T> getPair() {
+		return pair;
 	}
 }
