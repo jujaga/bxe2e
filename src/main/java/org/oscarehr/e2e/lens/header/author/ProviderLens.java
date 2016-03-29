@@ -1,20 +1,18 @@
 package org.oscarehr.e2e.lens.header.author;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.marc.everest.datatypes.TS;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AssignedAuthor;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Author;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.e2e.lens.common.AbstractLens;
-import org.oscarehr.e2e.util.EverestUtils;
 
-public class ProviderLens extends AbstractLens<String, Author> {
+public class ProviderLens extends AbstractLens<MutablePair<String, ArrayList<Author>>, MutablePair<String, ArrayList<Author>>> {
 	public ProviderLens() {
-		get = providerNo -> {
-			Provider provider = EverestUtils.getProviderFromString(providerNo);
-
+		get = source -> {
 			Author author = new Author();
 			AssignedAuthor assignedAuthor = new AssignedAuthor();
 
@@ -22,13 +20,12 @@ public class ProviderLens extends AbstractLens<String, Author> {
 			author.setTime(new GregorianCalendar(), TS.DAY);
 			author.setAssignedAuthor(assignedAuthor);
 
-			assignedAuthor.setId(new ProviderIdLens().get(provider));
-			assignedAuthor.setTelecom(new TelecomLens().get(provider));
-			assignedAuthor.setAssignedAuthorChoice(new PersonLens().get(provider));
-
-			return author;
+			source.getRight().add(author);
+			return source;
 		};
 
-		// TODO Put Function
+		put = (source, target) -> {
+			return source;
+		};
 	}
 }

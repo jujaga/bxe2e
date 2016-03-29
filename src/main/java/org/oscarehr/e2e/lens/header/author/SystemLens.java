@@ -1,7 +1,9 @@
 package org.oscarehr.e2e.lens.header.author;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.SC;
@@ -14,9 +16,9 @@ import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
-public class SystemLens extends AbstractLens<Object, Author> {
+public class SystemLens extends AbstractLens<MutablePair<String, ArrayList<Author>>, MutablePair<String, ArrayList<Author>>> {
 	public SystemLens() {
-		get = object -> {
+		get = source -> {
 			Author system = new Author();
 			AssignedAuthor assignedSystem = new AssignedAuthor();
 
@@ -32,11 +34,12 @@ public class SystemLens extends AbstractLens<Object, Author> {
 			device.setSoftwareName(new SC(Constants.EMR.EMR_VERSION));
 			assignedSystem.setAssignedAuthorChoice(device);
 
-			return system;
+			source.getRight().add(system);
+			return source;
 		};
 
-		put = (object, system) -> {
-			return null;
+		put = (source, target) -> {
+			return source;
 		};
 	}
 }
