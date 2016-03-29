@@ -14,7 +14,7 @@ public class AuthorRule extends AbstractRule<String, ArrayList<Author>> {
 
 	@Override
 	protected void defineLens() {
-		// TODO Auto-generated method stub
+		//lens = new AuthorLens();
 	}
 
 	@Override
@@ -30,6 +30,7 @@ public class AuthorRule extends AbstractRule<String, ArrayList<Author>> {
 
 		if(pair.left == null) {
 			// Do backward transformation
+			pair.left = null;
 		}
 	}
 }
