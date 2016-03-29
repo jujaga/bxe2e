@@ -3,14 +3,19 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.LanguageCommunication;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.constant.Mappings;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-public class LanguageLens extends AbstractLens<String, ArrayList<LanguageCommunication>> {
+public class LanguageLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
 	public LanguageLens() {
-		get = value -> {
+		get = source -> {
+			String value = source.getLeft().getOfficialLanguage();
+
 			ArrayList<LanguageCommunication> languages = null;
 			if(!EverestUtils.isNullorEmptyorWhitespace(value) && Mappings.languageCode.containsKey(value)) {
 				LanguageCommunication language = new LanguageCommunication();
@@ -18,9 +23,24 @@ public class LanguageLens extends AbstractLens<String, ArrayList<LanguageCommuni
 				languages = new ArrayList<>(Arrays.asList(language));
 			}
 
-			return languages;
+			source.getRight().getPatientRole().getPatient().setLanguageCommunication(languages);
+			return source;
 		};
 
-		// TODO Put Function
+		put = (source, target) -> {
+			String value = source.getLeft().getOfficialLanguage();
+			ArrayList<LanguageCommunication> languages = target.getRight().getPatientRole().getPatient().getLanguageCommunication();
+
+			if(languages != null && !languages.isEmpty()) {
+				LanguageCommunication language = languages.get(0);
+				String code = language.getLanguageCode().getCode();
+				if(!EverestUtils.isNullorEmptyorWhitespace(code) && Mappings.languageCode.inverseBidiMap().containsKey(code)) {
+					value = Mappings.languageCode.inverseBidiMap().get(code);
+				}
+			}
+
+			source.getLeft().setOfficialLanguage(value);
+			return source;
+		};
 	}
 }

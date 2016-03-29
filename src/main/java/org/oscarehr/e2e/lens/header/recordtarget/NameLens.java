@@ -3,19 +3,23 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.generic.SET;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.NamePartLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-public class NameLens extends AbstractLens<Demographic, SET<PN>> {
+public class NameLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
 	public NameLens() {
-		get = demographic -> {
+		get = source -> {
+			Demographic demographic = source.getLeft();
+
 			SET<PN> names = null;
 			List<ENXP> name = new ArrayList<>();
 			if(!EverestUtils.isNullorEmptyorWhitespace(demographic.getFirstName())) {
@@ -28,10 +32,14 @@ public class NameLens extends AbstractLens<Demographic, SET<PN>> {
 				names = new SET<>(new PN(EntityNameUse.Legal, name));
 			}
 
-			return names;
+			source.getRight().getPatientRole().getPatient().setName(names);
+			return source;
 		};
 
-		put = (demographic, names) -> {
+		put = (source, target) -> {
+			Demographic demographic = source.getLeft();
+			SET<PN> names = target.getRight().getPatientRole().getPatient().getName();
+
 			if(!names.isNull() && !names.isEmpty()) {
 				PN name = names.get(0);
 				if(!name.isNull()) {
@@ -48,7 +56,8 @@ public class NameLens extends AbstractLens<Demographic, SET<PN>> {
 				}
 			}
 
-			return demographic;
+			source.setLeft(demographic);
+			return source;
 		};
 	}
 }

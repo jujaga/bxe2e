@@ -119,12 +119,12 @@ public class RecordTargetModelTest {
 		TEL tel0 = telecoms.get(0);
 		assertNotNull(tel0);
 		assertTrue(TEL.isValidPhoneFlavor(tel0));
-		assertEquals("tel:" + demographic.getPhone().replaceAll("-", ""), tel0.getValue());
+		assertEquals("tel:" + demographic.getPhone().replaceAll("[^0-9]", ""), tel0.getValue());
 
 		TEL tel1 = telecoms.get(1);
 		assertNotNull(tel1);
 		assertTrue(TEL.isValidPhoneFlavor(tel1));
-		assertEquals("tel:" + demographic.getPhone2().replaceAll("-", ""), tel1.getValue());
+		assertEquals("tel:" + demographic.getPhone2().replaceAll("[^0-9]", ""), tel1.getValue());
 
 		TEL tel2 = telecoms.get(2);
 		assertNotNull(tel2);

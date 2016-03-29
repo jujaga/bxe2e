@@ -12,7 +12,7 @@ public class TelecomPartLens extends AbstractLens<String, TEL> {
 			TEL tel = null;
 			if(!EverestUtils.isNullorEmptyorWhitespace(value)) {
 				if(telecomType == Constants.TelecomType.TELEPHONE) {
-					tel = new TEL(Constants.DocumentHeader.TEL_PREFIX + value.replaceAll("-", ""), telecomAddressUse);
+					tel = new TEL(Constants.DocumentHeader.TEL_PREFIX + value.replaceAll("[^0-9]", ""), telecomAddressUse);
 				} else if(telecomType == Constants.TelecomType.EMAIL) {
 					tel = new TEL(Constants.DocumentHeader.EMAIL_PREFIX + value, telecomAddressUse);
 				}
@@ -21,6 +21,14 @@ public class TelecomPartLens extends AbstractLens<String, TEL> {
 			return tel;
 		};
 
-		// TODO Put Function
+		put = (value, tel) -> {
+			if(telecomType == Constants.TelecomType.TELEPHONE && TEL.isValidPhoneFlavor(tel)) {
+				// Consider restoring hyphens and parentheses in telephone numbers
+				value = tel.getValue().replaceAll(Constants.DocumentHeader.TEL_PREFIX, "");
+			} else if(telecomType == Constants.TelecomType.EMAIL && TEL.isValidEMailFlavor(tel)) {
+				value = tel.getValue().replaceAll(Constants.DocumentHeader.EMAIL_PREFIX, "");
+			}
+			return value;
+		};
 	}
 }

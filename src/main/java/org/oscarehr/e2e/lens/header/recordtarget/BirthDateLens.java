@@ -3,16 +3,19 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.TS;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
-public class BirthDateLens extends AbstractLens<Demographic, TS> {
+public class BirthDateLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
 	public BirthDateLens() {
-		get = demographic -> {
-			TS birthDate = new TS();
+		get = source -> {
+			Demographic demographic = source.getLeft();
 
+			TS birthDate = new TS();
 			if(demographic.getYearOfBirth() != null && demographic.getMonthOfBirth() != null) {
 				try {
 					if(Integer.parseInt(demographic.getYearOfBirth()) >= 0 &&
@@ -45,9 +48,28 @@ public class BirthDateLens extends AbstractLens<Demographic, TS> {
 				birthDate.setNullFlavor(NullFlavor.NoInformation);
 			}
 
-			return birthDate;
+			source.getRight().getPatientRole().getPatient().setBirthTime(birthDate);
+			return source;
 		};
 
-		// TODO Put Function
+		put = (source, target) -> {
+			Demographic demographic = source.getLeft();
+			TS birthDate = target.getRight().getPatientRole().getPatient().getBirthTime();
+
+			if(!birthDate.isNull() && !birthDate.isInvalidDate()) {
+				Calendar date = birthDate.getDateValue();
+
+				demographic.setYearOfBirth(Integer.toString(date.get(Calendar.YEAR)));
+				if(birthDate.getDateValuePrecision() > TS.YEAR) {
+					demographic.setMonthOfBirth(Integer.toString(date.get(Calendar.MONTH)));
+					if(birthDate.getDateValuePrecision() > TS.MONTH) {
+						demographic.setDateOfBirth(Integer.toString(date.get(Calendar.DATE)));
+					}
+				}
+			}
+
+			source.setLeft(demographic);
+			return source;
+		};
 	}
 }

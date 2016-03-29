@@ -19,20 +19,16 @@ public class RecordTargetLens extends AbstractLens<MutablePair<Demographic, Reco
 			recordTarget.setPatientRole(patientRole);
 			patientRole.setPatient(patient);
 
-			// Temporary
-			patientRole.setTelecom(new TelecomLens().get(source.left));
-			patient.setName(new NameLens().get(source.left));
-			// Gender
-			patient.setBirthTime(new BirthDateLens().get(source.left));
-			patient.setLanguageCommunication(new LanguageLens().get(source.left.getOfficialLanguage()));
-			// Temporary
-
 			source.setRight(recordTarget);
 			return source;
 		};
 
 		put = (source, target) -> {
-			Demographic demographic = new Demographic();
+			Demographic demographic = source.getLeft();
+
+			if(demographic == null) {
+				demographic = new Demographic();
+			}
 
 			source.setLeft(demographic);
 			return source;
