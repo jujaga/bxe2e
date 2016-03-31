@@ -20,6 +20,7 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.header.custodian.CustodianLens;
 import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.rule.header.AuthorRule;
+import org.oscarehr.e2e.rule.header.InformationRecipientRule;
 import org.oscarehr.e2e.rule.header.RecordTargetRule;
 
 public class HeaderLens extends AbstractLens<PatientModel, ClinicalDocument> {
@@ -59,7 +60,7 @@ public class HeaderLens extends AbstractLens<PatientModel, ClinicalDocument> {
 			clinicalDocument.setCustodian(new CustodianLens().get(patientModel.getClinic()));
 
 			// Information Recipient
-			clinicalDocument.setInformationRecipient(new InformationRecipientLens().get(null));
+			clinicalDocument.setInformationRecipient(new InformationRecipientRule(null, null).getTarget());
 
 			return clinicalDocument;
 		};
