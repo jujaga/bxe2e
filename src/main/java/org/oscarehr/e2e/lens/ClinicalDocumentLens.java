@@ -8,7 +8,6 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.header.HeaderLens;
 import org.oscarehr.e2e.model.PatientModel;
 
-// TODO Refactor this lens to allow multiple E2E use cases
 // Use Code and TemplateID value passing for template behavior change (header and body)
 public class ClinicalDocumentLens extends AbstractLens<PatientModel, ClinicalDocument> {
 	public ClinicalDocumentLens() {
@@ -17,7 +16,6 @@ public class ClinicalDocumentLens extends AbstractLens<PatientModel, ClinicalDoc
 			II templateId = new II(Constants.EMRConversionDocument.TEMPLATE_ID);
 
 			ClinicalDocument clinicalDocument = new HeaderLens(code, templateId).get(patientModel);
-			// TODO BodyLens
 			return clinicalDocument;
 		};
 

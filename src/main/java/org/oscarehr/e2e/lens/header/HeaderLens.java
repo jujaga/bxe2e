@@ -17,9 +17,9 @@ import org.marc.everest.rmim.uv.cdar2.vocabulary.BindingRealm;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_BasicConfidentialityKind;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
-import org.oscarehr.e2e.lens.header.custodian.CustodianLens;
 import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.rule.header.AuthorRule;
+import org.oscarehr.e2e.rule.header.CustodianRule;
 import org.oscarehr.e2e.rule.header.InformationRecipientRule;
 import org.oscarehr.e2e.rule.header.RecordTargetRule;
 
@@ -57,14 +57,12 @@ public class HeaderLens extends AbstractLens<PatientModel, ClinicalDocument> {
 			clinicalDocument.setAuthor(new AuthorRule(patientModel.getDemographic().getProviderNo(), null).getTarget());
 
 			// Custodian
-			clinicalDocument.setCustodian(new CustodianLens().get(patientModel.getClinic()));
+			clinicalDocument.setCustodian(new CustodianRule(patientModel.getClinic(), null).getTarget());
 
 			// Information Recipient
 			clinicalDocument.setInformationRecipient(new InformationRecipientRule(null, null).getTarget());
 
 			return clinicalDocument;
 		};
-
-		// TODO Put Function
 	}
 }
