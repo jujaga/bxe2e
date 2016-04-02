@@ -2,7 +2,9 @@ package org.oscarehr.e2e.rule.header;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Author;
+import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.header.author.AuthorLens;
 import org.oscarehr.e2e.lens.header.author.ProviderIdLens;
 import org.oscarehr.e2e.lens.header.author.ProviderLens;
@@ -17,8 +19,8 @@ public class AuthorRule extends AbstractRule<String, ArrayList<Author>> {
 	}
 
 	@Override
-	protected void defineLens() {
-		lens = new AuthorLens()
+	protected AbstractLens<MutablePair<String, ArrayList<Author>>, MutablePair<String, ArrayList<Author>>> defineLens() {
+		return new AuthorLens()
 				.compose(new ProviderLens())
 				.compose(new ProviderIdLens())
 				.compose(new ProviderTelecomLens())

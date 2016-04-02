@@ -11,13 +11,17 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 public class RecordTargetLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
 	public RecordTargetLens() {
 		get = source -> {
-			RecordTarget recordTarget = new RecordTarget();
-			PatientRole patientRole = new PatientRole();
-			Patient patient = new Patient();
+			RecordTarget recordTarget = source.getRight();
 
-			recordTarget.setContextControlCode(ContextControl.OverridingPropagating);
-			recordTarget.setPatientRole(patientRole);
-			patientRole.setPatient(patient);
+			if(recordTarget == null) {
+				recordTarget = new RecordTarget();
+				PatientRole patientRole = new PatientRole();
+				Patient patient = new Patient();
+
+				recordTarget.setContextControlCode(ContextControl.OverridingPropagating);
+				recordTarget.setPatientRole(patientRole);
+				patientRole.setPatient(patient);
+			}
 
 			source.setRight(recordTarget);
 			return source;

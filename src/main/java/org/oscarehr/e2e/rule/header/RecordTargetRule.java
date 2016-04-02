@@ -1,7 +1,9 @@
 package org.oscarehr.e2e.rule.header;
 
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.header.recordtarget.AddressLens;
 import org.oscarehr.e2e.lens.header.recordtarget.BirthDateLens;
 import org.oscarehr.e2e.lens.header.recordtarget.GenderLens;
@@ -18,8 +20,8 @@ public class RecordTargetRule extends AbstractRule<Demographic, RecordTarget> {
 	}
 
 	@Override
-	protected void defineLens() {
-		lens = new RecordTargetLens()
+	protected AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> defineLens() {
+		return new RecordTargetLens()
 				.compose(new HinIdLens())
 				.compose(new AddressLens())
 				.compose(new TelecomLens())

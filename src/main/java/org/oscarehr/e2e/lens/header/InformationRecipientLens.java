@@ -1,7 +1,6 @@
 package org.oscarehr.e2e.lens.header;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.marc.everest.datatypes.NullFlavor;
@@ -13,15 +12,21 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 public class InformationRecipientLens extends AbstractLens<MutablePair<Object, ArrayList<InformationRecipient>>, MutablePair<Object, ArrayList<InformationRecipient>>> {
 	public InformationRecipientLens() {
 		get = source -> {
-			InformationRecipient informationRecipient = new InformationRecipient();
-			IntendedRecipient intendedRecipient = new IntendedRecipient();
+			ArrayList<InformationRecipient> informationRecipients = source.getRight();
 
-			informationRecipient.setIntendedRecipient(intendedRecipient);
-			informationRecipient.setTypeCode(x_InformationRecipient.PRCP);
+			if(informationRecipients == null || informationRecipients.isEmpty()) {
+				informationRecipients = new ArrayList<>();
+				InformationRecipient informationRecipient = new InformationRecipient();
+				IntendedRecipient intendedRecipient = new IntendedRecipient();
 
-			intendedRecipient.setNullFlavor(NullFlavor.NoInformation);
+				informationRecipient.setIntendedRecipient(intendedRecipient);
+				informationRecipient.setTypeCode(x_InformationRecipient.PRCP);
 
-			source.setRight(new ArrayList<>(Arrays.asList(informationRecipient)));
+				intendedRecipient.setNullFlavor(NullFlavor.NoInformation);
+				informationRecipients.add(informationRecipient);
+			}
+
+			source.setRight(informationRecipients);
 			return source;
 		};
 

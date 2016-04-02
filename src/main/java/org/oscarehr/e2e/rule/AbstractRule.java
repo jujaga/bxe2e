@@ -7,16 +7,16 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 public abstract class AbstractRule<S, T> {
 	protected Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	protected MutablePair<S, T> pair = null;
-	protected AbstractLens<MutablePair<S, T>, MutablePair<S, T>> lens = null;
+	private AbstractLens<MutablePair<S, T>, MutablePair<S, T>> lens = null;
 
-	public AbstractRule(S source, T target) {
+	protected AbstractRule(S source, T target) {
 		pair = new MutablePair<S, T>(source, target);
 
-		defineLens();
+		lens = defineLens();
 		apply();
 	}
 
-	protected abstract void defineLens();
+	protected abstract AbstractLens<MutablePair<S, T>, MutablePair<S, T>> defineLens();
 
 	protected void apply() {
 		try {

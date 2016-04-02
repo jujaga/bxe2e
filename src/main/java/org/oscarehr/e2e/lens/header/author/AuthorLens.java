@@ -9,7 +9,13 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 public class AuthorLens extends AbstractLens<MutablePair<String, ArrayList<Author>>, MutablePair<String, ArrayList<Author>>> {
 	public AuthorLens() {
 		get = source -> {
-			source.setRight(new ArrayList<Author>());
+			ArrayList<Author> author = source.getRight();
+
+			if(author == null) {
+				author = new ArrayList<Author>();
+			}
+
+			source.setRight(author);
 			return source;
 		};
 

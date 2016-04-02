@@ -204,7 +204,7 @@ Based off of the E2E-DTC 1.4 specification</description>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.19</version>
+			<version>1.7.20</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

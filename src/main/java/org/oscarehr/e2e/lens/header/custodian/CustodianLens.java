@@ -10,12 +10,16 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 public class CustodianLens extends AbstractLens<MutablePair<Clinic, Custodian>, MutablePair<Clinic, Custodian>> {
 	public CustodianLens() {
 		get = source -> {
-			Custodian custodian = new Custodian();
-			AssignedCustodian assignedCustodian = new AssignedCustodian();
-			CustodianOrganization custodianOrganization = new CustodianOrganization();
+			Custodian custodian = source.getRight();
 
-			custodian.setAssignedCustodian(assignedCustodian);
-			assignedCustodian.setRepresentedCustodianOrganization(custodianOrganization);
+			if(custodian == null) {
+				custodian = new Custodian();
+				AssignedCustodian assignedCustodian = new AssignedCustodian();
+				CustodianOrganization custodianOrganization = new CustodianOrganization();
+
+				custodian.setAssignedCustodian(assignedCustodian);
+				assignedCustodian.setRepresentedCustodianOrganization(custodianOrganization);
+			}
 
 			source.setRight(custodian);
 			return source;
