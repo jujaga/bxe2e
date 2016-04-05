@@ -18,6 +18,7 @@ public abstract class AbstractRule<S, T> {
 
 	protected abstract AbstractLens<MutablePair<S, T>, MutablePair<S, T>> defineLens();
 
+	// TODO Find a better way of determining which lens direction without relying on null
 	protected void apply() {
 		try {
 			if(pair.getRight() == null) {

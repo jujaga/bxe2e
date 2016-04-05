@@ -7,6 +7,7 @@ import org.oscarehr.e2e.lens.ClinicalDocumentLens;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.model.CreatePatient;
 import org.oscarehr.e2e.model.PatientModel;
+import org.oscarehr.e2e.transformer.E2EConversionTransformer;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class Main {
@@ -24,11 +25,10 @@ public class Main {
 
 	private static ClinicalDocument doExport(PatientModel patientModel) {
 		// Define Model and Lens
-		AbstractLens<PatientModel, ClinicalDocument> lens = new ClinicalDocumentLens();
-		E2ETransformer e2eTransformer = new E2ETransformer(patientModel, lens);
+		E2EConversionTransformer transformer = new E2EConversionTransformer(patientModel, null);
 
 		// Populate Clinical Document
-		ClinicalDocument clinicalDocument = e2eTransformer.doExport();
+		ClinicalDocument clinicalDocument = transformer.getTarget();
 
 		// Output Clinical Document as String
 		String output = EverestUtils.generateDocumentToString(clinicalDocument, true);
