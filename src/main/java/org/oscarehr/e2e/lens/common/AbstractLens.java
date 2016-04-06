@@ -6,7 +6,7 @@ import java.util.function.Function;
 import org.apache.log4j.Logger;
 
 public class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
-	protected Logger log = Logger.getLogger(this.getClass().getSimpleName());
+	protected final Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	protected Function<S, T> get = null;
 	protected BiFunction<S, T, S> put = null;
 
@@ -43,6 +43,7 @@ public class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
 			log.error("Composition Error: Get subfunction(s) undefined");
 		}
 		try {
+			// TODO Debug order of lens operations
 			newLens.put = (s, u) -> this.put.apply(s, innerLens.put.apply(this.get.apply(s), u));
 		} catch (NullPointerException e) {
 			log.error("Composition Error: Put subfunction(s) undefined");

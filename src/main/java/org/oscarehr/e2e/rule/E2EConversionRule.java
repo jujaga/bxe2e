@@ -6,10 +6,11 @@ import org.oscarehr.e2e.lens.E2EConversionLens;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.model.Model;
 import org.oscarehr.e2e.model.PatientModel;
+import org.oscarehr.e2e.rule.common.AbstractCDARule;
 
 public class E2EConversionRule extends AbstractCDARule {
-	public E2EConversionRule(PatientModel source, ClinicalDocument target) {
-		super(source, target);
+	public E2EConversionRule(PatientModel source, ClinicalDocument target, Original original) {
+		super(source, target, original);
 	}
 
 	@Override

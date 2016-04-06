@@ -7,11 +7,11 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.header.custodian.CustodianIdLens;
 import org.oscarehr.e2e.lens.header.custodian.CustodianLens;
 import org.oscarehr.e2e.lens.header.custodian.CustodianNameLens;
-import org.oscarehr.e2e.rule.AbstractRule;
+import org.oscarehr.e2e.rule.common.AbstractRule;
 
 public class CustodianRule extends AbstractRule<Clinic, Custodian> {
-	public CustodianRule(Clinic source, Custodian target) {
-		super(source, target);
+	public CustodianRule(Clinic source, Custodian target, Original original) {
+		super(source, target, original);
 	}
 
 	@Override

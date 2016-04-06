@@ -11,11 +11,11 @@ import org.oscarehr.e2e.lens.header.author.ProviderLens;
 import org.oscarehr.e2e.lens.header.author.ProviderPersonLens;
 import org.oscarehr.e2e.lens.header.author.ProviderTelecomLens;
 import org.oscarehr.e2e.lens.header.author.SystemLens;
-import org.oscarehr.e2e.rule.AbstractRule;
+import org.oscarehr.e2e.rule.common.AbstractRule;
 
 public class AuthorRule extends AbstractRule<String, ArrayList<Author>> {
-	public AuthorRule(String source, ArrayList<Author> target) {
-		super(source, target);
+	public AuthorRule(String source, ArrayList<Author> target, Original original) {
+		super(source, target, original);
 	}
 
 	@Override

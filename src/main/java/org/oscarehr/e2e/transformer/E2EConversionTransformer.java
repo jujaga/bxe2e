@@ -8,16 +8,21 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Custodian;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.InformationRecipient;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
+import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.e2e.model.Model;
 import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.rule.E2EConversionRule;
+import org.oscarehr.e2e.rule.common.IRule;
+import org.oscarehr.e2e.rule.common.IRule.Original;
 import org.oscarehr.e2e.rule.header.AuthorRule;
 import org.oscarehr.e2e.rule.header.CustodianRule;
 import org.oscarehr.e2e.rule.header.InformationRecipientRule;
 import org.oscarehr.e2e.rule.header.RecordTargetRule;
 
 public class E2EConversionTransformer extends AbstractTransformer<PatientModel, ClinicalDocument> {
-	public E2EConversionTransformer(PatientModel model, ClinicalDocument target) {
-		super(model, target);
+	public E2EConversionTransformer(PatientModel model, ClinicalDocument target, Original original) {
+		super(model, target, original);
 
 		transform();
 	}
@@ -26,7 +31,9 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 	@Override
 	protected void transform() {
 		// Instantiate and map all rules
-		E2EConversionRule e2eConversionRule = new E2EConversionRule(model, target);
+		IRule<Model, ClinicalDocument> e2eConversionRule = new E2EConversionRule(model, target, original);
+		/*List<IRule<?, ?>> rules = new ArrayList<>();
+		rules.add(e2eConversionRule);*/
 
 		String providerNo = null;
 		try {
@@ -40,7 +47,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		} catch (Exception e) {
 			authors = null;
 		}
-		AuthorRule authorRule = new AuthorRule(providerNo, authors);
+		IRule<String, ArrayList<Author>> authorRule = new AuthorRule(providerNo, authors, original);
 
 		Custodian custodian = null;
 		try {
@@ -48,7 +55,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		} catch (Exception e) {
 			custodian = null;
 		}
-		CustodianRule custodianRule = new CustodianRule(model.getClinic(), custodian);
+		IRule<Clinic, Custodian> custodianRule = new CustodianRule(model.getClinic(), custodian, original);
 
 		ArrayList<InformationRecipient> informationRecipient = null;
 		try {
@@ -56,7 +63,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		} catch (Exception e) {
 			informationRecipient = null;
 		}
-		InformationRecipientRule informationRecipientRule = new InformationRecipientRule(null, informationRecipient);
+		IRule<?, ArrayList<InformationRecipient>> informationRecipientRule = new InformationRecipientRule(null, informationRecipient, original);
 
 		RecordTarget recordTarget = null;
 		try {
@@ -64,7 +71,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		} catch (Exception e) {
 			recordTarget = null;
 		}
-		RecordTargetRule recordTargetRule = new RecordTargetRule(model.getDemographic(), recordTarget);
+		IRule<Demographic, RecordTarget> recordTargetRule = new RecordTargetRule(model.getDemographic(), recordTarget, original);
 
 		// Run all rules
 

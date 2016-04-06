@@ -7,6 +7,7 @@ import org.oscarehr.e2e.lens.ClinicalDocumentLens;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.model.CreatePatient;
 import org.oscarehr.e2e.model.PatientModel;
+import org.oscarehr.e2e.rule.common.IRule.Original;
 import org.oscarehr.e2e.transformer.E2EConversionTransformer;
 import org.oscarehr.e2e.util.EverestUtils;
 
@@ -25,7 +26,7 @@ public class Main {
 
 	private static ClinicalDocument doExport(PatientModel patientModel) {
 		// Define Model and Lens
-		E2EConversionTransformer transformer = new E2EConversionTransformer(patientModel, null);
+		E2EConversionTransformer transformer = new E2EConversionTransformer(patientModel, null, Original.SOURCE);
 
 		// Populate Clinical Document
 		ClinicalDocument clinicalDocument = transformer.getTarget();
@@ -44,6 +45,7 @@ public class Main {
 		// Define Model and Lens;
 		AbstractLens<PatientModel, ClinicalDocument> lens = new ClinicalDocumentLens();
 		E2ETransformer e2eTransformer = new E2ETransformer(null, lens);
+		//E2EConversionTransformer transformer = new E2EConversionTransformer(null, clinicalDocument, Original.TARGET);
 
 		// Populate Patient Model
 		PatientModel patientModel = e2eTransformer.doImport(clinicalDocument);

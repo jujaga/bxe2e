@@ -50,17 +50,17 @@ public class HeaderLens extends AbstractLens<PatientModel, ClinicalDocument> {
 			clinicalDocument.setLanguageCode(Constants.DocumentHeader.LANGUAGE_ENGLISH_CANADIAN);
 
 			// Record Target
-			RecordTarget recordTarget = new RecordTargetRule(patientModel.getDemographic(), null).getTarget();
+			RecordTarget recordTarget = new RecordTargetRule(patientModel.getDemographic(), null, null).getTarget();
 			clinicalDocument.setRecordTarget(new ArrayList<>(Arrays.asList(recordTarget)));
 
 			// Author
-			clinicalDocument.setAuthor(new AuthorRule(patientModel.getDemographic().getProviderNo(), null).getTarget());
+			clinicalDocument.setAuthor(new AuthorRule(patientModel.getDemographic().getProviderNo(), null, null).getTarget());
 
 			// Custodian
-			clinicalDocument.setCustodian(new CustodianRule(patientModel.getClinic(), null).getTarget());
+			clinicalDocument.setCustodian(new CustodianRule(patientModel.getClinic(), null, null).getTarget());
 
 			// Information Recipient
-			clinicalDocument.setInformationRecipient(new InformationRecipientRule(null, null).getTarget());
+			clinicalDocument.setInformationRecipient(new InformationRecipientRule(null, null, null).getTarget());
 
 			return clinicalDocument;
 		};

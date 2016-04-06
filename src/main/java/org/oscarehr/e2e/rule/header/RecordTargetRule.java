@@ -12,11 +12,11 @@ import org.oscarehr.e2e.lens.header.recordtarget.LanguageLens;
 import org.oscarehr.e2e.lens.header.recordtarget.NameLens;
 import org.oscarehr.e2e.lens.header.recordtarget.RecordTargetLens;
 import org.oscarehr.e2e.lens.header.recordtarget.TelecomLens;
-import org.oscarehr.e2e.rule.AbstractRule;
+import org.oscarehr.e2e.rule.common.AbstractRule;
 
 public class RecordTargetRule extends AbstractRule<Demographic, RecordTarget> {
-	public RecordTargetRule(Demographic source, RecordTarget target) {
-		super(source, target);
+	public RecordTargetRule(Demographic source, RecordTarget target, Original original) {
+		super(source, target, original);
 	}
 
 	@Override
