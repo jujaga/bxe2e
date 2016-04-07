@@ -12,8 +12,11 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 	private Original original = null;
 	private Boolean applied = false;
 
-
 	protected AbstractRule(S source, T target, Original original) {
+		if(source == null || target == null || original == null) {
+			throw new IllegalArgumentException("Arguments cannot be null");
+		}
+
 		this.pair = new MutablePair<S, T>(source, target);
 		this.original = original;
 
@@ -23,7 +26,8 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 
 	protected abstract AbstractLens<MutablePair<S, T>, MutablePair<S, T>> defineLens();
 
-	protected void apply() {
+	@Override
+	public void apply() {
 		try {
 			if(original == Original.SOURCE) {
 				pair = lens.get(pair);

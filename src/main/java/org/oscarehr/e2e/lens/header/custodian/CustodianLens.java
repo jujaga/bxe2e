@@ -12,14 +12,12 @@ public class CustodianLens extends AbstractLens<MutablePair<Clinic, Custodian>, 
 		get = source -> {
 			Custodian custodian = source.getRight();
 
-			if(custodian == null) {
-				custodian = new Custodian();
-				AssignedCustodian assignedCustodian = new AssignedCustodian();
-				CustodianOrganization custodianOrganization = new CustodianOrganization();
+			custodian = new Custodian();
+			AssignedCustodian assignedCustodian = new AssignedCustodian();
+			CustodianOrganization custodianOrganization = new CustodianOrganization();
 
-				custodian.setAssignedCustodian(assignedCustodian);
-				assignedCustodian.setRepresentedCustodianOrganization(custodianOrganization);
-			}
+			custodian.setAssignedCustodian(assignedCustodian);
+			assignedCustodian.setRepresentedCustodianOrganization(custodianOrganization);
 
 			source.setRight(custodian);
 			return source;

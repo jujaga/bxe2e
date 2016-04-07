@@ -2,9 +2,6 @@ package org.oscarehr.e2e;
 
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.director.E2ETransformer;
-import org.oscarehr.e2e.lens.ClinicalDocumentLens;
-import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.model.CreatePatient;
 import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.rule.common.IRule.Original;
@@ -43,12 +40,13 @@ public class Main {
 
 	private static PatientModel doImport(ClinicalDocument clinicalDocument) {
 		// Define Model and Lens;
-		AbstractLens<PatientModel, ClinicalDocument> lens = new ClinicalDocumentLens();
-		E2ETransformer e2eTransformer = new E2ETransformer(null, lens);
-		//E2EConversionTransformer transformer = new E2EConversionTransformer(null, clinicalDocument, Original.TARGET);
+		//AbstractLens<PatientModel, ClinicalDocument> lens = new ClinicalDocumentLens();
+		//E2ETransformer e2eTransformer = new E2ETransformer(null, lens);
+		E2EConversionTransformer transformer = new E2EConversionTransformer(null, clinicalDocument, Original.TARGET);
 
 		// Populate Patient Model
-		PatientModel patientModel = e2eTransformer.doImport(clinicalDocument);
+		//PatientModel patientModel = e2eTransformer.doImport(clinicalDocument);
+		PatientModel patientModel = transformer.getModel();
 		if(patientModel.isLoaded()) {
 			System.out.println("Imported");
 		}

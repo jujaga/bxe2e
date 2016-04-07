@@ -9,6 +9,9 @@ public abstract class AbstractTransformer<M extends Model, T> {
 	protected final Original original;
 
 	protected AbstractTransformer(M model, T target, Original original) {
+		if(original == null) {
+			throw new IllegalArgumentException("Original cannot be null");
+		}
 		this.model = model;
 		this.target = target;
 		this.original = original;

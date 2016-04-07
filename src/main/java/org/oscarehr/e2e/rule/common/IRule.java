@@ -12,4 +12,6 @@ public interface IRule<S, T> {
 	T getTarget();
 
 	S getSource();
+
+	void apply();
 }
