@@ -28,10 +28,6 @@ public class RecordTargetLens extends AbstractLens<MutablePair<Demographic, Reco
 		put = (source, target) -> {
 			Demographic demographic = source.getLeft();
 
-			if(demographic == null) {
-				demographic = new Demographic();
-			}
-
 			source.setLeft(demographic);
 			return source;
 		};

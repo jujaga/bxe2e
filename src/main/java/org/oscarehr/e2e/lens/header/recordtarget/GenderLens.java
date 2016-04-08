@@ -38,7 +38,7 @@ public class GenderLens extends AbstractLens<MutablePair<Demographic, RecordTarg
 			String sex = source.getLeft().getSex();
 			CE<AdministrativeGender> gender = target.getRight().getPatientRole().getPatient().getAdministrativeGenderCode();
 
-			if(!gender.isNull()) {
+			if(gender != null && !gender.isNull()) {
 				AdministrativeGender administrativeGender = gender.getCode();
 				if(Mappings.genderCode.inverseBidiMap().containsKey(administrativeGender)) {
 					sex = Mappings.genderCode.inverseBidiMap().get(administrativeGender).toUpperCase().replace("UN", "U");

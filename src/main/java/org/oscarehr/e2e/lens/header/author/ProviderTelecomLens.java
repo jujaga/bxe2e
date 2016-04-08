@@ -20,14 +20,16 @@ public class ProviderTelecomLens extends AbstractLens<MutablePair<String, ArrayL
 			Provider provider = EverestUtils.getProviderFromString(source.getLeft());
 
 			SET<TEL> telecoms = null;
-			ArrayList<TEL> tels = new ArrayList<>();
-			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.TELEPHONE).get(provider.getPhone()));
-			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.WorkPlace, TelecomType.TELEPHONE).get(provider.getWorkPhone()));
-			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.EMAIL).get(provider.getEmail()));
-			tels.removeAll(Collections.singleton(null));
+			if(provider != null) {
+				ArrayList<TEL> tels = new ArrayList<>();
+				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.TELEPHONE).get(provider.getPhone()));
+				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.WorkPlace, TelecomType.TELEPHONE).get(provider.getWorkPhone()));
+				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.EMAIL).get(provider.getEmail()));
+				tels.removeAll(Collections.singleton(null));
 
-			if(!tels.isEmpty()) {
-				telecoms = new SET<>(tels);
+				if(!tels.isEmpty()) {
+					telecoms = new SET<>(tels);
+				}
 			}
 
 			source.getRight().get(0).getAssignedAuthor().setTelecom(telecoms);

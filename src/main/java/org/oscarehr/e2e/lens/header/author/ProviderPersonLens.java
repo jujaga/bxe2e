@@ -23,23 +23,25 @@ public class ProviderPersonLens extends AbstractLens<MutablePair<String, ArrayLi
 			Provider provider = EverestUtils.getProviderFromString(source.getLeft());
 
 			Person person = new Person();
-			SET<PN> names = new SET<>();
-			List<ENXP> name = new ArrayList<>();
-			if(!EverestUtils.isNullorEmptyorWhitespace(provider.getFirstName())) {
-				name.add(new NamePartLens(EntityNamePartType.Given).get(provider.getFirstName()));
-			}
-			if(!EverestUtils.isNullorEmptyorWhitespace(provider.getLastName())) {
-				name.add(new NamePartLens(EntityNamePartType.Family).get(provider.getLastName()));
-			}
+			if(provider != null) {
+				SET<PN> names = new SET<>();
+				List<ENXP> name = new ArrayList<>();
+				if(!EverestUtils.isNullorEmptyorWhitespace(provider.getFirstName())) {
+					name.add(new NamePartLens(EntityNamePartType.Given).get(provider.getFirstName()));
+				}
+				if(!EverestUtils.isNullorEmptyorWhitespace(provider.getLastName())) {
+					name.add(new NamePartLens(EntityNamePartType.Family).get(provider.getLastName()));
+				}
 
-			if(!name.isEmpty()) {
-				names = new SET<>(new PN(EntityNameUse.OfficialRecord, name));
-			} else {
-				PN pn = new PN();
-				pn.setNullFlavor(NullFlavor.NoInformation);
-				names.add(pn);
+				if(!name.isEmpty()) {
+					names = new SET<>(new PN(EntityNameUse.OfficialRecord, name));
+				} else {
+					PN pn = new PN();
+					pn.setNullFlavor(NullFlavor.NoInformation);
+					names.add(pn);
+				}
+				person.setName(names);
 			}
-			person.setName(names);
 
 			source.getRight().get(0).getAssignedAuthor().setAssignedAuthorChoice(person);
 			return source;

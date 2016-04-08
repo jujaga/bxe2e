@@ -1,5 +1,6 @@
 package org.oscarehr.e2e.rule.common;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.log4j.Logger;
 import org.oscarehr.e2e.lens.common.AbstractLens;
@@ -13,9 +14,9 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 	private Boolean applied = false;
 
 	protected AbstractRule(S source, T target, Original original) {
-		if(source == null || target == null || original == null) {
-			throw new IllegalArgumentException("Arguments cannot be null");
-		}
+		Validate.notNull(source, "Parameter source cannot be null");
+		Validate.notNull(target, "Parameter target cannot be null");
+		Validate.notNull(original, "Parameter original cannot be null");
 
 		this.pair = new MutablePair<S, T>(source, target);
 		this.original = original;
@@ -35,7 +36,7 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 				pair = lens.put(pair, pair);
 			}
 		} catch (NullPointerException e) {
-			log.error("Rule Error: Lens undefined");
+			log.error("Rule Error: Lens transformation failed", e);
 		}
 
 		applied = true;

@@ -32,7 +32,7 @@ public class HinIdLens extends AbstractLens<MutablePair<Demographic, RecordTarge
 			String hin = source.getLeft().getHin();
 			SET<II> id = target.getRight().getPatientRole().getId();
 
-			if(!id.isNull() && !id.isEmpty()) {
+			if(id != null && !id.isNull() && !id.isEmpty()) {
 				II ii = id.get(0);
 				if(!ii.isNull()) {
 					hin = ii.getExtension();

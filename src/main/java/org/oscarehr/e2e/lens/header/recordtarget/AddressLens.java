@@ -41,7 +41,7 @@ public class AddressLens extends AbstractLens<MutablePair<Demographic, RecordTar
 			Demographic demographic = source.getLeft();
 			SET<AD> addresses = target.getRight().getPatientRole().getAddr();
 
-			if(!addresses.isNull() && !addresses.isEmpty()) {
+			if(addresses != null && !addresses.isNull() && !addresses.isEmpty()) {
 				AD addr = addresses.get(0);
 				if(!addr.isNull()) {
 					List<ADXP> addrParts = addr.getPart();

@@ -56,7 +56,7 @@ public class BirthDateLens extends AbstractLens<MutablePair<Demographic, RecordT
 			Demographic demographic = source.getLeft();
 			TS birthDate = target.getRight().getPatientRole().getPatient().getBirthTime();
 
-			if(!birthDate.isNull() && !birthDate.isInvalidDate()) {
+			if(birthDate != null && !birthDate.isNull() && !birthDate.isInvalidDate()) {
 				Calendar date = birthDate.getDateValue();
 
 				demographic.setYearOfBirth(Integer.toString(date.get(Calendar.YEAR)));

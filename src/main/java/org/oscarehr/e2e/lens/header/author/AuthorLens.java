@@ -11,10 +11,6 @@ public class AuthorLens extends AbstractLens<MutablePair<String, ArrayList<Autho
 		get = source -> {
 			ArrayList<Author> author = source.getRight();
 
-			if(author == null) {
-				author = new ArrayList<Author>();
-			}
-
 			source.setRight(author);
 			return source;
 		};

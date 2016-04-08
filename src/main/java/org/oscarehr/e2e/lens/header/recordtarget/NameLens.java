@@ -40,7 +40,7 @@ public class NameLens extends AbstractLens<MutablePair<Demographic, RecordTarget
 			Demographic demographic = source.getLeft();
 			SET<PN> names = target.getRight().getPatientRole().getPatient().getName();
 
-			if(!names.isNull() && !names.isEmpty()) {
+			if(names != null && !names.isNull() && !names.isEmpty()) {
 				PN name = names.get(0);
 				if(!name.isNull()) {
 					List<ENXP> nameParts = name.getParts();

@@ -1,5 +1,7 @@
 package org.oscarehr.e2e;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.model.CreatePatient;
@@ -22,7 +24,7 @@ public class Main {
 	}
 
 	private static ClinicalDocument doExport(PatientModel patientModel) {
-		// Define Model and Lens
+		// Define Transformer
 		E2EConversionTransformer transformer = new E2EConversionTransformer(patientModel, null, Original.SOURCE);
 
 		// Populate Clinical Document
@@ -39,16 +41,16 @@ public class Main {
 	}
 
 	private static PatientModel doImport(ClinicalDocument clinicalDocument) {
-		// Define Model and Lens;
-		//AbstractLens<PatientModel, ClinicalDocument> lens = new ClinicalDocumentLens();
-		//E2ETransformer e2eTransformer = new E2ETransformer(null, lens);
+		// Define Transformer
 		E2EConversionTransformer transformer = new E2EConversionTransformer(null, clinicalDocument, Original.TARGET);
 
 		// Populate Patient Model
-		//PatientModel patientModel = e2eTransformer.doImport(clinicalDocument);
 		PatientModel patientModel = transformer.getModel();
+
+		// Output Patient Model
 		if(patientModel.isLoaded()) {
-			System.out.println("Imported");
+			System.out.println("\n" + ReflectionToStringBuilder.toString(patientModel, ToStringStyle.MULTI_LINE_STYLE));
+			System.out.println("\nImported");
 		}
 
 		return patientModel;

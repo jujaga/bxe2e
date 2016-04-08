@@ -38,72 +38,42 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 	protected void transform() {
 		// Instantiate and map all rules
 		IRule<Model, ClinicalDocument> e2eConversionRule = new E2EConversionRule(model, target, original);
-		/*List<IRule<?, ?>> rules = new ArrayList<>();
-		rules.add(e2eConversionRule);*/
 
 		String providerNo = null;
 		try {
 			providerNo = model.getDemographic().getProviderNo();
 		} catch (NullPointerException e) {
-			providerNo = new String();
+			providerNo = "";
 		}
-		ArrayList<Author> authors = null;
-		try {
-			authors = target.getAuthor();
-		} catch (Exception e) {
-			authors = new ArrayList<>();
-		}
-		IRule<String, ArrayList<Author>> authorRule = new AuthorRule(providerNo, authors, original);
+		IRule<String, ArrayList<Author>> authorRule = new AuthorRule(providerNo, target.getAuthor(), original);
 
-		Clinic clinic = null;
-		try {
-			clinic = model.getClinic();
-			if(clinic == null) {
-				clinic = new Clinic();
-			}
-		} catch (Exception e) {
+		Clinic clinic = model.getClinic();
+		if(clinic == null) {
 			clinic = new Clinic();
 		}
-		Custodian custodian = null;
-		try {
-			custodian = target.getCustodian();
-			if(custodian == null) {
-				custodian = new Custodian();
-			}
-		} catch (Exception e) {
-			custodian = null;
+		Custodian custodian = target.getCustodian();
+		if(custodian == null) {
+			custodian = new Custodian();
 		}
 		IRule<Clinic, Custodian> custodianRule = new CustodianRule(clinic, custodian, original);
 
-		ArrayList<InformationRecipient> informationRecipient = null;
-		try {
-			informationRecipient = target.getInformationRecipient();
-		} catch (Exception e) {
-			informationRecipient = null;
-		}
-		IRule<?, ArrayList<InformationRecipient>> informationRecipientRule = new InformationRecipientRule(model, informationRecipient, original);
+		IRule<?, ArrayList<InformationRecipient>> informationRecipientRule = new InformationRecipientRule(new Object(), target.getInformationRecipient(), original);
 
-		Demographic demographic = null;
-		try {
-			demographic = model.getDemographic();
-			if(demographic == null) {
-				demographic = new Demographic();
-			}
-		} catch (Exception e) {
+		Demographic demographic = model.getDemographic();
+		if(demographic == null) {
 			demographic = new Demographic();
 		}
 		RecordTarget recordTarget = null;
 		try {
 			recordTarget = target.getRecordTarget().get(0);
-			if(recordTarget == null) {
-				recordTarget = new RecordTarget();
-			}
 		} catch (Exception e) {
 			recordTarget = new RecordTarget();
 		}
 		IRule<Demographic, RecordTarget> recordTargetRule = new RecordTargetRule(demographic, recordTarget, original);
 
 		// Run all rules
+		/*List<IRule<?, ?>> rules = new ArrayList<>();
+		rules.add(e2eConversionRule);*/
 
 		// Grab contents from rules and reduce
 		if(original == Original.SOURCE) {
@@ -114,9 +84,9 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 			target.setInformationRecipient(informationRecipientRule.getTarget());
 		} else {
 			model = (PatientModel) e2eConversionRule.getSource();
-			//model.setDemographic(recordTargetRule.getSource());
-			//model.getDemographic().setProviderNo(authorRule.getSource());
-			//model.setClinic(custodianRule.getSource());
+			model.setDemographic(recordTargetRule.getSource());
+			model.getDemographic().setProviderNo(authorRule.getSource());
+			model.setClinic(custodianRule.getSource());
 		}
 
 		// Consider separate aggregation functions?
