@@ -2,7 +2,8 @@ package org.oscarehr.e2e.lens;
 
 import java.util.UUID;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.generic.CS;
 import org.marc.everest.datatypes.generic.LIST;
@@ -15,7 +16,7 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.model.Model;
 import org.oscarehr.e2e.model.PatientModel;
 
-public class E2EConversionLens extends AbstractLens<MutablePair<Model, ClinicalDocument>, MutablePair<Model, ClinicalDocument>> {
+public class E2EConversionLens extends AbstractLens<Pair<Model, ClinicalDocument>, Pair<Model, ClinicalDocument>> {
 	public E2EConversionLens() {
 		get = source -> {
 			PatientModel patientModel = (PatientModel) source.getLeft();
@@ -40,16 +41,14 @@ public class E2EConversionLens extends AbstractLens<MutablePair<Model, ClinicalD
 			clinicalDocument.setConfidentialityCode(x_BasicConfidentialityKind.Normal);
 			clinicalDocument.setLanguageCode(Constants.DocumentHeader.LANGUAGE_ENGLISH_CANADIAN);
 
-			source.setRight(clinicalDocument);
-			return source;
+			return new ImmutablePair<>(patientModel, clinicalDocument);
 		};
 
 		put = (source, target) -> {
-			Model patientModel = source.getLeft();
+			Model patientModel = target.getLeft();
 			patientModel.setLoaded(true);
 
-			source.setLeft(patientModel);
-			return source;
+			return new ImmutablePair<>(patientModel, target.getRight());
 		};
 	}
 }

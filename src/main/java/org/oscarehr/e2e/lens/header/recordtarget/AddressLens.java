@@ -3,7 +3,8 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.AD;
 import org.marc.everest.datatypes.ADXP;
 import org.marc.everest.datatypes.AddressPartType;
@@ -15,7 +16,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.AddressPartLens;
 
-public class AddressLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
+public class AddressLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair<Demographic, RecordTarget>> {
 	public AddressLens() {
 		get = source -> {
 			Demographic demographic = source.getLeft();
@@ -34,11 +35,11 @@ public class AddressLens extends AbstractLens<MutablePair<Demographic, RecordTar
 			}
 
 			source.getRight().getPatientRole().setAddr(addresses);
-			return source;
+			return new ImmutablePair<>(demographic, source.getRight());
 		};
 
 		put = (source, target) -> {
-			Demographic demographic = source.getLeft();
+			Demographic demographic = target.getLeft();
 			SET<AD> addresses = target.getRight().getPatientRole().getAddr();
 
 			if(addresses != null && !addresses.isNull() && !addresses.isEmpty()) {
@@ -62,8 +63,7 @@ public class AddressLens extends AbstractLens<MutablePair<Demographic, RecordTar
 				}
 			}
 
-			source.setLeft(demographic);
-			return source;
+			return new ImmutablePair<>(demographic, target.getRight());
 		};
 	}
 }

@@ -1,6 +1,7 @@
 package org.oscarehr.e2e.lens.header.custodian;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.generic.SET;
@@ -10,7 +11,7 @@ import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-public class CustodianIdLens extends AbstractLens<MutablePair<Clinic, Custodian>, MutablePair<Clinic, Custodian>> {
+public class CustodianIdLens extends AbstractLens<Pair<Clinic, Custodian>, Pair<Clinic, Custodian>> {
 	public CustodianIdLens() {
 		get = source -> {
 			Integer clinicId = source.getLeft().getId();
@@ -25,11 +26,21 @@ public class CustodianIdLens extends AbstractLens<MutablePair<Clinic, Custodian>
 			}
 
 			source.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().setId(new SET<>(id));
-			return source;
+			return new ImmutablePair<>(source.getLeft(), source.getRight());
 		};
 
 		put = (source, target) -> {
-			return source;
+			Clinic clinic = target.getLeft();
+			SET<II> ids = target.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().getId();
+
+			if(ids != null && !ids.isNull() && !ids.isEmpty()) {
+				II id = ids.get(0);
+				if(id != null && !id.isNull() && id.getRoot().equals(Constants.EMR.EMR_OID)) {
+					clinic.setId(Integer.parseInt(id.getExtension()));
+				}
+			}
+
+			return new ImmutablePair<>(clinic, target.getRight());
 		};
 	}
 }

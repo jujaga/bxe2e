@@ -2,28 +2,25 @@ package org.oscarehr.e2e.lens;
 
 import java.util.GregorianCalendar;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.TS;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.model.Model;
 
-public class CDALens extends AbstractLens<MutablePair<Model, ClinicalDocument>, MutablePair<Model, ClinicalDocument>> {
+public class CDALens extends AbstractLens<Pair<Model, ClinicalDocument>, Pair<Model, ClinicalDocument>> {
 	public CDALens() {
 		get = source -> {
 			ClinicalDocument clinicalDocument = source.getRight();
 
 			clinicalDocument.setEffectiveTime(new GregorianCalendar(), TS.MINUTE);
 
-			source.setRight(clinicalDocument);
-			return source;
+			return new ImmutablePair<>(source.getLeft(), clinicalDocument);
 		};
 
 		put = (source, target) -> {
-			Model patientModel = source.getLeft();
-
-			source.setLeft(patientModel);
-			return source;
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}
 }

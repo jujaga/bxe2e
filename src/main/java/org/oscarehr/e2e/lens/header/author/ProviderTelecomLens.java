@@ -3,7 +3,8 @@ package org.oscarehr.e2e.lens.header.author;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.TEL;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.SET;
@@ -14,7 +15,7 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.TelecomPartLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-public class ProviderTelecomLens extends AbstractLens<MutablePair<String, ArrayList<Author>>, MutablePair<String, ArrayList<Author>>> {
+public class ProviderTelecomLens extends AbstractLens<Pair<String, ArrayList<Author>>, Pair<String, ArrayList<Author>>> {
 	public ProviderTelecomLens() {
 		get = source -> {
 			Provider provider = EverestUtils.getProviderFromString(source.getLeft());
@@ -33,11 +34,11 @@ public class ProviderTelecomLens extends AbstractLens<MutablePair<String, ArrayL
 			}
 
 			source.getRight().get(0).getAssignedAuthor().setTelecom(telecoms);
-			return source;
+			return new ImmutablePair<>(source.getLeft(), source.getRight());
 		};
 
 		put = (source, target) -> {
-			return source;
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}
 }

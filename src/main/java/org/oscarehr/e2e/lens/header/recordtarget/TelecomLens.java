@@ -3,7 +3,8 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.TEL;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.SET;
@@ -13,7 +14,7 @@ import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.TelecomPartLens;
 
-public class TelecomLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
+public class TelecomLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair<Demographic, RecordTarget>> {
 	public TelecomLens() {
 		get = source -> {
 			Demographic demographic = source.getLeft();
@@ -30,11 +31,11 @@ public class TelecomLens extends AbstractLens<MutablePair<Demographic, RecordTar
 			}
 
 			source.getRight().getPatientRole().setTelecom(telecoms);
-			return source;
+			return new ImmutablePair<>(demographic, source.getRight());
 		};
 
 		put = (source, target) -> {
-			Demographic demographic = source.getLeft();
+			Demographic demographic = target.getLeft();
 			SET<TEL> telecoms = target.getRight().getPatientRole().getTelecom();
 
 			if(telecoms != null && !telecoms.isNull() && telecoms.isEmpty()) {
@@ -55,8 +56,7 @@ public class TelecomLens extends AbstractLens<MutablePair<Demographic, RecordTar
 				}
 			}
 
-			source.setLeft(demographic);
-			return source;
+			return new ImmutablePair<>(demographic, target.getRight());
 		};
 	}
 }

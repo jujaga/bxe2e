@@ -1,6 +1,7 @@
 package org.oscarehr.e2e.lens.header.recordtarget;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.generic.CE;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
@@ -10,7 +11,7 @@ import org.oscarehr.e2e.constant.Mappings;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-public class GenderLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
+public class GenderLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair<Demographic, RecordTarget>> {
 	public GenderLens() {
 		get = source -> {
 			String sex = source.getLeft().getSex();
@@ -31,11 +32,11 @@ public class GenderLens extends AbstractLens<MutablePair<Demographic, RecordTarg
 			}
 
 			source.getRight().getPatientRole().getPatient().setAdministrativeGenderCode(gender);
-			return source;
+			return new ImmutablePair<>(source.getLeft(), source.getRight());
 		};
 
 		put = (source, target) -> {
-			String sex = source.getLeft().getSex();
+			String sex = target.getLeft().getSex();
 			CE<AdministrativeGender> gender = target.getRight().getPatientRole().getPatient().getAdministrativeGenderCode();
 
 			if(gender != null && !gender.isNull()) {
@@ -45,8 +46,8 @@ public class GenderLens extends AbstractLens<MutablePair<Demographic, RecordTarg
 				}
 			}
 
-			source.getLeft().setSex(sex);
-			return source;
+			target.getLeft().setSex(sex);
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}
 }

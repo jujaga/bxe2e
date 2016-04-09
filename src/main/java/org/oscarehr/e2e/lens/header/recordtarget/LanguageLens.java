@@ -3,7 +3,8 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.LanguageCommunication;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Demographic;
@@ -11,7 +12,7 @@ import org.oscarehr.e2e.constant.Mappings;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-public class LanguageLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
+public class LanguageLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair<Demographic, RecordTarget>> {
 	public LanguageLens() {
 		get = source -> {
 			String value = source.getLeft().getOfficialLanguage();
@@ -24,11 +25,11 @@ public class LanguageLens extends AbstractLens<MutablePair<Demographic, RecordTa
 			}
 
 			source.getRight().getPatientRole().getPatient().setLanguageCommunication(languages);
-			return source;
+			return new ImmutablePair<>(source.getLeft(), source.getRight());
 		};
 
 		put = (source, target) -> {
-			String value = source.getLeft().getOfficialLanguage();
+			String value = target.getLeft().getOfficialLanguage();
 			ArrayList<LanguageCommunication> languages = target.getRight().getPatientRole().getPatient().getLanguageCommunication();
 
 			if(languages != null && !languages.isEmpty()) {
@@ -39,8 +40,8 @@ public class LanguageLens extends AbstractLens<MutablePair<Demographic, RecordTa
 				}
 			}
 
-			source.getLeft().setOfficialLanguage(value);
-			return source;
+			target.getLeft().setOfficialLanguage(value);
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}
 }

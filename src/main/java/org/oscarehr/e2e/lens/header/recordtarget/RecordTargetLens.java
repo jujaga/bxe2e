@@ -1,6 +1,7 @@
 package org.oscarehr.e2e.lens.header.recordtarget;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Patient;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.PatientRole;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
@@ -8,7 +9,7 @@ import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
-public class RecordTargetLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
+public class RecordTargetLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair<Demographic, RecordTarget>> {
 	public RecordTargetLens() {
 		get = source -> {
 			RecordTarget recordTarget = source.getRight();
@@ -21,15 +22,11 @@ public class RecordTargetLens extends AbstractLens<MutablePair<Demographic, Reco
 			recordTarget.setPatientRole(patientRole);
 			patientRole.setPatient(patient);
 
-			source.setRight(recordTarget);
-			return source;
+			return new ImmutablePair<>(source.getLeft(), recordTarget);
 		};
 
 		put = (source, target) -> {
-			Demographic demographic = source.getLeft();
-
-			source.setLeft(demographic);
-			return source;
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}
 }

@@ -49,7 +49,8 @@ public class Main {
 
 		// Output Patient Model
 		if(patientModel.isLoaded()) {
-			System.out.println("\n" + ReflectionToStringBuilder.toString(patientModel, ToStringStyle.MULTI_LINE_STYLE));
+			System.out.println("\n" + ReflectionToStringBuilder.toString(patientModel.getDemographic(), ToStringStyle.MULTI_LINE_STYLE));
+			System.out.println("\n" + ReflectionToStringBuilder.toString(patientModel.getClinic(), ToStringStyle.MULTI_LINE_STYLE));
 			System.out.println("\nImported");
 		}
 

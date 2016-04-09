@@ -1,13 +1,14 @@
 package org.oscarehr.e2e.lens.header.custodian;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AssignedCustodian;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Custodian;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.CustodianOrganization;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
-public class CustodianLens extends AbstractLens<MutablePair<Clinic, Custodian>, MutablePair<Clinic, Custodian>> {
+public class CustodianLens extends AbstractLens<Pair<Clinic, Custodian>, Pair<Clinic, Custodian>> {
 	public CustodianLens() {
 		get = source -> {
 			Custodian custodian = source.getRight();
@@ -18,12 +19,11 @@ public class CustodianLens extends AbstractLens<MutablePair<Clinic, Custodian>, 
 			custodian.setAssignedCustodian(assignedCustodian);
 			assignedCustodian.setRepresentedCustodianOrganization(custodianOrganization);
 
-			source.setRight(custodian);
-			return source;
+			return new ImmutablePair<>(source.getLeft(), custodian);
 		};
 
 		put = (source, target) -> {
-			return source;
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}
 }

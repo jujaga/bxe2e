@@ -3,14 +3,15 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.TS;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
-public class BirthDateLens extends AbstractLens<MutablePair<Demographic, RecordTarget>, MutablePair<Demographic, RecordTarget>> {
+public class BirthDateLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair<Demographic, RecordTarget>> {
 	public BirthDateLens() {
 		get = source -> {
 			Demographic demographic = source.getLeft();
@@ -49,11 +50,11 @@ public class BirthDateLens extends AbstractLens<MutablePair<Demographic, RecordT
 			}
 
 			source.getRight().getPatientRole().getPatient().setBirthTime(birthDate);
-			return source;
+			return new ImmutablePair<>(demographic, source.getRight());
 		};
 
 		put = (source, target) -> {
-			Demographic demographic = source.getLeft();
+			Demographic demographic = target.getLeft();
 			TS birthDate = target.getRight().getPatientRole().getPatient().getBirthTime();
 
 			if(birthDate != null && !birthDate.isNull() && !birthDate.isInvalidDate()) {
@@ -68,8 +69,7 @@ public class BirthDateLens extends AbstractLens<MutablePair<Demographic, RecordT
 				}
 			}
 
-			source.setLeft(demographic);
-			return source;
+			return new ImmutablePair<>(demographic, target.getRight());
 		};
 	}
 }

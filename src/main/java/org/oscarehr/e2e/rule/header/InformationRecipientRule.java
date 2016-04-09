@@ -2,7 +2,7 @@ package org.oscarehr.e2e.rule.header;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.InformationRecipient;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.header.InformationRecipientLens;
@@ -14,7 +14,7 @@ public class InformationRecipientRule extends AbstractRule<Object, ArrayList<Inf
 	}
 
 	@Override
-	protected AbstractLens<MutablePair<Object, ArrayList<InformationRecipient>>, MutablePair<Object, ArrayList<InformationRecipient>>> defineLens() {
+	protected AbstractLens<Pair<Object, ArrayList<InformationRecipient>>, Pair<Object, ArrayList<InformationRecipient>>> defineLens() {
 		return new InformationRecipientLens();
 	}
 }

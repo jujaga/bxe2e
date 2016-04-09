@@ -1,6 +1,6 @@
 package org.oscarehr.e2e.rule.header;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Custodian;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
@@ -15,7 +15,7 @@ public class CustodianRule extends AbstractRule<Clinic, Custodian> {
 	}
 
 	@Override
-	protected AbstractLens<MutablePair<Clinic, Custodian>, MutablePair<Clinic, Custodian>> defineLens() {
+	protected AbstractLens<Pair<Clinic, Custodian>, Pair<Clinic, Custodian>> defineLens() {
 		return new CustodianLens()
 				.compose(new CustodianIdLens())
 				.compose(new CustodianNameLens());

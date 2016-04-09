@@ -43,7 +43,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		try {
 			providerNo = model.getDemographic().getProviderNo();
 		} catch (NullPointerException e) {
-			providerNo = "";
+			providerNo = new String();
 		}
 		IRule<String, ArrayList<Author>> authorRule = new AuthorRule(providerNo, target.getAuthor(), original);
 

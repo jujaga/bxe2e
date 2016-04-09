@@ -3,7 +3,8 @@ package org.oscarehr.e2e.lens.header.author;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.EntityNameUse;
@@ -17,7 +18,7 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.NamePartLens;
 import org.oscarehr.e2e.util.EverestUtils;
 
-public class ProviderPersonLens extends AbstractLens<MutablePair<String, ArrayList<Author>>, MutablePair<String, ArrayList<Author>>> {
+public class ProviderPersonLens extends AbstractLens<Pair<String, ArrayList<Author>>, Pair<String, ArrayList<Author>>> {
 	public ProviderPersonLens() {
 		get = source -> {
 			Provider provider = EverestUtils.getProviderFromString(source.getLeft());
@@ -44,11 +45,11 @@ public class ProviderPersonLens extends AbstractLens<MutablePair<String, ArrayLi
 			}
 
 			source.getRight().get(0).getAssignedAuthor().setAssignedAuthorChoice(person);
-			return source;
+			return new ImmutablePair<>(source.getLeft(), source.getRight());
 		};
 
 		put = (source, target) -> {
-			return source;
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}
 }
