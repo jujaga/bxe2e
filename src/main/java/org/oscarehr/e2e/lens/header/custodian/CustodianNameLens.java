@@ -1,7 +1,6 @@
 package org.oscarehr.e2e.lens.header.custodian;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,15 +15,13 @@ public class CustodianNameLens extends AbstractLens<Pair<Clinic, Custodian>, Pai
 	public CustodianNameLens() {
 		get = source -> {
 			String value = source.getLeft().getClinicName();
+			ON on = source.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().getName();
 
-			ON on = null;
-			List<ENXP> name = new ArrayList<>();
-			if(!EverestUtils.isNullorEmptyorWhitespace(value)) {
-				name.add(new ENXP(value));
-			}
-			if(!name.isEmpty()) {
-				on = new ON();
-				on.setParts(name);
+			if(on == null) {
+				if(!EverestUtils.isNullorEmptyorWhitespace(value)) {
+					on = new ON();
+					on.setParts(Arrays.asList(new ENXP(value)));
+				}
 			}
 
 			source.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().setName(on);
@@ -32,15 +29,15 @@ public class CustodianNameLens extends AbstractLens<Pair<Clinic, Custodian>, Pai
 		};
 
 		put = (source, target) -> {
-			Clinic clinic = target.getLeft();
+			String value = target.getLeft().getClinicName();
 			ON on = target.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().getName();
 
-			if(on != null && !on.isNull()) {
-				String clinicName = "test";
-				clinic.setClinicName(clinicName);
+			if(value == null && on != null && !on.isNull()) {
+				value = on.getPart(0).getValue();
+				target.getLeft().setClinicName(value);
 			}
 
-			return new ImmutablePair<>(clinic, target.getRight());
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}
 }

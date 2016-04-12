@@ -15,6 +15,7 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 	private Boolean applied = false;
 
 	protected AbstractRule(S source, T target, Original original) {
+		// Consider allowing rules to start with null source and/or target
 		Validate.notNull(source, "Parameter source cannot be null");
 		Validate.notNull(target, "Parameter target cannot be null");
 		Validate.notNull(original, "Parameter original cannot be null");

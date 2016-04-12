@@ -15,32 +15,41 @@ public class CustodianIdLens extends AbstractLens<Pair<Clinic, Custodian>, Pair<
 	public CustodianIdLens() {
 		get = source -> {
 			Integer clinicId = source.getLeft().getId();
+			SET<II> ids = source.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().getId();
 
-			II id = new II();
-			if(clinicId != null && !EverestUtils.isNullorEmptyorWhitespace(clinicId.toString())) {
-				id.setRoot(Constants.EMR.EMR_OID);
-				id.setAssigningAuthorityName(Constants.EMR.EMR_VERSION);
-				id.setExtension(clinicId.toString());
-			} else {
-				id.setNullFlavor(NullFlavor.NoInformation);
+			if(ids == null) {
+				II id = new II();
+				if(clinicId != null && !EverestUtils.isNullorEmptyorWhitespace(clinicId.toString())) {
+					id.setRoot(Constants.EMR.EMR_OID);
+					id.setAssigningAuthorityName(Constants.EMR.EMR_VERSION);
+					id.setExtension(clinicId.toString());
+				} else {
+					id.setNullFlavor(NullFlavor.NoInformation);
+				}
+
+				source.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().setId(new SET<>(id));
 			}
 
-			source.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().setId(new SET<>(id));
 			return new ImmutablePair<>(source.getLeft(), source.getRight());
 		};
 
 		put = (source, target) -> {
-			Clinic clinic = target.getLeft();
+			Integer clinicId = target.getLeft().getId();
 			SET<II> ids = target.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().getId();
 
 			if(ids != null && !ids.isNull() && !ids.isEmpty()) {
 				II id = ids.get(0);
 				if(id != null && !id.isNull() && id.getRoot().equals(Constants.EMR.EMR_OID)) {
-					clinic.setId(Integer.parseInt(id.getExtension()));
+					try {
+						clinicId = Integer.parseInt(id.getExtension());
+					} catch (NumberFormatException e) {
+						clinicId = null;
+					}
+					target.getLeft().setId(clinicId);
 				}
 			}
 
-			return new ImmutablePair<>(clinic, target.getRight());
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}
 }
