@@ -1,5 +1,6 @@
 package org.oscarehr.e2e.rule.header;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Demographic;
@@ -17,6 +18,12 @@ import org.oscarehr.e2e.rule.common.AbstractRule;
 public class RecordTargetRule extends AbstractRule<Demographic, RecordTarget> {
 	public RecordTargetRule(Demographic source, RecordTarget target, Original original) {
 		super(source, target, original);
+		if(this.pair.getLeft() == null) {
+			pair = new ImmutablePair<>(new Demographic(), pair.getRight());
+		}
+		if(this.pair.getRight() == null) {
+			pair = new ImmutablePair<>(pair.getLeft(), new RecordTarget());
+		}
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package org.oscarehr.e2e.rule.header;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Custodian;
 import org.oscarehr.common.model.Clinic;
@@ -12,6 +13,12 @@ import org.oscarehr.e2e.rule.common.AbstractRule;
 public class CustodianRule extends AbstractRule<Clinic, Custodian> {
 	public CustodianRule(Clinic source, Custodian target, Original original) {
 		super(source, target, original);
+		if(this.pair.getLeft() == null) {
+			pair = new ImmutablePair<>(new Clinic(), pair.getRight());
+		}
+		if(this.pair.getRight() == null) {
+			pair = new ImmutablePair<>(pair.getLeft(), new Custodian());
+		}
 	}
 
 	@Override
