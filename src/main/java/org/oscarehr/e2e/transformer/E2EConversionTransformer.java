@@ -42,24 +42,23 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		List<IRule<?, ?>> rules = new ArrayList<>();
 		rules.add(new E2EConversionRule(model, target, original));
 
+		Demographic demographic = model.getDemographic();
+		RecordTarget recordTarget = null;
+		if(target.getRecordTarget() != null && !target.getRecordTarget().isEmpty()) {
+			recordTarget = target.getRecordTarget().get(0);
+		}
+		rules.add(new RecordTargetRule(demographic, recordTarget, original));
+
 		String providerNo = null;
-		try {
+		if(demographic != null) {
 			providerNo = model.getDemographic().getProviderNo();
-		} catch (NullPointerException e) {
 		}
 		rules.add(new AuthorRule(providerNo, target.getAuthor(), original));
 		rules.add(new CustodianRule(model.getClinic(), target.getCustodian(), original));
 		rules.add(new InformationRecipientRule(null, target.getInformationRecipient(), original));
 
-		RecordTarget recordTarget = null;
-		try {
-			recordTarget = target.getRecordTarget().get(0);
-		} catch (Exception e) {
-		}
-		rules.add(new RecordTargetRule(model.getDemographic(), recordTarget, original));
-
 		// Run all rules
-		List<IRule<?, ?>> mapped = rules.parallelStream()
+		List<IRule<?, ?>> mapped = rules.stream()
 				.map(rule -> {
 					rule.apply();
 					return rule;
@@ -75,7 +74,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 
 			for(IRule<?, ?> rule : mapped) {
 				if(rule.getClass() == RecordTargetRule.class) {
-					target.setRecordTarget((ArrayList<RecordTarget>) new ArrayList<>(Arrays.asList(rule.getTarget())));
+					target.setRecordTarget(new ArrayList<>(Arrays.asList((RecordTarget) rule.getTarget())));
 				}
 				if(rule.getClass() == AuthorRule.class) {
 					target.setAuthor((ArrayList<Author>) rule.getTarget());

@@ -1,6 +1,7 @@
 package org.oscarehr.e2e.lens.header.custodian;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,11 +18,8 @@ public class CustodianNameLens extends AbstractLens<Pair<Clinic, Custodian>, Pai
 			String value = source.getLeft().getClinicName();
 			ON on = source.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().getName();
 
-			if(on == null) {
-				if(!EverestUtils.isNullorEmptyorWhitespace(value)) {
-					on = new ON();
-					on.setParts(Arrays.asList(new ENXP(value)));
-				}
+			if(on == null && !EverestUtils.isNullorEmptyorWhitespace(value)) {
+				on = new ON(null, (Collection<ENXP>) Arrays.asList(new ENXP(value)));
 			}
 
 			source.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().setName(on);
