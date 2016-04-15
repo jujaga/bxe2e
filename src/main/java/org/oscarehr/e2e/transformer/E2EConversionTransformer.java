@@ -58,7 +58,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		rules.add(new InformationRecipientRule(null, target.getInformationRecipient(), original));
 
 		// Run all rules
-		List<IRule<?, ?>> mapped = rules.stream()
+		rules = rules.stream()
 				.map(rule -> {
 					rule.apply();
 					return rule;
@@ -68,11 +68,11 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		// Grab contents from rules and reduce
 		if(original == Original.SOURCE) {
 			// TODO Determine if mapped list streaming can be better written and ordered
-			mapped.stream().filter(rule -> rule.getClass() == E2EConversionRule.class).forEach(rule -> {
+			rules.stream().filter(rule -> rule.isApplied() && rule.getClass() == E2EConversionRule.class).forEach(rule -> {
 				target = (ClinicalDocument) rule.getTarget();
 			});
 
-			for(IRule<?, ?> rule : mapped) {
+			for(IRule<?, ?> rule : rules) {
 				if(rule.getClass() == RecordTargetRule.class) {
 					target.setRecordTarget(new ArrayList<>(Arrays.asList((RecordTarget) rule.getTarget())));
 				}
@@ -87,17 +87,17 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 				}
 			}
 		} else {
-			for(IRule<?, ?> rule : mapped) {
+			for(IRule<?, ?> rule : rules) {
 				if(rule.getClass() == E2EConversionRule.class) {
 					model = (PatientModel) rule.getSource();
 				}
 			}
-			for(IRule<?, ?> rule : mapped) {
+			for(IRule<?, ?> rule : rules) {
 				if(rule.getClass() == RecordTargetRule.class) {
 					model.setDemographic((Demographic) rule.getSource());
 				}
 			}
-			for(IRule<?, ?> rule : mapped) {
+			for(IRule<?, ?> rule : rules) {
 				if(rule.getClass() == AuthorRule.class) {
 					model.getDemographic().setProviderNo((String) rule.getSource());
 				}

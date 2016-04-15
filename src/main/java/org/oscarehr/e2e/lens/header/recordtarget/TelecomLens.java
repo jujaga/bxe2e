@@ -38,7 +38,7 @@ public class TelecomLens extends AbstractLens<Pair<Demographic, RecordTarget>, P
 			Demographic demographic = target.getLeft();
 			SET<TEL> telecoms = target.getRight().getPatientRole().getTelecom();
 
-			if(telecoms != null && !telecoms.isNull() && telecoms.isEmpty()) {
+			if(telecoms != null && !telecoms.isNull() && !telecoms.isEmpty()) {
 				for(TEL tel : telecoms) {
 					if(TEL.isValidPhoneFlavor(tel)) {
 						String value = new TelecomPartLens(null, TelecomType.TELEPHONE).put(tel);

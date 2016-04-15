@@ -26,7 +26,6 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Person;
 import org.oscarehr.common.dao.ProviderDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.model.export.header.AuthorModel;
 import org.oscarehr.e2e.util.EverestUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -61,6 +60,13 @@ public class AuthorModelTest {
 	@Test
 	public void nullProviderModelTest() {
 		Provider provider = null;
+		AuthorModel authorModel = new AuthorModel(provider);
+		assertNotNull(authorModel);
+	}
+
+	@Test
+	public void nullStringProviderModelTest() {
+		String provider = null;
 		AuthorModel authorModel = new AuthorModel(provider);
 		assertNotNull(authorModel);
 	}

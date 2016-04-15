@@ -40,16 +40,6 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 		applied = true;
 	}
 
-	// TODO Determine if this should be used for aggregating rule pairs into a map
-	@Override
-	public Pair<S, T> getPair() {
-		if(applied) {
-			return pair;
-		} else {
-			return null;
-		}
-	}
-
 	@Override
 	public S getSource() {
 		return pair.getLeft();
@@ -58,5 +48,10 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 	@Override
 	public T getTarget() {
 		return pair.getRight();
+	}
+
+	@Override
+	public Boolean isApplied() {
+		return applied;
 	}
 }
