@@ -22,6 +22,8 @@ import org.oscarehr.e2e.rule.header.InformationRecipientRule;
 import org.oscarehr.e2e.rule.header.RecordTargetRule;
 
 public class E2EConversionTransformer extends AbstractTransformer<PatientModel, ClinicalDocument> {
+	private List<IRule<?, ?>> rules;
+
 	public E2EConversionTransformer(PatientModel model, ClinicalDocument target, Original original) {
 		super(model, target, original);
 		if(this.model == null) {
@@ -30,16 +32,19 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		if(this.target == null) {
 			this.target = new ClinicalDocument();
 		}
+		rules = new ArrayList<>();
 
 		transform();
 	}
 
-	// TODO Design cleaner transformation solution
-	@SuppressWarnings("unchecked")
+	// TODO Design cleaner transformation solution with reflection?
 	@Override
 	protected void transform() {
-		// Instantiate and map all rules
-		List<IRule<?, ?>> rules = new ArrayList<>();
+		map();
+		reduce();
+	}
+
+	private void map() {
 		rules.add(new E2EConversionRule(model, target, original));
 
 		Demographic demographic = model.getDemographic();
@@ -64,8 +69,10 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 					return rule;
 				})
 				.collect(Collectors.toList());
+	}
 
-		// Grab contents from rules and reduce
+	@SuppressWarnings("unchecked")
+	private void reduce() {
 		if(original == Original.SOURCE) {
 			// TODO Determine if mapped list streaming can be better written and ordered
 			rules.stream().filter(rule -> rule.isApplied() && rule.getClass() == E2EConversionRule.class).forEach(rule -> {
@@ -106,7 +113,5 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 				}
 			}
 		}
-
-		// Consider separate aggregation functions?
 	}
 }

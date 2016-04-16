@@ -46,6 +46,7 @@ public class BodyConstants {
 		}
 	}
 
+	/*
 	public static class Alerts extends AbstractBodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
@@ -322,4 +323,5 @@ public class BodyConstants {
 			return bodyConstants;
 		}
 	}
+	*/
 }

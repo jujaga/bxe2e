@@ -18,16 +18,18 @@ public class TelecomLens extends AbstractLens<Pair<Demographic, RecordTarget>, P
 	public TelecomLens() {
 		get = source -> {
 			Demographic demographic = source.getLeft();
+			SET<TEL> telecoms = source.getRight().getPatientRole().getTelecom();
 
-			SET<TEL> telecoms = null;
-			ArrayList<TEL> tels = new ArrayList<>();
-			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.TELEPHONE).get(demographic.getPhone()));
-			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.WorkPlace, TelecomType.TELEPHONE).get(demographic.getPhone2()));
-			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.EMAIL).get(demographic.getEmail()));
-			tels.removeAll(Collections.singleton(null));
+			if(telecoms == null) {
+				ArrayList<TEL> tels = new ArrayList<>();
+				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.TELEPHONE).get(demographic.getPhone()));
+				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.WorkPlace, TelecomType.TELEPHONE).get(demographic.getPhone2()));
+				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.EMAIL).get(demographic.getEmail()));
+				tels.removeAll(Collections.singleton(null));
 
-			if(!tels.isEmpty()) {
-				telecoms = new SET<>(tels);
+				if(!tels.isEmpty()) {
+					telecoms = new SET<>(tels);
+				}
 			}
 
 			source.getRight().getPatientRole().setTelecom(telecoms);

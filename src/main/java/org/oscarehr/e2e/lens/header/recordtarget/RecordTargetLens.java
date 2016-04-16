@@ -14,13 +14,13 @@ public class RecordTargetLens extends AbstractLens<Pair<Demographic, RecordTarge
 		get = source -> {
 			RecordTarget recordTarget = source.getRight();
 
-			recordTarget = new RecordTarget();
-			PatientRole patientRole = new PatientRole();
-			Patient patient = new Patient();
+			if(recordTarget.getPatientRole() == null) {
+				PatientRole patientRole = new PatientRole();
+				patientRole.setPatient(new Patient());
 
-			recordTarget.setContextControlCode(ContextControl.OverridingPropagating);
-			recordTarget.setPatientRole(patientRole);
-			patientRole.setPatient(patient);
+				recordTarget.setContextControlCode(ContextControl.OverridingPropagating);
+				recordTarget.setPatientRole(patientRole);
+			}
 
 			return new ImmutablePair<>(source.getLeft(), recordTarget);
 		};

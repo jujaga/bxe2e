@@ -20,17 +20,19 @@ public class NameLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair
 	public NameLens() {
 		get = source -> {
 			Demographic demographic = source.getLeft();
+			SET<PN> names = source.getRight().getPatientRole().getPatient().getName();
 
-			SET<PN> names = null;
-			List<ENXP> name = new ArrayList<>();
-			if(!EverestUtils.isNullorEmptyorWhitespace(demographic.getFirstName())) {
-				name.add(new NamePartLens(EntityNamePartType.Given).get(demographic.getFirstName()));
-			}
-			if(!EverestUtils.isNullorEmptyorWhitespace(demographic.getLastName())) {
-				name.add(new NamePartLens(EntityNamePartType.Family).get(demographic.getLastName()));
-			}
-			if(!name.isEmpty()) {
-				names = new SET<>(new PN(EntityNameUse.Legal, name));
+			if(names == null) {
+				List<ENXP> name = new ArrayList<>();
+				if(!EverestUtils.isNullorEmptyorWhitespace(demographic.getFirstName())) {
+					name.add(new NamePartLens(EntityNamePartType.Given).get(demographic.getFirstName()));
+				}
+				if(!EverestUtils.isNullorEmptyorWhitespace(demographic.getLastName())) {
+					name.add(new NamePartLens(EntityNamePartType.Family).get(demographic.getLastName()));
+				}
+				if(!name.isEmpty()) {
+					names = new SET<>(new PN(EntityNameUse.Legal, name));
+				}
 			}
 
 			source.getRight().getPatientRole().getPatient().setName(names);

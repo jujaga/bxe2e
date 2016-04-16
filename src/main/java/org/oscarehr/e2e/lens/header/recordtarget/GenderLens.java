@@ -15,19 +15,22 @@ public class GenderLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pa
 	public GenderLens() {
 		get = source -> {
 			String sex = source.getLeft().getSex();
+			CE<AdministrativeGender> gender = source.getRight().getPatientRole().getPatient().getAdministrativeGenderCode();
 
-			CE<AdministrativeGender> gender = new CE<>();
-			if(EverestUtils.isNullorEmptyorWhitespace(sex)) {
-				gender.setNullFlavor(NullFlavor.NoInformation);
-			}
-			else {
-				String sexCode = sex.toUpperCase().replace("U", "UN");
-				if(Mappings.genderCode.containsKey(sexCode)) {
-					gender.setCodeEx(Mappings.genderCode.get(sexCode));
-					gender.setDisplayName(Mappings.genderDescription.get(sexCode));
+			if(gender == null) {
+				gender = new CE<>();
+				if(EverestUtils.isNullorEmptyorWhitespace(sex)) {
+					gender.setNullFlavor(NullFlavor.NoInformation);
 				}
 				else {
-					gender.setNullFlavor(NullFlavor.NoInformation);
+					String sexCode = sex.toUpperCase().replace("U", "UN");
+					if(Mappings.genderCode.containsKey(sexCode)) {
+						gender.setCodeEx(Mappings.genderCode.get(sexCode));
+						gender.setDisplayName(Mappings.genderDescription.get(sexCode));
+					}
+					else {
+						gender.setNullFlavor(NullFlavor.NoInformation);
+					}
 				}
 			}
 

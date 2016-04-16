@@ -15,17 +15,21 @@ public class HinIdLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pai
 	public HinIdLens() {
 		get = source -> {
 			String hin = source.getLeft().getHin();
+			SET<II> id = source.getRight().getPatientRole().getId();
 
-			II id = new II();
-			if(!EverestUtils.isNullorEmptyorWhitespace(hin)) {
-				id.setRoot(Constants.DocumentHeader.BC_PHN_OID);
-				id.setAssigningAuthorityName(Constants.DocumentHeader.BC_PHN_OID_ASSIGNING_AUTHORITY_NAME);
-				id.setExtension(hin);
-			} else {
-				id.setNullFlavor(NullFlavor.NoInformation);
+			if(id == null) {
+				II ii = new II();
+				if(!EverestUtils.isNullorEmptyorWhitespace(hin)) {
+					ii.setRoot(Constants.DocumentHeader.BC_PHN_OID);
+					ii.setAssigningAuthorityName(Constants.DocumentHeader.BC_PHN_OID_ASSIGNING_AUTHORITY_NAME);
+					ii.setExtension(hin);
+				} else {
+					ii.setNullFlavor(NullFlavor.NoInformation);
+				}
+				id = new SET<>(ii);
 			}
 
-			source.getRight().getPatientRole().setId(new SET<>(id));
+			source.getRight().getPatientRole().setId(id);
 			return new ImmutablePair<>(source.getLeft(), source.getRight());
 		};
 

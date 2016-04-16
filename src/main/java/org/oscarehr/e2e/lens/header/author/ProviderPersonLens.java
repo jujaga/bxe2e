@@ -42,6 +42,8 @@ public class ProviderPersonLens extends AbstractLens<Pair<String, ArrayList<Auth
 					names.add(pn);
 				}
 				person.setName(names);
+			} else {
+				person.setNullFlavor(NullFlavor.NoInformation);
 			}
 
 			source.getRight().get(0).getAssignedAuthor().setAssignedAuthorChoice(person);
