@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.apache.commons.collections4.bidimap.UnmodifiableBidiMap;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.PQ;
 import org.marc.everest.datatypes.SetOperator;
@@ -23,13 +26,13 @@ public class Mappings {
 		throw new UnsupportedOperationException();
 	}
 
-	public static final Map<String, AdministrativeGender> genderCode;
+	public static final BidiMap<String, AdministrativeGender> genderCode;
 	static {
-		Map<String, AdministrativeGender> map = new HashMap<>();
+		BidiMap<String, AdministrativeGender> map = new DualHashBidiMap<>();
 		map.put(Constants.DocumentHeader.MALE_ADMINISTRATIVE_GENDER_CODE, AdministrativeGender.Male);
 		map.put(Constants.DocumentHeader.FEMALE_ADMINISTRATIVE_GENDER_CODE, AdministrativeGender.Female);
 		map.put(Constants.DocumentHeader.UNDIFFERENTIATED_ADMINISTRATIVE_GENDER_CODE, AdministrativeGender.Undifferentiated);
-		genderCode = Collections.unmodifiableMap(map);
+		genderCode = UnmodifiableBidiMap.unmodifiableBidiMap(map);
 	}
 
 	public static final Map<String, String> genderDescription;
@@ -41,12 +44,12 @@ public class Mappings {
 		genderDescription = Collections.unmodifiableMap(map);
 	}
 
-	public static final Map<String, String> languageCode;
+	public static final BidiMap<String, String> languageCode;
 	static {
-		Map<String, String> map = new HashMap<>();
+		BidiMap<String, String> map = new DualHashBidiMap<>();
 		map.put(Constants.DocumentHeader.HUMANLANGUAGE_ENGLISH_DESCRIPTION, Constants.DocumentHeader.HUMANLANGUAGE_ENGLISH_CODE);
 		map.put(Constants.DocumentHeader.HUMANLANGUAGE_FRENCH_DESCRIPTION, Constants.DocumentHeader.HUMANLANGUAGE_FRENCH_CODE);
-		languageCode = Collections.unmodifiableMap(map);
+		languageCode = UnmodifiableBidiMap.unmodifiableBidiMap(map);
 	}
 
 	public static final Map<Integer, String> reactionTypeCode;
@@ -61,26 +64,26 @@ public class Mappings {
 		reactionTypeCode = Collections.unmodifiableMap(map);
 	}
 
-	public static final Map<String, String> lifeStageCode;
+	public static final BidiMap<String, String> lifeStageCode;
 	static {
-		Map<String, String> map = new HashMap<>();
+		BidiMap<String, String> map = new DualHashBidiMap<>();
 		map.put("N", "133933007");
 		map.put("I", "133931009");
 		map.put("C", "410601007");
 		map.put("T", "133937008");
 		map.put("A", "133936004");
-		lifeStageCode = Collections.unmodifiableMap(map);
+		lifeStageCode = UnmodifiableBidiMap.unmodifiableBidiMap(map);
 	}
 
-	public static final Map<String, String> lifeStageName;
+	public static final BidiMap<String, String> lifeStageName;
 	static {
-		Map<String, String> map = new HashMap<>();
+		BidiMap<String, String> map = new DualHashBidiMap<>();
 		map.put("N", "Newborn");
 		map.put("I", "Infant");
 		map.put("C", "Child");
 		map.put("T", "Adolescent");
 		map.put("A", "Adult");
-		lifeStageName = Collections.unmodifiableMap(map);
+		lifeStageName = UnmodifiableBidiMap.unmodifiableBidiMap(map);
 	}
 
 	public static final Map<String, String> allergyTestValue;

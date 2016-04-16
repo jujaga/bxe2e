@@ -5,4 +5,4 @@ notifications:
     on_success: never
     on_failure: change
 after_success:
-  mvn cobertura:cobertura coveralls:report -DTRAVIS_JOB_ID=$TRAVIS_JOB_ID 
+  mvn jacoco:report coveralls:report -DTRAVIS_JOB_ID=$TRAVIS_JOB_ID

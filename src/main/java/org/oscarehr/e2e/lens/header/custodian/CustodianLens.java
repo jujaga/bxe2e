@@ -1,26 +1,28 @@
 package org.oscarehr.e2e.lens.header.custodian;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AssignedCustodian;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Custodian;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.CustodianOrganization;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
-public class CustodianLens extends AbstractLens<Clinic, Custodian> {
+public class CustodianLens extends AbstractLens<Pair<Clinic, Custodian>, Pair<Clinic, Custodian>> {
 	public CustodianLens() {
-		get = clinic -> {
-			Custodian custodian = new Custodian();
-			AssignedCustodian assignedCustodian = new AssignedCustodian();
-			CustodianOrganization custodianOrganization = new CustodianOrganization();
+		get = source -> {
+			Custodian custodian = source.getRight();
 
-			custodian.setAssignedCustodian(assignedCustodian);
-			assignedCustodian.setRepresentedCustodianOrganization(custodianOrganization);
-			custodianOrganization.setId(new CustodianIdLens().get(clinic.getId()));
-			custodianOrganization.setName(new CustodianNameLens().get(clinic.getClinicName()));
+			if(custodian.getAssignedCustodian() == null) {
+				AssignedCustodian assignedCustodian = new AssignedCustodian(new CustodianOrganization());
+				custodian.setAssignedCustodian(assignedCustodian);
+			}
 
-			return custodian;
+			return new ImmutablePair<>(source.getLeft(), custodian);
 		};
 
-		// TODO Put Function
+		put = (source, target) -> {
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
+		};
 	}
 }

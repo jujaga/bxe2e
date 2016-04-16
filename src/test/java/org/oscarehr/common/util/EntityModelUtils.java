@@ -34,7 +34,7 @@ public class EntityModelUtils {
 					m[i].invoke(model, args);
 				}
 				// Getters and Booleans
-				else if(m[i].getName().startsWith("get")){
+				else if(m[i].getName().matches("^(get|is).*$")){
 					m[i].invoke(model);
 				}
 			} catch (Exception e) {

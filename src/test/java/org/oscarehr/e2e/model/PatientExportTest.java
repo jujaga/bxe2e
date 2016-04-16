@@ -1,5 +1,6 @@
 package org.oscarehr.e2e.model;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -16,5 +17,11 @@ public class PatientExportTest {
 	public void emptyPatientExportTest() {
 		PatientModel patientModel = new CreatePatient(Constants.Runtime.EMPTY_DEMOGRAPHIC).getPatientModel();
 		assertTrue(patientModel.isLoaded());
+	}
+
+	@Test
+	public void nullPatientExportTest() {
+		PatientModel patientModel = new CreatePatient(null).getPatientModel();
+		assertFalse(patientModel.isLoaded());
 	}
 }

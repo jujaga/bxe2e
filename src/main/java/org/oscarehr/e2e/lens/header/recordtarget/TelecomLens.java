@@ -3,30 +3,62 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.TEL;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.SET;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.TelecomPartLens;
 
-class TelecomLens extends AbstractLens<Demographic, SET<TEL>> {
-	TelecomLens() {
-		get = demographic -> {
-			SET<TEL> telecoms = null;
-			ArrayList<TEL> tels = new ArrayList<>();
-			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.TELEPHONE).get(demographic.getPhone()));
-			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.WorkPlace, TelecomType.TELEPHONE).get(demographic.getPhone2()));
-			tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.EMAIL).get(demographic.getEmail()));
-			tels.removeAll(Collections.singleton(null));
+public class TelecomLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair<Demographic, RecordTarget>> {
+	public TelecomLens() {
+		get = source -> {
+			Demographic demographic = source.getLeft();
+			SET<TEL> telecoms = source.getRight().getPatientRole().getTelecom();
 
-			if(!tels.isEmpty()) {
-				telecoms = new SET<>(tels);
+			if(telecoms == null) {
+				ArrayList<TEL> tels = new ArrayList<>();
+				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.TELEPHONE).get(demographic.getPhone()));
+				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.WorkPlace, TelecomType.TELEPHONE).get(demographic.getPhone2()));
+				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.EMAIL).get(demographic.getEmail()));
+				tels.removeAll(Collections.singleton(null));
+
+				if(!tels.isEmpty()) {
+					telecoms = new SET<>(tels);
+				}
 			}
-			return telecoms;
+
+			source.getRight().getPatientRole().setTelecom(telecoms);
+			return new ImmutablePair<>(demographic, source.getRight());
 		};
 
-		// TODO Put Function
+		put = (source, target) -> {
+			Demographic demographic = target.getLeft();
+			SET<TEL> telecoms = target.getRight().getPatientRole().getTelecom();
+
+			if(telecoms != null && !telecoms.isNull() && !telecoms.isEmpty()) {
+				for(TEL tel : telecoms) {
+					if(TEL.isValidPhoneFlavor(tel)) {
+						String value = new TelecomPartLens(null, TelecomType.TELEPHONE).put(tel);
+						if(tel.getUse().get(0).getCode() == TelecommunicationsAddressUse.Home) {
+							demographic.setPhone(value);
+						} else if(tel.getUse().get(0).getCode() == TelecommunicationsAddressUse.WorkPlace) {
+							demographic.setPhone2(value);
+						}
+					} else if(TEL.isValidEMailFlavor(tel)) {
+						String value = new TelecomPartLens(null, TelecomType.EMAIL).put(tel);
+						if(tel.getUse().get(0).getCode() == TelecommunicationsAddressUse.Home) {
+							demographic.setEmail(value);
+						}
+					}
+				}
+			}
+
+			return new ImmutablePair<>(demographic, target.getRight());
+		};
 	}
 }

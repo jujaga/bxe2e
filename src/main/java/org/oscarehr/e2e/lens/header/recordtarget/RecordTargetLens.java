@@ -1,5 +1,7 @@
 package org.oscarehr.e2e.lens.header.recordtarget;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Patient;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.PatientRole;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
@@ -7,29 +9,24 @@ import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 
-public class RecordTargetLens extends AbstractLens<Demographic, RecordTarget> {
+public class RecordTargetLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair<Demographic, RecordTarget>> {
 	public RecordTargetLens() {
-		get = demographic -> {
-			RecordTarget recordTarget = new RecordTarget();
-			PatientRole patientRole = new PatientRole();
-			Patient patient = new Patient();
+		get = source -> {
+			RecordTarget recordTarget = source.getRight();
 
-			recordTarget.setContextControlCode(ContextControl.OverridingPropagating);
-			recordTarget.setPatientRole(patientRole);
+			if(recordTarget.getPatientRole() == null) {
+				PatientRole patientRole = new PatientRole();
+				patientRole.setPatient(new Patient());
 
-			patientRole.setId(new HinIdLens().get(demographic.getHin()));
-			patientRole.setAddr(new AddressLens().get(demographic));
-			patientRole.setTelecom(new TelecomLens().get(demographic));
-			patientRole.setPatient(patient);
+				recordTarget.setContextControlCode(ContextControl.OverridingPropagating);
+				recordTarget.setPatientRole(patientRole);
+			}
 
-			patient.setName(new NameLens().get(demographic));
-			patient.setAdministrativeGenderCode(new GenderLens().get(demographic.getSex()));
-			patient.setBirthTime(new BirthDateLens().get(demographic));
-			patient.setLanguageCommunication(new LanguageLens().get(demographic.getOfficialLanguage()));
-
-			return recordTarget;
+			return new ImmutablePair<>(source.getLeft(), recordTarget);
 		};
 
-		// TODO Put Function
+		put = (source, target) -> {
+			return new ImmutablePair<>(target.getLeft(), target.getRight());
+		};
 	}
 }
