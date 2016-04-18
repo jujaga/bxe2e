@@ -42,11 +42,17 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 
 	@Override
 	public S getSource() {
+		if(!applied) {
+			log.warn("Rule has not been applied yet - value may not be properly transformed");
+		}
 		return pair.getLeft();
 	}
 
 	@Override
 	public T getTarget() {
+		if(!applied) {
+			log.warn("Rule has not been applied yet - value may not be properly transformed");
+		}
 		return pair.getRight();
 	}
 
