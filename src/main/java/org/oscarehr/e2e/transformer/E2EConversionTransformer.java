@@ -38,13 +38,17 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		transform();
 	}
 
-	// TODO Consider Reflection to parse model and target
 	@Override
 	protected void transform() {
 		map();
-		reduce();
+		if(original == Original.SOURCE) {
+			reduceTarget();
+		} else {
+			reduceModel();
+		}
 	}
 
+	// TODO Consider Reflection to parse model and target
 	private void map() {
 		List<IRule<?, ?>> rules = new ArrayList<>();
 		rules.add(new E2EConversionRule(model, target));
@@ -66,23 +70,31 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 
 		// Run all rules
 		results = rules.stream()
+				.parallel()
 				.map(IRule::execute)
+				.sequential()
 				.collect(Collectors.toMap(IRule::getName, IRule::getPair));
 	}
 
 	@SuppressWarnings("unchecked")
-	private void reduce() {
-		if(original == Original.SOURCE) {
-			target = (ClinicalDocument) results.get(E2EConversionRule.class.getSimpleName()).getRight();
-			target.setRecordTarget(new ArrayList<>(Arrays.asList((RecordTarget) results.get(RecordTargetRule.class.getSimpleName()).getRight())));
-			target.setAuthor((ArrayList<Author>) results.get(AuthorRule.class.getSimpleName()).getRight());
-			target.setCustodian((Custodian) results.get(CustodianRule.class.getSimpleName()).getRight());
-			target.setInformationRecipient((ArrayList<InformationRecipient>) results.get(InformationRecipientRule.class.getSimpleName()).getRight());
-		} else {
-			model = (PatientModel) results.get(E2EConversionRule.class.getSimpleName()).getLeft();
-			model.setDemographic((Demographic) results.get(RecordTargetRule.class.getSimpleName()).getLeft());
-			model.getDemographic().setProviderNo((String) results.get(AuthorRule.class.getSimpleName()).getLeft());
-			model.setClinic((Clinic) results.get(CustodianRule.class.getSimpleName()).getLeft());
-		}
+	private void reduceTarget() {
+		Map<String, ?> right = results.entrySet().stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getRight()));
+
+		target = (ClinicalDocument) right.get(E2EConversionRule.class.getSimpleName());
+		target.setRecordTarget(new ArrayList<>(Arrays.asList((RecordTarget) right.get(RecordTargetRule.class.getSimpleName()))));
+		target.setAuthor((ArrayList<Author>) right.get(AuthorRule.class.getSimpleName()));
+		target.setCustodian((Custodian) right.get(CustodianRule.class.getSimpleName()));
+		target.setInformationRecipient((ArrayList<InformationRecipient>) right.get(InformationRecipientRule.class.getSimpleName()));
+	}
+
+	private void reduceModel() {
+		Map<String, ?> left = results.entrySet().stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getLeft()));
+
+		model = (PatientModel) left.get(E2EConversionRule.class.getSimpleName());
+		model.setDemographic((Demographic) left.get(RecordTargetRule.class.getSimpleName()));
+		model.getDemographic().setProviderNo((String) left.get(AuthorRule.class.getSimpleName()));
+		model.setClinic((Clinic) left.get(CustodianRule.class.getSimpleName()));
 	}
 }
