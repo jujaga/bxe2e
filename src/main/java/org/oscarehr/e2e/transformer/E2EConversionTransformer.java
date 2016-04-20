@@ -3,8 +3,10 @@ package org.oscarehr.e2e.transformer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Author;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Custodian;
@@ -22,7 +24,7 @@ import org.oscarehr.e2e.rule.header.InformationRecipientRule;
 import org.oscarehr.e2e.rule.header.RecordTargetRule;
 
 public class E2EConversionTransformer extends AbstractTransformer<PatientModel, ClinicalDocument> {
-	private List<IRule<?, ?>> rules;
+	private Map<String, Pair<?, ?>> results;
 
 	public E2EConversionTransformer(PatientModel model, ClinicalDocument target, Original original) {
 		super(model, target, original);
@@ -32,12 +34,11 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		if(this.target == null) {
 			this.target = new ClinicalDocument();
 		}
-		rules = new ArrayList<>();
 
 		transform();
 	}
 
-	// TODO Design cleaner transformation solution with reflection?
+	// TODO Consider Reflection to parse model and target
 	@Override
 	protected void transform() {
 		map();
@@ -45,68 +46,46 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 	}
 
 	private void map() {
-		rules.add(new E2EConversionRule(model, target, original));
+		List<IRule<?, ?>> rules = new ArrayList<>();
+		rules.add(new E2EConversionRule(model, target));
 
 		Demographic demographic = model.getDemographic();
 		RecordTarget recordTarget = null;
 		if(target.getRecordTarget() != null && !target.getRecordTarget().isEmpty()) {
 			recordTarget = target.getRecordTarget().get(0);
 		}
-		rules.add(new RecordTargetRule(demographic, recordTarget, original));
+		rules.add(new RecordTargetRule(demographic, recordTarget));
 
 		String providerNo = null;
 		if(demographic != null) {
 			providerNo = model.getDemographic().getProviderNo();
 		}
-		rules.add(new AuthorRule(providerNo, target.getAuthor(), original));
-		rules.add(new CustodianRule(model.getClinic(), target.getCustodian(), original));
-		rules.add(new InformationRecipientRule(null, target.getInformationRecipient(), original));
+		rules.add(new AuthorRule(providerNo, target.getAuthor()));
+		rules.add(new CustodianRule(model.getClinic(), target.getCustodian()));
+		rules.add(new InformationRecipientRule(null, target.getInformationRecipient()));
 
 		// Run all rules
-		rules = rules.stream()
+		results = rules.stream()
 				.map(rule -> {
-					rule.apply();
+					rule.execute();
 					return rule;
 				})
-				.collect(Collectors.toList());
+				.collect(Collectors.toMap(IRule::getName, IRule::getPair));
 	}
 
 	@SuppressWarnings("unchecked")
 	private void reduce() {
 		if(original == Original.SOURCE) {
-			// TODO Determine if mapped list streaming can be better written and ordered
-			rules.stream().filter(rule -> rule.getClass() == E2EConversionRule.class).forEach(rule -> {
-				target = (ClinicalDocument) rule.getTarget();
-			});
-			rules.stream().forEach(rule -> {
-				if(rule.getClass() == RecordTargetRule.class) {
-					target.setRecordTarget(new ArrayList<>(Arrays.asList((RecordTarget) rule.getTarget())));
-				}
-				if(rule.getClass() == AuthorRule.class) {
-					target.setAuthor((ArrayList<Author>) rule.getTarget());
-				}
-				if(rule.getClass() == CustodianRule.class) {
-					target.setCustodian((Custodian) rule.getTarget());
-				}
-				if(rule.getClass() == InformationRecipientRule.class) {
-					target.setInformationRecipient((ArrayList<InformationRecipient>) rule.getTarget());
-				}
-			});
+			target = (ClinicalDocument) results.get(E2EConversionRule.class.getSimpleName()).getRight();
+			target.setRecordTarget(new ArrayList<>(Arrays.asList((RecordTarget) results.get(RecordTargetRule.class.getSimpleName()).getRight())));
+			target.setAuthor((ArrayList<Author>) results.get(AuthorRule.class.getSimpleName()).getRight());
+			target.setCustodian((Custodian) results.get(CustodianRule.class.getSimpleName()).getRight());
+			target.setInformationRecipient((ArrayList<InformationRecipient>) results.get(InformationRecipientRule.class.getSimpleName()).getRight());
 		} else {
-			rules.stream().filter(rule -> rule.getClass() == E2EConversionRule.class).forEach(rule -> {
-				model = (PatientModel) rule.getSource();
-			});
-			rules.stream().filter(rule -> rule.getClass() == RecordTargetRule.class).forEach(rule -> {
-				model.setDemographic((Demographic) rule.getSource());
-			});
-			rules.stream().forEach(rule -> {
-				if(rule.getClass() == AuthorRule.class) {
-					model.getDemographic().setProviderNo((String) rule.getSource());
-				}
-				if(rule.getClass() == CustodianRule.class) {
-					model.setClinic((Clinic) rule.getSource());
-				}
-			});
+			model = (PatientModel) results.get(E2EConversionRule.class.getSimpleName()).getLeft();
+			model.setDemographic((Demographic) results.get(RecordTargetRule.class.getSimpleName()).getLeft());
+			model.getDemographic().setProviderNo((String) results.get(AuthorRule.class.getSimpleName()).getLeft());
+			model.setClinic((Clinic) results.get(CustodianRule.class.getSimpleName()).getLeft());
 		}
 	}
 }

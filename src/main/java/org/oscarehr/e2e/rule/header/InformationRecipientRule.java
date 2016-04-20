@@ -10,8 +10,8 @@ import org.oscarehr.e2e.lens.header.InformationRecipientLens;
 import org.oscarehr.e2e.rule.common.AbstractRule;
 
 public class InformationRecipientRule extends AbstractRule<Object, ArrayList<InformationRecipient>> {
-	public InformationRecipientRule(Object source, ArrayList<InformationRecipient> target, Original original) {
-		super(source, target, original);
+	public InformationRecipientRule(Object source, ArrayList<InformationRecipient> target) {
+		super(source, target);
 		if(this.pair.getLeft() == null) {
 			pair = new ImmutablePair<>(new Object(), pair.getRight());
 		}

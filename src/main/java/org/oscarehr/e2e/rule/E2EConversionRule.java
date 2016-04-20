@@ -10,8 +10,8 @@ import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.rule.common.AbstractCDARule;
 
 public class E2EConversionRule extends AbstractCDARule {
-	public E2EConversionRule(PatientModel source, ClinicalDocument target, Original original) {
-		super(source, target, original);
+	public E2EConversionRule(PatientModel source, ClinicalDocument target) {
+		super(source, target);
 		if(this.pair.getLeft() == null) {
 			pair = new ImmutablePair<>(new PatientModel(), pair.getRight());
 		}

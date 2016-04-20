@@ -7,8 +7,8 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.model.Model;
 
 public abstract class AbstractCDARule extends AbstractRule<Model, ClinicalDocument> {
-	protected AbstractCDARule(Model source, ClinicalDocument target, Original original) {
-		super(source, target, original);
+	protected AbstractCDARule(Model source, ClinicalDocument target) {
+		super(source, target);
 	}
 
 	@Override

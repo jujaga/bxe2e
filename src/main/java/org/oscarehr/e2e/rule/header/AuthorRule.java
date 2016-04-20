@@ -15,8 +15,8 @@ import org.oscarehr.e2e.lens.header.author.SystemLens;
 import org.oscarehr.e2e.rule.common.AbstractRule;
 
 public class AuthorRule extends AbstractRule<String, ArrayList<Author>> {
-	public AuthorRule(String source, ArrayList<Author> target, Original original) {
-		super(source, target, original);
+	public AuthorRule(String source, ArrayList<Author> target) {
+		super(source, target);
 		if(this.pair.getLeft() == null) {
 			pair = new ImmutablePair<>(new String(), pair.getRight());
 		}

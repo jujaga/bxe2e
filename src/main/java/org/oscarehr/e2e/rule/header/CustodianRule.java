@@ -11,8 +11,8 @@ import org.oscarehr.e2e.lens.header.custodian.CustodianNameLens;
 import org.oscarehr.e2e.rule.common.AbstractRule;
 
 public class CustodianRule extends AbstractRule<Clinic, Custodian> {
-	public CustodianRule(Clinic source, Custodian target, Original original) {
-		super(source, target, original);
+	public CustodianRule(Clinic source, Custodian target) {
+		super(source, target);
 		if(this.pair.getLeft() == null) {
 			pair = new ImmutablePair<>(new Clinic(), pair.getRight());
 		}
