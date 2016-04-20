@@ -9,7 +9,7 @@ public interface IRule<S, T> {
 
 	String getName();
 
-	void execute();
+	IRule<S, T> execute();
 
 	Boolean executed();
 

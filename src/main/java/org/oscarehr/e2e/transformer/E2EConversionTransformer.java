@@ -66,10 +66,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 
 		// Run all rules
 		results = rules.stream()
-				.map(rule -> {
-					rule.execute();
-					return rule;
-				})
+				.map(IRule::execute)
 				.collect(Collectors.toMap(IRule::getName, IRule::getPair));
 	}
 

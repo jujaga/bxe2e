@@ -33,18 +33,22 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 	}
 
 	@Override
-	public void execute() {
-		try {
-			if(original == Original.SOURCE) {
-				pair = lens.get(pair);
-			} else if(original == Original.TARGET) {
-				pair = lens.put(pair, pair);
+	public IRule<S, T> execute() {
+		if(!executed) {
+			try {
+				if(original == Original.SOURCE) {
+					pair = lens.get(pair);
+				} else if(original == Original.TARGET) {
+					pair = lens.put(pair, pair);
+				}
+			} catch (NullPointerException e) {
+				log.error("Rule Error: Lens transformation failed", e);
 			}
-		} catch (NullPointerException e) {
-			log.error("Rule Error: Lens transformation failed", e);
+
+			executed = true;
 		}
 
-		executed = true;
+		return this;
 	}
 
 	@Override
