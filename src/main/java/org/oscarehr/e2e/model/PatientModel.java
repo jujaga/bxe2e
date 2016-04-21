@@ -19,7 +19,9 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.e2e.constant.Constants;
 
-public class PatientModel extends Model {
+public class PatientModel implements IModel {
+	private Boolean loaded = false;
+
 	private Demographic demographic = null;
 	private Clinic clinic = null;
 	private List<Allergy> allergies = null;
@@ -32,6 +34,16 @@ public class PatientModel extends Model {
 	private List<Lab> labs = null;
 	private List<Drug> drugs = null;
 	private List<Dxresearch> problems = null;
+
+	@Override
+	public Boolean isLoaded() {
+		return loaded;
+	}
+
+	@Override
+	public void setLoaded(Boolean loaded) {
+		this.loaded = loaded;
+	}
 
 	// PatientExport Standard Interface
 	public Demographic getDemographic() {
@@ -133,7 +145,7 @@ public class PatientModel extends Model {
 	// Supporting Family History Subclass
 	public static class FamilyHistoryEntry {
 		private CaseManagementNote familyHistory = new CaseManagementNote();
-		private Map<String, String> extMap = new HashMap<String, String>();
+		private Map<String, String> extMap = new HashMap<>();
 
 		public FamilyHistoryEntry(CaseManagementNote familyHistory, List<CaseManagementNoteExt> extMap) {
 			if(familyHistory != null) {
@@ -158,7 +170,7 @@ public class PatientModel extends Model {
 	// Supporting Immunization Subclass
 	public static class Immunization {
 		private Prevention prevention = new Prevention();
-		private Map<String, String> preventionMap = new HashMap<String, String>();
+		private Map<String, String> preventionMap = new HashMap<>();
 
 		public Immunization(Prevention prevention, List<PreventionExt> preventionExt) {
 			if(prevention != null) {
@@ -183,7 +195,7 @@ public class PatientModel extends Model {
 	// Supporting Lab Grouping Subclasses
 	public static class Lab {
 		private Hl7TextInfo hl7TextInfo = new Hl7TextInfo();
-		private List<LabOrganizer> labOrganizer = new ArrayList<LabOrganizer>();
+		private List<LabOrganizer> labOrganizer = new ArrayList<>();
 		private String requestDate = null;
 
 		public Lab(Hl7TextInfo hl7TextInfo) {
@@ -212,7 +224,7 @@ public class PatientModel extends Model {
 	public static class LabOrganizer {
 		private Integer id = Constants.Runtime.INVALID_VALUE;
 		private String reportStatus = null;
-		private List<LabComponent> labComponent = new ArrayList<LabComponent>();
+		private List<LabComponent> labComponent = new ArrayList<>();
 
 		public LabOrganizer(Integer id, String reportStatus) {
 			this.id = id;
@@ -234,7 +246,7 @@ public class PatientModel extends Model {
 
 	public static class LabComponent {
 		private Measurement measurement = new Measurement();
-		private Map<String, String> measurementsMap = new HashMap<String, String>();
+		private Map<String, String> measurementsMap = new HashMap<>();
 
 		public LabComponent(Measurement measurement, List<MeasurementsExt> measurementsExt) {
 			if(measurement != null) {

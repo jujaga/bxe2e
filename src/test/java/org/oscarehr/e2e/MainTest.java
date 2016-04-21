@@ -8,7 +8,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.oscarehr.e2e.Main;
 
 public class MainTest {
 	@BeforeClass

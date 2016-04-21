@@ -7,9 +7,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.TS;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.e2e.lens.common.AbstractLens;
-import org.oscarehr.e2e.model.Model;
+import org.oscarehr.e2e.model.IModel;
 
-public class CDALens extends AbstractLens<Pair<Model, ClinicalDocument>, Pair<Model, ClinicalDocument>> {
+public class CDALens extends AbstractLens<Pair<IModel, ClinicalDocument>, Pair<IModel, ClinicalDocument>> {
 	public CDALens() {
 		get = source -> {
 			ClinicalDocument clinicalDocument = source.getRight();

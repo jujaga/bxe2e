@@ -16,12 +16,14 @@ public class AbstractLens<S, T> implements IGet<S, T>, IPut<S, T> {
 	}
 
 	// Standard Get Function
+	@Override
 	public T get(S s) {
 		Validate.notNull(get, "Get function is null");
 		return get.apply(s);
 	}
 
 	// Standard Put Function
+	@Override
 	public S put(S s, T t) {
 		Validate.notNull(put, "Put function is null");
 		return put.apply(s, t);

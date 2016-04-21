@@ -6,21 +6,21 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.oscarehr.e2e.constant.Constants;
 
-public class PatientExportTest {
+public class CreatePatientTest {
 	@Test
-	public void patientExportTest() {
+	public void createPatientTest() {
 		PatientModel patientModel = new CreatePatient(Constants.Runtime.VALID_DEMOGRAPHIC).getPatientModel();
 		assertTrue(patientModel.isLoaded());
 	}
 
 	@Test
-	public void emptyPatientExportTest() {
+	public void emptyCreatePatientTest() {
 		PatientModel patientModel = new CreatePatient(Constants.Runtime.EMPTY_DEMOGRAPHIC).getPatientModel();
 		assertTrue(patientModel.isLoaded());
 	}
 
 	@Test
-	public void nullPatientExportTest() {
+	public void nullCreatePatientTest() {
 		PatientModel patientModel = new CreatePatient(null).getPatientModel();
 		assertFalse(patientModel.isLoaded());
 	}

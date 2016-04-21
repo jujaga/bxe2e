@@ -13,10 +13,10 @@ import org.marc.everest.rmim.uv.cdar2.vocabulary.BindingRealm;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_BasicConfidentialityKind;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
-import org.oscarehr.e2e.model.Model;
+import org.oscarehr.e2e.model.IModel;
 import org.oscarehr.e2e.model.PatientModel;
 
-public class E2EConversionLens extends AbstractLens<Pair<Model, ClinicalDocument>, Pair<Model, ClinicalDocument>> {
+public class E2EConversionLens extends AbstractLens<Pair<IModel, ClinicalDocument>, Pair<IModel, ClinicalDocument>> {
 	public E2EConversionLens() {
 		get = source -> {
 			PatientModel patientModel = (PatientModel) source.getLeft();
@@ -45,7 +45,7 @@ public class E2EConversionLens extends AbstractLens<Pair<Model, ClinicalDocument
 		};
 
 		put = (source, target) -> {
-			Model patientModel = target.getLeft();
+			PatientModel patientModel = (PatientModel) target.getLeft();
 			patientModel.setLoaded(true);
 
 			return new ImmutablePair<>(patientModel, target.getRight());
