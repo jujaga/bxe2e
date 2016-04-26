@@ -31,7 +31,7 @@ public class AdvanceDirectivesPopulator extends AbstractBodyPopulator<AdvanceDir
 	public ClinicalStatement populateNullFlavorClinicalStatement() {
 		Observation observation = new Observation(x_ActMoodDocumentObservation.Eventoccurrence);
 
-		observation.setId(EverestUtils.buildUniqueId(Constants.IdPrefixes.AdvanceDirectives, 0));
+		observation.setId(EverestUtils.buildUniqueId(Constants.IdPrefixes.AdvanceDirectives, null));
 		observation.setCode(new CD<String>() {{setNullFlavor(NullFlavor.NoInformation);}});
 		observation.setText(new ED() {{setNullFlavor(NullFlavor.NoInformation);}});
 		observation.setStatusCode(ActStatus.Completed);

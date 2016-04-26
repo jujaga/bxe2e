@@ -21,14 +21,12 @@ public class GenderLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pa
 				gender = new CE<>();
 				if(EverestUtils.isNullorEmptyorWhitespace(sex)) {
 					gender.setNullFlavor(NullFlavor.NoInformation);
-				}
-				else {
+				} else {
 					String sexCode = sex.toUpperCase().replace("U", "UN");
 					if(Mappings.genderCode.containsKey(sexCode)) {
 						gender.setCodeEx(Mappings.genderCode.get(sexCode));
 						gender.setDisplayName(Mappings.genderDescription.get(sexCode));
-					}
-					else {
+					} else {
 						gender.setNullFlavor(NullFlavor.NoInformation);
 					}
 				}

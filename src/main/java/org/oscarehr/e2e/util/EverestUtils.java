@@ -5,14 +5,10 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -25,7 +21,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
-import org.jdom2.Attribute;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.marc.everest.datatypes.ADXP;
@@ -36,7 +31,6 @@ import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.TEL;
-import org.marc.everest.datatypes.TS;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.exceptions.ObjectDisposedException;
@@ -61,12 +55,12 @@ import org.oscarehr.e2e.lens.common.EverestBugLens;
 import org.oscarehr.e2e.model.CreatePatient;
 
 public class EverestUtils {
-	private static Logger log = Logger.getLogger(EverestUtils.class.getName());
+	private static final Logger log = Logger.getLogger(EverestUtils.class.getName());
 	private static final String OSCAR_PREVENTIONITEMS_FILE = "/PreventionItems.xml";
-	protected static Map<String, String> preventionTypeCodes = null;
+	static Map<String, String> preventionTypeCodes = null;
 
-	public static final Map<Integer, Demographic> demographicCache = new ConcurrentHashMap<Integer, Demographic>();
-	public static final Map<Integer, Provider> providerCache = new ConcurrentHashMap<Integer, Provider>();
+	private static final Map<Integer, Demographic> demographicCache = new ConcurrentHashMap<>();
+	private static final Map<Integer, Provider> providerCache = new ConcurrentHashMap<>();
 
 	EverestUtils() {
 		throw new UnsupportedOperationException();
@@ -236,9 +230,10 @@ public class EverestUtils {
 
 		II ii = new II(Constants.EMR.EMR_OID, sb.toString());
 		ii.setAssigningAuthorityName(Constants.EMR.EMR_VERSION);
-		return new SET<II>(ii);
+		return new SET<>(ii);
 	}
 
+	/*
 	// Create Prefix-number id object from long
 	public static SET<II> buildUniqueId(IdPrefixes prefix, Long id) {
 		if(id == null) {
@@ -283,6 +278,7 @@ public class EverestUtils {
 
 		return null;
 	}
+	 */
 
 	/**
 	 * Caching Utility Functions
@@ -327,6 +323,7 @@ public class EverestUtils {
 
 	// PatientExport Supplemental Functions
 	// TODO [OSCAR] Replace mock with OSCAR icd9Dao
+	/*
 	public static String getICD9Description(String code) {
 		if(!EverestUtils.isNullorEmptyorWhitespace(code) && Mappings.icd9Map.containsKey(code)) {
 			return Mappings.icd9Map.get(code);
@@ -334,6 +331,7 @@ public class EverestUtils {
 
 		return null;
 	}
+
 
 	// Find the description of measurement type
 	// TODO [OSCAR] Replace mock with OSCAR measurementTypeDao
@@ -344,23 +342,16 @@ public class EverestUtils {
 
 		return type;
 	}
+	 */
 
 	// Find ATC code of prevention type
 	public static String getPreventionType(String type) {
 		if(preventionTypeCodes == null) {
-			preventionTypeCodes = new ConcurrentHashMap<String,String>();
-			try {
-				InputStream is = EverestUtils.class.getResourceAsStream(OSCAR_PREVENTIONITEMS_FILE);
+			try (InputStream is = EverestUtils.class.getResourceAsStream(OSCAR_PREVENTIONITEMS_FILE)) {
 				Element root = new SAXBuilder().build(is).getRootElement();
-				List<Element> items = root.getChildren("item");
-				for(Element e : items) {
-					Attribute name = e.getAttribute("name");
-					Attribute atc = e.getAttribute("atc");
-					if(atc != null && !isNullorEmptyorWhitespace(atc.getValue())) {
-						preventionTypeCodes.put(name.getValue(), atc.getValue());
-					}
-				}
-				is.close();
+				preventionTypeCodes = root.getChildren("item").stream()
+						.filter(e -> e.getAttribute("atc") != null && !isNullorEmptyorWhitespace(e.getAttribute("atc").getValue()))
+						.collect(Collectors.toConcurrentMap(e -> e.getAttribute("name").getValue(), e -> e.getAttribute("atc").getValue()));
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}

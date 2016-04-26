@@ -40,7 +40,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class CreatePatient {
-	private static Logger log = Logger.getLogger(PatientModel.class.getName());
+	private static final Logger log = Logger.getLogger(PatientModel.class.getName());
 	private static ApplicationContext context = null;
 
 	private PatientModel patientModel = null;

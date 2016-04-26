@@ -25,6 +25,7 @@ import org.oscarehr.e2e.rule.header.RecordTargetRule;
 
 public class E2EConversionTransformer extends AbstractTransformer<PatientModel, ClinicalDocument> {
 	private Map<String, Pair<?, ?>> results;
+	private String patientUUID;
 
 	public E2EConversionTransformer(PatientModel model, ClinicalDocument target, Original original) {
 		super(model, target, original);
@@ -38,18 +39,31 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		transform();
 	}
 
+	public String getPatientUUID() {
+		return patientUUID;
+	}
+
 	@Override
 	protected void transform() {
-		map();
+		// Map
+		results = map();
+
+		// Reduce
 		if(original == Original.SOURCE) {
 			reduceTarget();
 		} else {
 			reduceModel();
 		}
+
+		// Save Patient UUID session
+		try {
+			patientUUID = target.getId().getRoot();
+		} catch (NullPointerException e) {
+			patientUUID = null;
+		}
 	}
 
-	// TODO Consider Reflection to parse model and target
-	private void map() {
+	private Map<String, Pair<?, ?>> map() {
 		List<IRule<?, ?>> rules = new ArrayList<>();
 		rules.add(new E2EConversionRule(model, target));
 
@@ -69,17 +83,16 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		rules.add(new InformationRecipientRule(null, target.getInformationRecipient()));
 
 		// Run all rules
-		results = rules.stream()
-				.parallel()
+		return rules.parallelStream()
 				.map(IRule::execute)
 				.sequential()
-				.collect(Collectors.toMap(IRule::getName, IRule::getPair));
+				.collect(Collectors.toConcurrentMap(IRule::getName, IRule::getPair));
 	}
 
 	@SuppressWarnings("unchecked")
 	private void reduceTarget() {
 		Map<String, ?> right = results.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getRight()));
+				.collect(Collectors.toConcurrentMap(Map.Entry::getKey, e -> e.getValue().getRight()));
 
 		target = (ClinicalDocument) right.get(E2EConversionRule.class.getSimpleName());
 		target.setRecordTarget(new ArrayList<>(Arrays.asList((RecordTarget) right.get(RecordTargetRule.class.getSimpleName()))));
@@ -90,7 +103,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 
 	private void reduceModel() {
 		Map<String, ?> left = results.entrySet().stream()
-				.collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getLeft()));
+				.collect(Collectors.toConcurrentMap(Map.Entry::getKey, e -> e.getValue().getLeft()));
 
 		model = (PatientModel) left.get(E2EConversionRule.class.getSimpleName());
 		model.setDemographic((Demographic) left.get(RecordTargetRule.class.getSimpleName()));

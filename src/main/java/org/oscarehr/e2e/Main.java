@@ -12,21 +12,22 @@ import org.oscarehr.e2e.util.EverestUtils;
 
 public class Main {
 	private static Boolean validation = true;
-	private static String exportString = null;
+	private static String patientUUID = null;
 
 	Main() {
 		throw new UnsupportedOperationException();
 	}
 
 	public static void main(String[] args) {
-		Integer demographicNo = Constants.Runtime.VALID_DEMOGRAPHIC;
-		PatientModel patientModel = new CreatePatient(demographicNo).getPatientModel();
+		PatientModel patientModel = new CreatePatient(Constants.Runtime.VALID_DEMOGRAPHIC).getPatientModel();
 
-		doExport(patientModel);
+		String exportString = doExport(patientModel);
 		doImport(exportString);
+
+		// Merge patientModels if UUID matches
 	}
 
-	private static ClinicalDocument doExport(PatientModel patientModel) {
+	private static String doExport(PatientModel patientModel) {
 		// Define Transformer
 		E2EConversionTransformer transformer = new E2EConversionTransformer(patientModel, null, Original.SOURCE);
 
@@ -34,13 +35,15 @@ public class Main {
 		ClinicalDocument clinicalDocument = transformer.getTarget();
 
 		// Output Clinical Document as String
-		exportString = EverestUtils.generateDocumentToString(clinicalDocument, validation);
+		String exportString = EverestUtils.generateDocumentToString(clinicalDocument, validation);
 		if(!EverestUtils.isNullorEmptyorWhitespace(exportString)) {
 			System.out.println(exportString);
 			System.out.println("Exported\n");
 		}
 
-		return clinicalDocument;
+		// Save patientUUID session
+		patientUUID = transformer.getPatientUUID();
+		return exportString;
 	}
 
 	private static PatientModel doImport(String document) {
@@ -59,6 +62,11 @@ public class Main {
 			System.out.println(ReflectionToStringBuilder.toString(patientModel.getDemographic(), ToStringStyle.SIMPLE_STYLE));
 			System.out.println(ReflectionToStringBuilder.toString(patientModel.getClinic(), ToStringStyle.SIMPLE_STYLE));
 			System.out.println("\nImported\n");
+		}
+
+		// Check patientUUID session
+		if(patientUUID.equalsIgnoreCase(transformer.getPatientUUID())) {
+			System.out.println("UUID session matched: " + patientUUID);
 		}
 
 		return patientModel;

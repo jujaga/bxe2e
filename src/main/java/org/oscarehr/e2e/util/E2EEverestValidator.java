@@ -7,7 +7,7 @@ import org.marc.everest.interfaces.IResultDetail;
 import org.marc.everest.interfaces.ResultDetailType;
 
 public class E2EEverestValidator {
-	private static Logger log = Logger.getLogger(E2EEverestValidator.class.getName());
+	private static final Logger log = Logger.getLogger(E2EEverestValidator.class.getName());
 
 	E2EEverestValidator() {
 		throw new UnsupportedOperationException();
