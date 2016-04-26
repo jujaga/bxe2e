@@ -1,8 +1,10 @@
 package org.oscarehr.e2e.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,7 +39,9 @@ import org.marc.everest.datatypes.TEL;
 import org.marc.everest.datatypes.TS;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.SET;
+import org.marc.everest.exceptions.ObjectDisposedException;
 import org.marc.everest.formatters.interfaces.IFormatterGraphResult;
+import org.marc.everest.formatters.interfaces.IFormatterParseResult;
 import org.marc.everest.formatters.xml.datatypes.r1.DatatypeFormatter;
 import org.marc.everest.formatters.xml.datatypes.r1.R1FormatterCompatibilityMode;
 import org.marc.everest.formatters.xml.its1.XmlIts1Formatter;
@@ -53,6 +57,7 @@ import org.oscarehr.e2e.constant.Constants.IdPrefixes;
 import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.constant.Mappings;
 import org.oscarehr.e2e.extension.ObservationWithConfidentialityCode;
+import org.oscarehr.e2e.lens.common.EverestBugLens;
 import org.oscarehr.e2e.model.CreatePatient;
 
 public class EverestUtils {
@@ -77,20 +82,15 @@ public class EverestUtils {
 
 	// Generate Document Function
 	public static String generateDocumentToString(ClinicalDocument clinicalDocument, Boolean validation) {
+		String output = null;
 		if(clinicalDocument == null) {
-			return null;
+			return output;
 		}
 
-		StringWriter sw = new StringWriter();
-		XmlIts1Formatter fmtr = new XmlIts1Formatter();
-		fmtr.setValidateConformance(validation);
-		fmtr.getGraphAides().add(new DatatypeFormatter(R1FormatterCompatibilityMode.ClinicalDocumentArchitecture));
-		fmtr.addCachedClass(ClinicalDocument.class);
-		fmtr.registerXSITypeName("POCD_MT000040UV.Observation", ObservationWithConfidentialityCode.class);
-
 		try {
-			XMLOutputFactory fact = XMLOutputFactory.newInstance();
-			XMLStateStreamWriter xssw = new XMLStateStreamWriter(fact.createXMLStreamWriter(sw));
+			StringWriter sw = new StringWriter();
+			XmlIts1Formatter fmtr = getFormatter(validation);
+			XMLStateStreamWriter xssw = new XMLStateStreamWriter(XMLOutputFactory.newInstance().createXMLStreamWriter(sw));
 
 			xssw.writeStartDocument(Constants.XML.ENCODING, Constants.XML.VERSION);
 			xssw.writeStartElement("hl7", "ClinicalDocument", "urn:hl7-org:v3");
@@ -101,34 +101,48 @@ public class EverestUtils {
 			xssw.writeAttribute("xsi", "schemaLocation", "schemaLocation", "urn:hl7-org:v3 Schemas/CDA-PITO-E2E.xsd");
 			xssw.writeDefaultNamespace("urn:hl7-org:v3"); // Default hl7 namespace
 
-			IFormatterGraphResult details = fmtr.graph(xssw, clinicalDocument);
+			IFormatterGraphResult result = fmtr.graph(xssw, clinicalDocument);
 
 			xssw.writeEndElement();
 			xssw.writeEndDocument();
 			xssw.close();
 
-			String output = prettyFormatXML(sw.toString(), Constants.XML.INDENT);
-
-			// Temporary Everest Bugfixes
-			output = everestBugFixes(output);
+			output = new EverestBugLens().get(prettyFormatXML(sw.toString(), Constants.XML.INDENT));
 
 			if(validation) {
-				E2EEverestValidator.isValidCDA(details);
+				E2EEverestValidator.isValidCDAGraph(result);
 				E2EXSDValidator.isValidXML(output);
 			}
-
-			return output;
 		} catch (XMLStreamException e) {
 			log.error(e.toString());
 		}
 
-		return null;
+		return output;
 	}
 
-	// Temporary Everest Bugfixes
-	private static String everestBugFixes(String output) {
-		String result = output.replaceAll("xsi:nil=\"true\" ", "");
-		return result.replaceAll("delimeter", "delimiter");
+	// Parse Document Function
+	public static ClinicalDocument parseDocumentFromString(String document, Boolean validation) {
+		ClinicalDocument clinicalDocument = null;
+		if(document == null) {
+			return clinicalDocument;
+		}
+
+		try {
+			String input = new EverestBugLens().put(document);
+			InputStream is = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+			XmlIts1Formatter fmtr = getFormatter(validation);
+			IFormatterParseResult result = fmtr.parse(is);
+			clinicalDocument = (ClinicalDocument) result.getStructure();
+
+			if(validation) {
+				E2EEverestValidator.isValidCDAParse(result);
+				E2EXSDValidator.isValidXML(document);
+			}
+		} catch (ObjectDisposedException e) {
+			log.error(e.toString());
+		}
+
+		return clinicalDocument;
 	}
 
 	// Pretty Print XML
@@ -151,6 +165,16 @@ public class EverestUtils {
 		}
 
 		return null;
+	}
+
+	// Standard Formatter Generator
+	private static XmlIts1Formatter getFormatter(Boolean validation) {
+		XmlIts1Formatter fmtr = new XmlIts1Formatter();
+		fmtr.setValidateConformance(validation);
+		fmtr.getGraphAides().add(new DatatypeFormatter(R1FormatterCompatibilityMode.ClinicalDocumentArchitecture));
+		fmtr.addCachedClass(ClinicalDocument.class);
+		fmtr.registerXSITypeName("POCD_MT000040UV.Observation", ObservationWithConfidentialityCode.class);
+		return fmtr;
 	}
 
 	/**

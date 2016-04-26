@@ -12,7 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.util.EverestUtils;
 
 public class EverestUtilsTest {
 	@BeforeClass
@@ -38,6 +37,13 @@ public class EverestUtilsTest {
 		ClinicalDocument clinicalDocument = new ClinicalDocument();
 		assertNotNull(EverestUtils.generateDocumentToString(clinicalDocument, true));
 		assertNull(EverestUtils.generateDocumentToString(null, true));
+	}
+
+	@Test
+	public void parseDocumentFromStringTest() {
+		String document = EverestUtils.generateDocumentToString(new ClinicalDocument(), true);
+		assertNotNull(EverestUtils.parseDocumentFromString(document, true));
+		assertNull(EverestUtils.parseDocumentFromString(null, true));
 	}
 
 	@Test

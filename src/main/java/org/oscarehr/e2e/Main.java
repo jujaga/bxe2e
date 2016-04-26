@@ -11,6 +11,9 @@ import org.oscarehr.e2e.transformer.E2EConversionTransformer;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class Main {
+	private static Boolean validation = true;
+	private static String exportString = null;
+
 	Main() {
 		throw new UnsupportedOperationException();
 	}
@@ -19,8 +22,8 @@ public class Main {
 		Integer demographicNo = Constants.Runtime.VALID_DEMOGRAPHIC;
 		PatientModel patientModel = new CreatePatient(demographicNo).getPatientModel();
 
-		ClinicalDocument clinicalDocument = doExport(patientModel);
-		doImport(clinicalDocument);
+		doExport(patientModel);
+		doImport(exportString);
 	}
 
 	private static ClinicalDocument doExport(PatientModel patientModel) {
@@ -31,13 +34,17 @@ public class Main {
 		ClinicalDocument clinicalDocument = transformer.getTarget();
 
 		// Output Clinical Document as String
-		String output = EverestUtils.generateDocumentToString(clinicalDocument, true);
-		if(!EverestUtils.isNullorEmptyorWhitespace(output)) {
-			System.out.println(output);
-			System.out.println("Exported");
+		exportString = EverestUtils.generateDocumentToString(clinicalDocument, validation);
+		if(!EverestUtils.isNullorEmptyorWhitespace(exportString)) {
+			System.out.println(exportString);
+			System.out.println("Exported\n");
 		}
 
 		return clinicalDocument;
+	}
+
+	private static PatientModel doImport(String document) {
+		return doImport(EverestUtils.parseDocumentFromString(document, validation));
 	}
 
 	private static PatientModel doImport(ClinicalDocument clinicalDocument) {
@@ -49,9 +56,9 @@ public class Main {
 
 		// Output Patient Model
 		if(patientModel.isLoaded()) {
-			System.out.println("\n" + ReflectionToStringBuilder.toString(patientModel.getDemographic(), ToStringStyle.SIMPLE_STYLE));
-			System.out.println("\n" + ReflectionToStringBuilder.toString(patientModel.getClinic(), ToStringStyle.SIMPLE_STYLE));
-			System.out.println("\nImported");
+			System.out.println(ReflectionToStringBuilder.toString(patientModel.getDemographic(), ToStringStyle.SIMPLE_STYLE));
+			System.out.println(ReflectionToStringBuilder.toString(patientModel.getClinic(), ToStringStyle.SIMPLE_STYLE));
+			System.out.println("\nImported\n");
 		}
 
 		return patientModel;

@@ -2,18 +2,20 @@ package org.oscarehr.e2e.util;
 
 import static org.junit.Assert.assertFalse;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.marc.everest.formatters.interfaces.IFormatterGraphResult;
+import org.marc.everest.formatters.interfaces.IFormatterParseResult;
 import org.marc.everest.formatters.xml.datatypes.r1.DatatypeFormatter;
 import org.marc.everest.formatters.xml.its1.XmlIts1Formatter;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
-import org.oscarehr.e2e.util.E2EEverestValidator;
 
 public class E2EEverestValidatorTest {
 	@BeforeClass
@@ -27,13 +29,25 @@ public class E2EEverestValidatorTest {
 	}
 
 	@Test
-	public void isValidCDATest() {
+	public void isValidCDAGraphTest() {
 		XmlIts1Formatter fmtr = new XmlIts1Formatter();
 		fmtr.setValidateConformance(true);
 		fmtr.getGraphAides().add(new DatatypeFormatter());
-		IFormatterGraphResult details = fmtr.graph(new NullOutputStream(), new ClinicalDocument());
+		IFormatterGraphResult result = fmtr.graph(new NullOutputStream(), new ClinicalDocument());
 
-		assertFalse(E2EEverestValidator.isValidCDA(details));
+		assertFalse(E2EEverestValidator.isValidCDAGraph(result));
+	}
+
+	@Test
+	public void isValidCDAParseTest() {
+		String document = EverestUtils.generateDocumentToString(new ClinicalDocument(), true);
+
+		XmlIts1Formatter fmtr = new XmlIts1Formatter();
+		fmtr.setValidateConformance(true);
+		fmtr.getGraphAides().add(new DatatypeFormatter());
+		IFormatterParseResult result = fmtr.parse(new ByteArrayInputStream(document.getBytes(StandardCharsets.UTF_8)));
+
+		assertFalse(E2EEverestValidator.isValidCDAParse(result));
 	}
 
 	// Creates an OutputStream that does nothing
