@@ -45,7 +45,7 @@ public class PatientModel implements IModel {
 		this.loaded = loaded;
 	}
 
-	// PatientExport Standard Interface
+	// PatientModel Standard Interface
 	public Demographic getDemographic() {
 		return demographic;
 	}
@@ -152,9 +152,7 @@ public class PatientModel implements IModel {
 				this.familyHistory = familyHistory;
 			}
 			if(extMap != null) {
-				for(CaseManagementNoteExt extElement : extMap) {
-					this.extMap.put(extElement.getKeyVal(), extElement.getValue());
-				}
+				extMap.forEach(e -> this.extMap.put(e.getKeyVal(), e.getValue()));
 			}
 		}
 
@@ -177,9 +175,7 @@ public class PatientModel implements IModel {
 				this.prevention = prevention;
 			}
 			if(preventionExt != null) {
-				for(PreventionExt extElement : preventionExt) {
-					this.preventionMap.put(extElement.getKeyVal(), extElement.getVal());
-				}
+				preventionExt.forEach(e -> this.preventionMap.put(e.getKeyVal(), e.getVal()));
 			}
 		}
 
@@ -253,9 +249,7 @@ public class PatientModel implements IModel {
 				this.measurement = measurement;
 			}
 			if(measurementsExt != null) {
-				for(MeasurementsExt extElement : measurementsExt) {
-					this.measurementsMap.put(extElement.getKeyVal(), extElement.getVal());
-				}
+				measurementsExt.forEach(e -> this.measurementsMap.put(e.getKeyVal(), e.getVal()));
 			}
 		}
 

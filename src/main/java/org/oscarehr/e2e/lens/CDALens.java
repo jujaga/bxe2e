@@ -12,11 +12,14 @@ import org.oscarehr.e2e.model.IModel;
 public class CDALens extends AbstractLens<Pair<IModel, ClinicalDocument>, Pair<IModel, ClinicalDocument>> {
 	public CDALens() {
 		get = source -> {
-			ClinicalDocument clinicalDocument = source.getRight();
+			TS ts = source.getRight().getEffectiveTime();
 
-			clinicalDocument.setEffectiveTime(new GregorianCalendar(), TS.MINUTE);
+			if(ts == null || ts.isNull() || ts.isInvalidDate()) {
+				ts = new TS(new GregorianCalendar(), TS.MINUTE);
+			}
 
-			return new ImmutablePair<>(source.getLeft(), clinicalDocument);
+			source.getRight().setEffectiveTime(ts);
+			return new ImmutablePair<>(source.getLeft(), source.getRight());
 		};
 
 		put = (source, target) -> {

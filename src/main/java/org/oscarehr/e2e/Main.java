@@ -66,7 +66,7 @@ public class Main {
 
 		// Check patientUUID session
 		if(patientUUID.equalsIgnoreCase(transformer.getPatientUUID())) {
-			System.out.println("UUID session matched: " + patientUUID);
+			System.out.println("UUID session matched: " + patientUUID + "\n");
 		}
 
 		return patientModel;

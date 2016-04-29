@@ -1,6 +1,7 @@
 package org.oscarehr.e2e.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -58,6 +59,12 @@ public class EverestUtils {
 	private static final Logger log = Logger.getLogger(EverestUtils.class.getName());
 	private static final String OSCAR_PREVENTIONITEMS_FILE = "/PreventionItems.xml";
 	static Map<String, String> preventionTypeCodes = null;
+	private static final XmlIts1Formatter fmtr = new XmlIts1Formatter();
+	static {
+		fmtr.getGraphAides().add(new DatatypeFormatter(R1FormatterCompatibilityMode.ClinicalDocumentArchitecture));
+		fmtr.addCachedClass(ClinicalDocument.class);
+		fmtr.registerXSITypeName("POCD_MT000040UV.Observation", ObservationWithConfidentialityCode.class);
+	}
 
 	private static final Map<Integer, Demographic> demographicCache = new ConcurrentHashMap<>();
 	private static final Map<Integer, Provider> providerCache = new ConcurrentHashMap<>();
@@ -81,9 +88,8 @@ public class EverestUtils {
 			return output;
 		}
 
-		try {
-			StringWriter sw = new StringWriter();
-			XmlIts1Formatter fmtr = getFormatter(validation);
+		try (StringWriter sw = new StringWriter()) {
+			fmtr.setValidateConformance(validation);
 			XMLStateStreamWriter xssw = new XMLStateStreamWriter(XMLOutputFactory.newInstance().createXMLStreamWriter(sw));
 
 			xssw.writeStartDocument(Constants.XML.ENCODING, Constants.XML.VERSION);
@@ -107,7 +113,7 @@ public class EverestUtils {
 				E2EEverestValidator.isValidCDAGraph(result);
 				E2EXSDValidator.isValidXML(output);
 			}
-		} catch (XMLStreamException e) {
+		} catch (IOException|XMLStreamException e) {
 			log.error(e.toString());
 		}
 
@@ -121,10 +127,9 @@ public class EverestUtils {
 			return clinicalDocument;
 		}
 
-		try {
-			String input = new EverestBugLens().put(document);
-			InputStream is = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-			XmlIts1Formatter fmtr = getFormatter(validation);
+		String input = new EverestBugLens().put(document);
+		try (InputStream is = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))) {
+			fmtr.setValidateConformance(validation);
 			IFormatterParseResult result = fmtr.parse(is);
 			clinicalDocument = (ClinicalDocument) result.getStructure();
 
@@ -132,7 +137,7 @@ public class EverestUtils {
 				E2EEverestValidator.isValidCDAParse(result);
 				E2EXSDValidator.isValidXML(document);
 			}
-		} catch (ObjectDisposedException e) {
+		} catch (IOException|ObjectDisposedException e) {
 			log.error(e.toString());
 		}
 
@@ -159,16 +164,6 @@ public class EverestUtils {
 		}
 
 		return null;
-	}
-
-	// Standard Formatter Generator
-	private static XmlIts1Formatter getFormatter(Boolean validation) {
-		XmlIts1Formatter fmtr = new XmlIts1Formatter();
-		fmtr.setValidateConformance(validation);
-		fmtr.getGraphAides().add(new DatatypeFormatter(R1FormatterCompatibilityMode.ClinicalDocumentArchitecture));
-		fmtr.addCachedClass(ClinicalDocument.class);
-		fmtr.registerXSITypeName("POCD_MT000040UV.Observation", ObservationWithConfidentialityCode.class);
-		return fmtr;
 	}
 
 	/**
