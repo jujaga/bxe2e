@@ -61,6 +61,7 @@ public class Main {
 		if(patientModel.isLoaded()) {
 			System.out.println(ReflectionToStringBuilder.toString(patientModel.getDemographic(), ToStringStyle.SIMPLE_STYLE));
 			System.out.println(ReflectionToStringBuilder.toString(patientModel.getClinic(), ToStringStyle.SIMPLE_STYLE));
+			System.out.println(ReflectionToStringBuilder.toString(patientModel.getProblems(), ToStringStyle.SIMPLE_STYLE));
 			System.out.println("\nImported\n");
 		}
 

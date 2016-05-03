@@ -275,6 +275,7 @@ public class BodyConstants {
 			return bodyConstants;
 		}
 	}
+	 */
 
 	public static class Problems extends AbstractBodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
@@ -300,6 +301,7 @@ public class BodyConstants {
 		}
 	}
 
+	/*
 	public static class RiskFactors extends AbstractBodyConstants {
 		protected static AbstractBodyConstants bodyConstants = null;
 
@@ -323,5 +325,5 @@ public class BodyConstants {
 			return bodyConstants;
 		}
 	}
-	*/
+	 */
 }
