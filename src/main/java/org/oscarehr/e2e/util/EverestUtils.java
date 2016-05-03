@@ -7,6 +7,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -32,6 +35,7 @@ import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.TEL;
+import org.marc.everest.datatypes.TS;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.exceptions.ObjectDisposedException;
@@ -242,6 +246,7 @@ public class EverestUtils {
 		ii.setAssigningAuthorityName(Constants.EMR.EMR_VERSION);
 		return new SET<II>(ii);
 	}
+	 */
 
 	// Create a TS object from a Java Date with Day precision
 	public static TS buildTSFromDate(Date date) {
@@ -259,6 +264,7 @@ public class EverestUtils {
 		return new TS(calendar, precision);
 	}
 
+	/*
 	// Create a Date object from dateString
 	public static Date stringToDate(String dateString) {
 		String[] formatStrings = {"yyyy-MM-dd hh:mm:ss", "yyyy-MM-dd hh:mm", "yyyy-MM-dd"};
@@ -318,7 +324,6 @@ public class EverestUtils {
 
 	// PatientExport Supplemental Functions
 	// TODO [OSCAR] Replace mock with OSCAR icd9Dao
-	/*
 	public static String getICD9Description(String code) {
 		if(!EverestUtils.isNullorEmptyorWhitespace(code) && Mappings.icd9Map.containsKey(code)) {
 			return Mappings.icd9Map.get(code);
@@ -327,7 +332,7 @@ public class EverestUtils {
 		return null;
 	}
 
-
+	/*
 	// Find the description of measurement type
 	// TODO [OSCAR] Replace mock with OSCAR measurementTypeDao
 	public static String getTypeDescription(String type) {

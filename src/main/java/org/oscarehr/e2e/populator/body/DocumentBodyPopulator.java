@@ -13,8 +13,8 @@ import org.oscarehr.e2e.populator.AbstractPopulator;
 
 public class DocumentBodyPopulator extends AbstractPopulator {
 	public DocumentBodyPopulator(PatientModel patientModel) {
-		patientModel.isLoaded(); // Avoid PMD Failure
 		populators.add(new AdvanceDirectivesPopulator());
+		populators.add(new ProblemsPopulator(patientModel));
 	}
 
 	@Override
