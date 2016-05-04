@@ -14,8 +14,10 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.InformationRecipient;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.e2e.model.PatientModel;
 import org.oscarehr.e2e.rule.E2EConversionRule;
+import org.oscarehr.e2e.rule.body.ProblemsRule;
 import org.oscarehr.e2e.rule.common.IRule;
 import org.oscarehr.e2e.rule.common.IRule.Original;
 import org.oscarehr.e2e.rule.header.AuthorRule;
@@ -81,6 +83,15 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		rules.add(new AuthorRule(providerNo, target.getAuthor()));
 		rules.add(new CustodianRule(model.getClinic(), target.getCustodian()));
 		rules.add(new InformationRecipientRule(null, target.getInformationRecipient()));
+
+		// TODO Factor in Target problems on map
+		List<Dxresearch> problems = model.getProblems();
+		if(problems != null && !problems.isEmpty()) {
+			for(Integer i = 0; i < problems.size(); i++) {
+				Dxresearch problem = problems.get(i);
+				rules.add(new ProblemsRule(problem, null, i));
+			}
+		}
 
 		// Run all rules
 		return rules.parallelStream()

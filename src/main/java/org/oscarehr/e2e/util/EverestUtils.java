@@ -59,6 +59,9 @@ import org.oscarehr.e2e.extension.ObservationWithConfidentialityCode;
 import org.oscarehr.e2e.lens.common.EverestBugLens;
 import org.oscarehr.e2e.model.CreatePatient;
 
+/**
+ * The Class EverestUtils.
+ */
 public class EverestUtils {
 	private static final Logger log = Logger.getLogger(EverestUtils.class.getName());
 	private static final String OSCAR_PREVENTIONITEMS_FILE = "/PreventionItems.xml";
@@ -77,16 +80,25 @@ public class EverestUtils {
 		throw new UnsupportedOperationException();
 	}
 
+	// General Everest Utility Functions
 	/**
-	 * General Everest Utility Functions
+	 * Check String for Null, Empty or Whitespace
+	 *
+	 * @param str the str
+	 * @return true if null, empty or whitespace; false otherwise
 	 */
-	// Check String for Null, Empty or Whitespace
-	public static Boolean isNullorEmptyorWhitespace(String obj) {
-		return obj == null || obj.isEmpty() || obj.trim().isEmpty();
+	public static Boolean isNullorEmptyorWhitespace(final String str) {
+		return str == null || str.trim().isEmpty();
 	}
 
-	// Generate Document Function
-	public static String generateDocumentToString(ClinicalDocument clinicalDocument, Boolean validation) {
+	/**
+	 * Generate Document Function.
+	 *
+	 * @param clinicalDocument the clinical document
+	 * @param validation boolean to run validation
+	 * @return the xml string
+	 */
+	public static String generateDocumentToString(final ClinicalDocument clinicalDocument, final Boolean validation) {
 		String output = null;
 		if(clinicalDocument == null) {
 			return output;
@@ -124,8 +136,14 @@ public class EverestUtils {
 		return output;
 	}
 
-	// Parse Document Function
-	public static ClinicalDocument parseDocumentFromString(String document, Boolean validation) {
+	/**
+	 * Parse Document Function.
+	 *
+	 * @param document the xml string
+	 * @param validation boolean to run validation
+	 * @return the clinical document
+	 */
+	public static ClinicalDocument parseDocumentFromString(final String document, final Boolean validation) {
 		ClinicalDocument clinicalDocument = null;
 		if(document == null) {
 			return clinicalDocument;
@@ -148,8 +166,14 @@ public class EverestUtils {
 		return clinicalDocument;
 	}
 
-	// Pretty Print XML
-	public static String prettyFormatXML(String input, Integer indent) {
+	/**
+	 * Pretty Print XML.
+	 *
+	 * @param input the input string
+	 * @param indent the indent amount
+	 * @return the formatted string
+	 */
+	public static String prettyFormatXML(final String input, final Integer indent) {
 		if(!isNullorEmptyorWhitespace(input)) {
 			try {
 				Source xmlInput = new StreamSource(new StringReader(input));
@@ -170,10 +194,7 @@ public class EverestUtils {
 		return null;
 	}
 
-	/**
-	 * Header Utility Functions
-	 */
-	// Add an address to the addrParts list
+	// Header Utility Functions
 	public static void addAddressPart(ArrayList<ADXP> addrParts, String value, AddressPartType addressPartType) {
 		if(!isNullorEmptyorWhitespace(value)) {
 			ADXP addrPart = new ADXP(value, addressPartType);
@@ -215,11 +236,15 @@ public class EverestUtils {
 		}
 	}
 
+	// Body Utility Functions
 	/**
-	 * Body Utility Functions
+	 * Create a unique id using the prefix and id.
+	 *
+	 * @param prefix the prefix
+	 * @param id the id
+	 * @return the unique id
 	 */
-	// Create Prefix-number id object from integer
-	public static SET<II> buildUniqueId(IdPrefixes prefix, Integer id) {
+	public static SET<II> buildUniqueId(final IdPrefixes prefix, Integer id) {
 		if(id == null) {
 			id = 0;
 		}
@@ -248,13 +273,25 @@ public class EverestUtils {
 	}
 	 */
 
+	/**
+	 * Create a TS object from a Java Date with default day precision.
+	 *
+	 * @param date the date
+	 * @return the ts
+	 */
 	// Create a TS object from a Java Date with Day precision
-	public static TS buildTSFromDate(Date date) {
+	public static TS buildTSFromDate(final Date date) {
 		return buildTSFromDate(date, TS.DAY);
 	}
 
-	// Create a TS object from a Java Date with specified precision
-	public static TS buildTSFromDate(Date date, Integer precision) {
+	/**
+	 * Create a TS object from a Java Date with specified precision.
+	 *
+	 * @param date the date
+	 * @param precision the precision
+	 * @return the ts
+	 */
+	public static TS buildTSFromDate(final Date date, final Integer precision) {
 		if(date == null) {
 			return null;
 		}
@@ -281,11 +318,14 @@ public class EverestUtils {
 	}
 	 */
 
+	// Caching Utility Functions
 	/**
-	 * Caching Utility Functions
+	 * Find the provider of a given demographicNo.
+	 *
+	 * @param demographicNo the demographicNo
+	 * @return the demographic's providerNo
 	 */
-	// Find the provider of a given demographicNo
-	public static String getDemographicProviderNo(Integer demographicNo) {
+	public static String getDemographicProviderNo(final Integer demographicNo) {
 		String providerNo = null;
 		try {
 			if(demographicCache.containsKey(demographicNo)) {
@@ -303,8 +343,13 @@ public class EverestUtils {
 		return providerNo;
 	}
 
-	// Find the provider from providerNo String
-	public static Provider getProviderFromString(String providerNo) {
+	/**
+	 * Find the provider from the providerNo String.
+	 *
+	 * @param providerNo the provider no
+	 * @return the provider
+	 */
+	public static Provider getProviderFromString(final String providerNo) {
 		Provider provider = null;
 		try {
 			Integer providerId = Integer.parseInt(providerNo);
@@ -322,9 +367,15 @@ public class EverestUtils {
 		return provider;
 	}
 
-	// PatientExport Supplemental Functions
-	// TODO [OSCAR] Replace mock with OSCAR icd9Dao
-	public static String getICD9Description(String code) {
+	// PatientModel Supplemental Functions
+	/**
+	 * Gets the ICD9 description.
+	 * TODO [OSCAR] Replace mock with OSCAR icd9Dao.
+	 *
+	 * @param code the ICD9 code
+	 * @return the ICD9 description
+	 */
+	public static String getICD9Description(final String code) {
 		if(!EverestUtils.isNullorEmptyorWhitespace(code) && Mappings.icd9Map.containsKey(code)) {
 			return Mappings.icd9Map.get(code);
 		}
@@ -344,8 +395,13 @@ public class EverestUtils {
 	}
 	 */
 
-	// Find ATC code of prevention type
-	public static String getPreventionType(String type) {
+	/**
+	 * Find ATC code of prevention type.
+	 *
+	 * @param type the type
+	 * @return the prevention type
+	 */
+	public static String getPreventionType(final String type) {
 		if(preventionTypeCodes == null) {
 			try (InputStream is = EverestUtils.class.getResourceAsStream(OSCAR_PREVENTIONITEMS_FILE)) {
 				Element root = new SAXBuilder().build(is).getRootElement();

@@ -2,6 +2,9 @@ package org.oscarehr.e2e.constant;
 
 import org.marc.everest.datatypes.generic.CE;
 
+/**
+ * The Class Constants. Contains Enumerations and Constants used throughout E2E.
+ */
 public class Constants {
 	Constants() {
 		throw new UnsupportedOperationException();

@@ -1,5 +1,8 @@
 package org.oscarehr.e2e.constant;
 
+/**
+ * The Class BodyConstants. Contains Section heading constants used in E2E Body Sections.
+ */
 public class BodyConstants {
 	BodyConstants() {
 		throw new UnsupportedOperationException();

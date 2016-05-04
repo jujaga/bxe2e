@@ -39,9 +39,6 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 
 			// Check if Model has Entries
 			Boolean hasEntries = containsEntries(patientModel);
-			if(hasEntries) {
-				createSummaryText(patientModel);
-			}
 
 			// Find Section Component if it exists
 			Optional<Component3> oComponent = components.stream()
@@ -49,7 +46,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 					.findFirst();
 
 			// Setup Section Component Structure
-			Component3 component = oComponent.orElse(makeSectionComponent(hasEntries));
+			Component3 component = oComponent.orElse(makeSectionComponent(patientModel, hasEntries));
 			if(hasEntries && component.getSection().getEntry() == null) {
 				component.getSection().setEntry(new ArrayList<>());
 			}
@@ -113,7 +110,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 		return false;
 	};
 
-	private Component3 makeSectionComponent(Boolean hasEntries) {
+	private Component3 makeSectionComponent(PatientModel patientModel, Boolean hasEntries) {
 		Component3 component = new Component3();
 		component.setTypeCode(ActRelationshipHasComponent.HasComponent);
 		component.setContextConductionInd(true);
@@ -130,7 +127,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 			section.setConfidentialityCode(x_BasicConfidentialityKind.Normal);
 		}
 
-		List<String> texts = createSummaryText(null);
+		List<String> texts = createSummaryText(patientModel);
 		if(texts == null || texts.isEmpty()) {
 			section.setText(new SD(new StructDocTextNode(bodyConstants.ENTRY_NO_TEXT)));
 		} else {

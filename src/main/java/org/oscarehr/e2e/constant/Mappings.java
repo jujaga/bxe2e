@@ -21,6 +21,9 @@ import org.marc.everest.datatypes.interfaces.ISetComponent;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.AdministrativeGender;
 import org.oscarehr.e2e.constant.Constants.IssueCodes;
 
+/**
+ * The Class Mappings. Contains Mappings used throughout E2E.
+ */
 public class Mappings {
 	Mappings() {
 		throw new UnsupportedOperationException();

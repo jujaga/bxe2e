@@ -15,6 +15,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
+/**
+ * The Class E2EXSDValidator.
+ */
 public class E2EXSDValidator {
 	private static final Logger log = Logger.getLogger(E2EXSDValidator.class.getName());
 	private static final SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -26,14 +29,19 @@ public class E2EXSDValidator {
 		throw new UnsupportedOperationException();
 	}
 
-	public static Boolean isWellFormedXML(String xmlstring) {
+	/**
+	 * Checks if xmlstring is a well formed XML.
+	 *
+	 * @param xmlstring the xmlstring
+	 * @return true if well formed, false otherwise
+	 */
+	public static Boolean isWellFormedXML(final String xmlstring) {
 		factory.setValidating(false);
 
 		try {
 			SAXParser parser = factory.newSAXParser();
 			XMLReader reader = parser.getXMLReader();
 			reader.setErrorHandler(new SimpleErrorHandler());
-			// the parse method throws an exception if the XML is not well-formed
 			reader.parse(new InputSource(new StringReader(xmlstring)));
 			return true;
 		} catch (Exception e) {
@@ -42,7 +50,13 @@ public class E2EXSDValidator {
 		}
 	}
 
-	public static Boolean isValidXML(String xmlstring) {
+	/**
+	 * Checks if xmlstring is a valid XML.
+	 *
+	 * @param xmlstring the xmlstring
+	 * @return true if valid, false otherwise
+	 */
+	public static Boolean isValidXML(final String xmlstring) {
 		factory.setValidating(true);
 
 		try {
@@ -75,10 +89,10 @@ public class E2EXSDValidator {
 
 	private static class E2EEntityResolver implements EntityResolver {
 		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-			// Grab only the filename part from the full path
+			// Grab only the filename from the full path
 			String filename = new File(systemId).getName();
 
-			// Now prepend the correct path
+			// Prepend the correct path
 			String correctedId = E2EXSDValidator.class.getResource("/e2e/" + filename).getPath();
 
 			InputSource is = new InputSource(ClassLoader.getSystemResourceAsStream(correctedId));

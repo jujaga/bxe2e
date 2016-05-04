@@ -6,6 +6,9 @@ import org.marc.everest.formatters.interfaces.IFormatterParseResult;
 import org.marc.everest.interfaces.IResultDetail;
 import org.marc.everest.interfaces.ResultDetailType;
 
+/**
+ * The Class E2EEverestValidator.
+ */
 public class E2EEverestValidator {
 	private static final Logger log = Logger.getLogger(E2EEverestValidator.class.getName());
 
@@ -13,7 +16,13 @@ public class E2EEverestValidator {
 		throw new UnsupportedOperationException();
 	}
 
-	public static Boolean isValidCDAGraph(IFormatterGraphResult details) {
+	/**
+	 * Checks if graph operation on CDA is valid.
+	 *
+	 * @param details the details
+	 * @return true if valid, false otherwise
+	 */
+	public static Boolean isValidCDAGraph(final IFormatterGraphResult details) {
 		Boolean result = true;
 
 		for(IResultDetail dtl : details.getDetails()) {
@@ -31,7 +40,13 @@ public class E2EEverestValidator {
 		return result;
 	}
 
-	public static Boolean isValidCDAParse(IFormatterParseResult details) {
+	/**
+	 * Checks if parse operation on CDA is valid.
+	 *
+	 * @param details the details
+	 * @return true if valid, false otherwise
+	 */
+	public static Boolean isValidCDAParse(final IFormatterParseResult details) {
 		Boolean result = true;
 
 		for(IResultDetail dtl : details.getDetails()) {
