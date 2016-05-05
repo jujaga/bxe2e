@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -42,7 +42,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 
 			// Find Section Component if it exists
 			Optional<Component3> oComponent = components.stream()
-					.filter(e -> entryFilter.test(componentToII.apply(e)))
+					.filter(e -> entryFilter.test(componentToII.apply(e), bodyConstants))
 					.findFirst();
 
 			// Setup Section Component Structure
@@ -68,7 +68,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 
 			// Find Section Component if it exists
 			Optional<Component3> oComponent = components.stream()
-					.filter(e -> filledEntryFilter.test(componentToII.apply(e)))
+					.filter(e -> filledEntryFilter.test(componentToII.apply(e), bodyConstants))
 					.findFirst();
 
 			// Setup Model Structure
@@ -84,6 +84,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 	abstract Boolean containsEntries(PatientModel patientModel);
 	abstract PatientModel createModelList(PatientModel patientModel);
 
+	// TODO Consolidate to Constants
 	private Function<Component3, LIST<II>> componentToII = e -> {
 		if(e.getSection() != null) {
 			return e.getSection().getTemplateId();
@@ -91,20 +92,22 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 		return null;
 	};
 
-	private Predicate<LIST<II>> entryFilter = e -> {
+	// TODO Consolidate to Constants
+	private BiPredicate<LIST<II>, AbstractBodyConstants> entryFilter = (e, bc) -> {
 		if(e != null && !e.isNull() && !e.isEmpty()) {
 			return e.stream().anyMatch(ii -> {
-				return ii.getRoot().equals(bodyConstants.WITH_ENTRIES_TEMPLATE_ID) ||
-						ii.getRoot().equals(bodyConstants.WITHOUT_ENTRIES_TEMPLATE_ID);
+				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID) ||
+						ii.getRoot().equals(bc.WITHOUT_ENTRIES_TEMPLATE_ID);
 			});
 		}
 		return false;
 	};
 
-	private Predicate<LIST<II>> filledEntryFilter = e -> {
+	// TODO Consolidate to Constants
+	private BiPredicate<LIST<II>, AbstractBodyConstants> filledEntryFilter = (e, bc) -> {
 		if(e != null && !e.isNull() && !e.isEmpty()) {
 			return e.stream().anyMatch(ii -> {
-				return ii.getRoot().equals(bodyConstants.WITH_ENTRIES_TEMPLATE_ID);
+				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID);
 			});
 		}
 		return false;
