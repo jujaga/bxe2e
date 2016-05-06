@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -15,12 +13,12 @@ import org.marc.everest.datatypes.SD;
 import org.marc.everest.datatypes.doc.StructDocElementNode;
 import org.marc.everest.datatypes.doc.StructDocTextNode;
 import org.marc.everest.datatypes.generic.CE;
-import org.marc.everest.datatypes.generic.LIST;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Component3;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Section;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ActRelationshipHasComponent;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_BasicConfidentialityKind;
+import org.oscarehr.e2e.constant.BodyConstants;
 import org.oscarehr.e2e.constant.BodyConstants.AbstractBodyConstants;
 import org.oscarehr.e2e.constant.BodyConstants.SectionPriority;
 import org.oscarehr.e2e.lens.common.AbstractLens;
@@ -42,7 +40,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 
 			// Find Section Component if it exists
 			Optional<Component3> oComponent = components.stream()
-					.filter(e -> entryFilter.test(componentToII.apply(e), bodyConstants))
+					.filter(e -> BodyConstants.entryFilter.test(BodyConstants.componentToII.apply(e), bodyConstants))
 					.findFirst();
 
 			// Setup Section Component Structure
@@ -68,7 +66,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 
 			// Find Section Component if it exists
 			Optional<Component3> oComponent = components.stream()
-					.filter(e -> filledEntryFilter.test(componentToII.apply(e), bodyConstants))
+					.filter(e -> BodyConstants.filledEntryFilter.test(BodyConstants.componentToII.apply(e), bodyConstants))
 					.findFirst();
 
 			// Setup Model Structure
@@ -83,35 +81,6 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 	abstract List<String> createSummaryText(PatientModel patientModel);
 	abstract Boolean containsEntries(PatientModel patientModel);
 	abstract PatientModel createModelList(PatientModel patientModel);
-
-	// TODO Consolidate to Constants
-	private Function<Component3, LIST<II>> componentToII = e -> {
-		if(e.getSection() != null) {
-			return e.getSection().getTemplateId();
-		}
-		return null;
-	};
-
-	// TODO Consolidate to Constants
-	private BiPredicate<LIST<II>, AbstractBodyConstants> entryFilter = (e, bc) -> {
-		if(e != null && !e.isNull() && !e.isEmpty()) {
-			return e.stream().anyMatch(ii -> {
-				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID) ||
-						ii.getRoot().equals(bc.WITHOUT_ENTRIES_TEMPLATE_ID);
-			});
-		}
-		return false;
-	};
-
-	// TODO Consolidate to Constants
-	private BiPredicate<LIST<II>, AbstractBodyConstants> filledEntryFilter = (e, bc) -> {
-		if(e != null && !e.isNull() && !e.isEmpty()) {
-			return e.stream().anyMatch(ii -> {
-				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID);
-			});
-		}
-		return false;
-	};
 
 	private Component3 makeSectionComponent(PatientModel patientModel, Boolean hasEntries) {
 		Component3 component = new Component3();

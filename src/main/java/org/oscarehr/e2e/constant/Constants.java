@@ -10,9 +10,7 @@ public class Constants {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * Enumerations
-	 */
+	// Enumerations
 	public static enum FormCodes {
 		AER, BAR, BARSOAP, CAP, CRM, DISK, DOUCHE, DROP, ECTAB, ELIXIR, ENEMA,
 		ENTCAP, ERCAP, ERSUSP, ERTAB, FOAM, GASINHL, GEL, GELAPL, GRAN, GUM,
@@ -65,9 +63,7 @@ public class Constants {
 		d, h, mo, wk
 	}
 
-	/**
-	 * Header Constants
-	 */
+	// Header Constants
 	public static class EMR {
 		public static final String EMR_OID = "2.16.840.1.113883.3.3331";
 		public static final String EMR_VERSION = "OSCAR EMR";
@@ -118,9 +114,7 @@ public class Constants {
 		public static final String HUMANLANGUAGE_FRENCH_DESCRIPTION = "French";
 	}
 
-	/**
-	 * Body Constants
-	 */
+	// Body Constants
 	public static class CodeSystems {
 		public static final String ACT_CODE_CODESYSTEM_OID = "2.16.840.1.113883.5.4";
 		public static final String ACT_CODE_CODESYSTEM_NAME = "ActCode";
@@ -198,9 +192,7 @@ public class Constants {
 		public static final String RISK_FACTORS_ORGANIZER_TEMPLATE_ID = "2.16.840.1.113883.3.1818.10.3.17";
 	}
 
-	/**
-	 * Runtime Constants
-	 */
+	// Runtime Constants
 	public static class XML {
 		public static final Integer INDENT = 2;
 		public static final String ENCODING = "UTF-8";

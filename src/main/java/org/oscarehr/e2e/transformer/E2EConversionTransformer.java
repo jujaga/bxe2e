@@ -4,13 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.marc.everest.datatypes.II;
-import org.marc.everest.datatypes.generic.LIST;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Author;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Component3;
@@ -21,6 +17,7 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.e2e.constant.BodyConstants;
 import org.oscarehr.e2e.constant.BodyConstants.AbstractBodyConstants;
 import org.oscarehr.e2e.constant.BodyConstants.Problems;
 import org.oscarehr.e2e.model.PatientModel;
@@ -34,6 +31,7 @@ import org.oscarehr.e2e.rule.header.InformationRecipientRule;
 import org.oscarehr.e2e.rule.header.RecordTargetRule;
 
 public class E2EConversionTransformer extends AbstractTransformer<PatientModel, ClinicalDocument> {
+	private List<IRule<?, ?>> rules;
 	private Map<String, Pair<?, ?>> results;
 	private String patientUUID;
 
@@ -74,7 +72,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 	}
 
 	private Map<String, Pair<?, ?>> map() {
-		List<IRule<?, ?>> rules = new ArrayList<>();
+		rules = new ArrayList<>();
 		rules.add(new E2EConversionRule(model, target));
 
 		Demographic demographic = model.getDemographic();
@@ -92,20 +90,43 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		rules.add(new CustodianRule(model.getClinic(), target.getCustodian()));
 		rules.add(new InformationRecipientRule(null, target.getInformationRecipient()));
 
-		// TODO Factor in Target problems on map
-		List<Dxresearch> problems = model.getProblems();
-		if(problems != null && !problems.isEmpty()) {
-			for(Integer i = 0; i < problems.size(); i++) {
-				Dxresearch problem = problems.get(i);
-				rules.add(new ProblemsRule(problem, null, i));
-			}
+		ArrayList<Component3> components = null;
+		try {
+			components = target.getComponent().getBodyChoiceIfStructuredBody().getComponent();
+		} catch (NullPointerException e) {
+			components = new ArrayList<>();
 		}
+
+		mapProblems(components);
 
 		// Run all rules
 		return rules.parallelStream()
 				.map(IRule::execute)
 				.sequential()
 				.collect(Collectors.toConcurrentMap(IRule::getName, IRule::getPair));
+	}
+
+	private void mapProblems(ArrayList<Component3> components) {
+		if(original == Original.SOURCE) {
+			List<Dxresearch> problems = model.getProblems();
+
+			if(problems != null && !problems.isEmpty()) {
+				for(Integer i = 0; i < problems.size(); i++) {
+					rules.add(new ProblemsRule(problems.get(i), null, i));
+				}
+			}
+		} else {
+			Component3 component = findBodySection(components, Problems.getConstants());
+
+			if(component != null) {
+				ArrayList<Entry> entries = component.getSection().getEntry();
+				if(entries != null && !entries.isEmpty()) {
+					for(Integer i = 0; i < entries.size(); i++) {
+						rules.add(new ProblemsRule(null, entries.get(i), i));
+					}
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -121,10 +142,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 
 		ArrayList<Component3> components = target.getComponent().getBodyChoiceIfStructuredBody().getComponent();
 
-		Component3 problemsSection = components.stream()
-				.filter(e -> filledEntryFilter.test(componentToII.apply(e), Problems.getConstants()))
-				.findFirst()
-				.orElse(null);
+		Component3 problemsSection = findBodySection(components, Problems.getConstants());
 
 		if(problemsSection != null) {
 			ArrayList<Entry> entries = problemsSection.getSection().getEntry();
@@ -150,23 +168,18 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		model.setDemographic((Demographic) left.get(RecordTargetRule.class.getSimpleName()));
 		model.getDemographic().setProviderNo((String) left.get(AuthorRule.class.getSimpleName()));
 		model.setClinic((Clinic) left.get(CustodianRule.class.getSimpleName()));
+
+		for(Map.Entry<String, ?> e : left.entrySet()) {
+			if(e.getKey().startsWith(ProblemsRule.class.getSimpleName())) {
+				model.getProblems().add((Dxresearch) e.getValue());
+			}
+		}
 	}
 
-	// TODO Consolidate to Constants
-	private Function<Component3, LIST<II>> componentToII = e -> {
-		if(e.getSection() != null) {
-			return e.getSection().getTemplateId();
-		}
-		return null;
-	};
-
-	// TODO Consolidate to Constants
-	private BiPredicate<LIST<II>, AbstractBodyConstants> filledEntryFilter = (e, bc) -> {
-		if(e != null && !e.isNull() && !e.isEmpty()) {
-			return e.stream().anyMatch(ii -> {
-				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID);
-			});
-		}
-		return false;
-	};
+	private Component3 findBodySection(ArrayList<Component3> components, AbstractBodyConstants bodyConstants) {
+		return components.stream()
+				.filter(e -> BodyConstants.filledEntryFilter.test(BodyConstants.componentToII.apply(e), bodyConstants))
+				.findFirst()
+				.orElse(null);
+	}
 }

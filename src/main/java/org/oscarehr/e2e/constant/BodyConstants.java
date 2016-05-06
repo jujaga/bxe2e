@@ -1,5 +1,12 @@
 package org.oscarehr.e2e.constant;
 
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+
+import org.marc.everest.datatypes.II;
+import org.marc.everest.datatypes.generic.LIST;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Component3;
+
 /**
  * The Class BodyConstants. Contains Section heading constants used in E2E Body Sections.
  */
@@ -8,10 +15,39 @@ public class BodyConstants {
 		throw new UnsupportedOperationException();
 	}
 
+	// Enumerations
 	public static enum SectionPriority {
 		MAY, SHALL, SHOULD
 	}
 
+	// Functions
+	public static Function<Component3, LIST<II>> componentToII = e -> {
+		if(e.getSection() != null) {
+			return e.getSection().getTemplateId();
+		}
+		return null;
+	};
+
+	public static BiPredicate<LIST<II>, AbstractBodyConstants> entryFilter = (e, bc) -> {
+		if(e != null && !e.isNull() && !e.isEmpty()) {
+			return e.stream().anyMatch(ii -> {
+				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID) ||
+						ii.getRoot().equals(bc.WITHOUT_ENTRIES_TEMPLATE_ID);
+			});
+		}
+		return false;
+	};
+
+	public static BiPredicate<LIST<II>, AbstractBodyConstants> filledEntryFilter = (e, bc) -> {
+		if(e != null && !e.isNull() && !e.isEmpty()) {
+			return e.stream().anyMatch(ii -> {
+				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID);
+			});
+		}
+		return false;
+	};
+
+	// Body Constants
 	public abstract static class AbstractBodyConstants {
 		public SectionPriority EMR_CONVERSION_SECTION_PRIORITY;
 		public String WITH_ENTRIES_TITLE;
