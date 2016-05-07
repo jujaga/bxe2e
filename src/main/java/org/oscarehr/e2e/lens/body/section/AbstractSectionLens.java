@@ -45,11 +45,6 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 
 			// Setup Section Component Structure
 			Component3 component = oComponent.orElse(makeSectionComponent(patientModel, hasEntries));
-			if(hasEntries && component.getSection().getEntry() == null) {
-				component.getSection().setEntry(new ArrayList<>());
-			}
-
-			// Commit Section Component Changes
 			if(oComponent.isPresent()) {
 				components.set(components.indexOf(component), component);
 			} else if(bodyConstants.EMR_CONVERSION_SECTION_PRIORITY == SectionPriority.SHALL || hasEntries) {
@@ -90,13 +85,13 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 		Section section = new Section();
 		section.setCode(new CE<String>(bodyConstants.CODE, bodyConstants.CODE_SYSTEM, bodyConstants.CODE_SYSTEM_NAME, null));
 
-		if(!hasEntries) {
-			section.setTemplateId(Arrays.asList(new II(bodyConstants.WITHOUT_ENTRIES_TEMPLATE_ID)));
-			section.setTitle(bodyConstants.WITHOUT_ENTRIES_TITLE);
-		} else {
+		if(hasEntries) {
 			section.setTemplateId(Arrays.asList(new II(bodyConstants.WITH_ENTRIES_TEMPLATE_ID)));
 			section.setTitle(bodyConstants.WITH_ENTRIES_TITLE);
 			section.setConfidentialityCode(x_BasicConfidentialityKind.Normal);
+		} else {
+			section.setTemplateId(Arrays.asList(new II(bodyConstants.WITHOUT_ENTRIES_TEMPLATE_ID)));
+			section.setTitle(bodyConstants.WITHOUT_ENTRIES_TITLE);
 		}
 
 		List<String> texts = createSummaryText(patientModel);

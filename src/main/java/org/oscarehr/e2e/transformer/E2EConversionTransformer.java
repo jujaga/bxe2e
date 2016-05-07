@@ -37,14 +37,6 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 
 	public E2EConversionTransformer(PatientModel model, ClinicalDocument target, Original original) {
 		super(model, target, original);
-		if(this.model == null) {
-			this.model = new PatientModel();
-		}
-		if(this.target == null) {
-			this.target = new ClinicalDocument();
-		}
-
-		transform();
 	}
 
 	public String getPatientUUID() {
@@ -53,15 +45,15 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 
 	@Override
 	protected void transform() {
-		// Map
-		results = map();
-
-		// Reduce
-		if(original == Original.SOURCE) {
-			reduceTarget();
-		} else {
-			reduceModel();
+		if(model == null) {
+			model = new PatientModel();
 		}
+		if(target == null) {
+			target = new ClinicalDocument();
+		}
+
+		results = map();
+		reduce();
 
 		// Save Patient UUID session
 		try {
@@ -90,7 +82,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		rules.add(new CustodianRule(model.getClinic(), target.getCustodian()));
 		rules.add(new InformationRecipientRule(null, target.getInformationRecipient()));
 
-		ArrayList<Component3> components = null;
+		ArrayList<Component3> components;
 		try {
 			components = target.getComponent().getBodyChoiceIfStructuredBody().getComponent();
 		} catch (NullPointerException e) {
@@ -111,9 +103,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 			List<Dxresearch> problems = model.getProblems();
 
 			if(problems != null && !problems.isEmpty()) {
-				for(Integer i = 0; i < problems.size(); i++) {
-					rules.add(new ProblemsRule(problems.get(i), null, i));
-				}
+				problems.forEach(problem -> rules.add(new ProblemsRule(problem, null)));
 			}
 		} else {
 			Component3 component = findBodySection(components, Problems.getConstants());
@@ -121,57 +111,54 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 			if(component != null) {
 				ArrayList<Entry> entries = component.getSection().getEntry();
 				if(entries != null && !entries.isEmpty()) {
-					for(Integer i = 0; i < entries.size(); i++) {
-						rules.add(new ProblemsRule(null, entries.get(i), i));
-					}
+					entries.forEach(entry -> rules.add(new ProblemsRule(null, entry)));
 				}
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void reduceTarget() {
-		Map<String, ?> right = results.entrySet().stream()
-				.collect(Collectors.toConcurrentMap(Map.Entry::getKey, e -> e.getValue().getRight()));
+	private void reduce() {
+		if(original == Original.SOURCE) {
+			target = (ClinicalDocument) results.get(E2EConversionRule.class.getSimpleName()).getRight();
+			target.setRecordTarget(new ArrayList<>(Arrays.asList((RecordTarget) results.get(RecordTargetRule.class.getSimpleName()).getRight())));
+			target.setAuthor((ArrayList<Author>) results.get(AuthorRule.class.getSimpleName()).getRight());
+			target.setCustodian((Custodian) results.get(CustodianRule.class.getSimpleName()).getRight());
+			target.setInformationRecipient((ArrayList<InformationRecipient>) results.get(InformationRecipientRule.class.getSimpleName()).getRight());
 
-		target = (ClinicalDocument) right.get(E2EConversionRule.class.getSimpleName());
-		target.setRecordTarget(new ArrayList<>(Arrays.asList((RecordTarget) right.get(RecordTargetRule.class.getSimpleName()))));
-		target.setAuthor((ArrayList<Author>) right.get(AuthorRule.class.getSimpleName()));
-		target.setCustodian((Custodian) right.get(CustodianRule.class.getSimpleName()));
-		target.setInformationRecipient((ArrayList<InformationRecipient>) right.get(InformationRecipientRule.class.getSimpleName()));
+			ArrayList<Component3> components = target.getComponent().getBodyChoiceIfStructuredBody().getComponent();
 
-		ArrayList<Component3> components = target.getComponent().getBodyChoiceIfStructuredBody().getComponent();
+			reduceProblems(components);
 
-		Component3 problemsSection = findBodySection(components, Problems.getConstants());
+			target.getComponent().getBodyChoiceIfStructuredBody().setComponent(components);
+		} else {
+			model = (PatientModel) results.get(E2EConversionRule.class.getSimpleName()).getLeft();
+			model.setDemographic((Demographic) results.get(RecordTargetRule.class.getSimpleName()).getLeft());
+			model.getDemographic().setProviderNo((String) results.get(AuthorRule.class.getSimpleName()).getLeft());
+			model.setClinic((Clinic) results.get(CustodianRule.class.getSimpleName()).getLeft());
 
-		if(problemsSection != null) {
-			ArrayList<Entry> entries = problemsSection.getSection().getEntry();
+			ArrayList<Component3> components = target.getComponent().getBodyChoiceIfStructuredBody().getComponent();
 
-			for(Map.Entry<String, ?> e : right.entrySet()) {
-				if(e.getKey().startsWith(ProblemsRule.class.getSimpleName())) {
-					entries.add((Entry) e.getValue());
-				}
-			}
-
-			problemsSection.getSection().setEntry(entries);
-			components.set(components.indexOf(problemsSection), problemsSection);
+			reduceProblems(components);
 		}
-
-		target.getComponent().getBodyChoiceIfStructuredBody().setComponent(components);
 	}
 
-	private void reduceModel() {
-		Map<String, ?> left = results.entrySet().stream()
-				.collect(Collectors.toConcurrentMap(Map.Entry::getKey, e -> e.getValue().getLeft()));
+	private void reduceProblems(ArrayList<Component3> components) {
+		if(original == Original.SOURCE) {
+			Component3 component = findBodySection(components, Problems.getConstants());
 
-		model = (PatientModel) left.get(E2EConversionRule.class.getSimpleName());
-		model.setDemographic((Demographic) left.get(RecordTargetRule.class.getSimpleName()));
-		model.getDemographic().setProviderNo((String) left.get(AuthorRule.class.getSimpleName()));
-		model.setClinic((Clinic) left.get(CustodianRule.class.getSimpleName()));
-
-		for(Map.Entry<String, ?> e : left.entrySet()) {
-			if(e.getKey().startsWith(ProblemsRule.class.getSimpleName())) {
-				model.getProblems().add((Dxresearch) e.getValue());
+			if(component != null) {
+				for(Map.Entry<String, Pair<?, ?>> e : results.entrySet()) {
+					if(e.getKey().startsWith(ProblemsRule.class.getSimpleName())) {
+						component.getSection().getEntry().add((Entry) e.getValue().getRight());
+					}
+				}
+			}
+		} else {
+			for(Map.Entry<String, Pair<?, ?>> e : results.entrySet()) {
+				if(e.getKey().startsWith(ProblemsRule.class.getSimpleName())) {
+					model.getProblems().add((Dxresearch) e.getValue().getLeft());
+				}
 			}
 		}
 	}

@@ -14,7 +14,9 @@ public abstract class AbstractTransformer<IModel, T> {
 		this.model = model;
 		this.target = target;
 		this.original = original;
-		AbstractRule.setOriginal(this.original);
+		AbstractRule.setOriginal(original);
+
+		transform();
 	}
 
 	protected abstract void transform();
