@@ -49,8 +49,17 @@ public class E2EConversionLens extends AbstractLens<Pair<IModel, ClinicalDocumen
 
 		put = (source, target) -> {
 			PatientModel patientModel = (PatientModel) target.getLeft();
-			patientModel.setLoaded(true);
 
+			Demographic demographic = patientModel.getDemographic();
+			if(demographic == null) {
+				demographic = new Demographic();
+			}
+			if(demographic.getDemographicNo() == null) {
+				demographic.setDemographicNo(Integer.parseInt(target.getRight().getId().getExtension().replaceAll("[\\D]", "")));
+			}
+
+			patientModel.setDemographic(demographic);
+			patientModel.setLoaded(true);
 			return new ImmutablePair<>(patientModel, target.getRight());
 		};
 	}

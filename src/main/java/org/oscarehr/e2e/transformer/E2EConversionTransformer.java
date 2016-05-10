@@ -133,7 +133,14 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 			target.getComponent().getBodyChoiceIfStructuredBody().setComponent(components);
 		} else {
 			model = (PatientModel) results.get(E2EConversionRule.class.getSimpleName()).getLeft();
+
+			Integer demographicNo = null;
+			if(model.getDemographic() != null) {
+				demographicNo = model.getDemographic().getDemographicNo();
+			}
+
 			model.setDemographic((Demographic) results.get(RecordTargetRule.class.getSimpleName()).getLeft());
+			model.getDemographic().setDemographicNo(demographicNo);
 			model.getDemographic().setProviderNo((String) results.get(AuthorRule.class.getSimpleName()).getLeft());
 			model.setClinic((Clinic) results.get(CustodianRule.class.getSimpleName()).getLeft());
 
@@ -148,18 +155,18 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 			Component3 component = findBodySection(components, Problems.getConstants());
 
 			if(component != null) {
-				for(Map.Entry<String, Pair<?, ?>> e : results.entrySet()) {
+				results.entrySet().forEach(e -> {
 					if(e.getKey().startsWith(ProblemsRule.class.getSimpleName())) {
 						component.getSection().getEntry().add((Entry) e.getValue().getRight());
 					}
-				}
+				});
 			}
 		} else {
-			for(Map.Entry<String, Pair<?, ?>> e : results.entrySet()) {
+			results.entrySet().forEach(e -> {
 				if(e.getKey().startsWith(ProblemsRule.class.getSimpleName())) {
 					model.getProblems().add((Dxresearch) e.getValue().getLeft());
 				}
-			}
+			});
 		}
 	}
 
