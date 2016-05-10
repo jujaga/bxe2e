@@ -8,7 +8,7 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_ActMoodDocumentObservation;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_ActRelationshipEntryRelationship;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.util.EverestUtils;
+import org.oscarehr.e2e.lens.common.TSDateLens;
 
 public class DateObservationModel extends AbstractObservationModel {
 	public EntryRelationship getEntryRelationship(Date date) {
@@ -19,7 +19,7 @@ public class DateObservationModel extends AbstractObservationModel {
 
 			observation.setMoodCode(x_ActMoodDocumentObservation.Eventoccurrence);
 			observation.getCode().setCodeEx(Constants.ObservationType.DATEOBS.toString());
-			observation.setEffectiveTime(EverestUtils.buildTSFromDate(date), null);
+			observation.setEffectiveTime(new TSDateLens().get(date), null);
 		} else {
 			entryRelationship = null;
 		}

@@ -7,9 +7,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -32,10 +29,8 @@ import org.marc.everest.datatypes.AddressPartType;
 import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.EntityNameUse;
-import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.TEL;
-import org.marc.everest.datatypes.TS;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.exceptions.ObjectDisposedException;
@@ -52,7 +47,6 @@ import org.oscarehr.common.dao.ProviderDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.constant.Constants.IdPrefixes;
 import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.constant.Mappings;
 import org.oscarehr.e2e.extension.ObservationWithConfidentialityCode;
@@ -237,70 +231,6 @@ public class EverestUtils {
 	}
 
 	// Body Utility Functions
-	/**
-	 * Create a unique id using the prefix and id.
-	 *
-	 * @param prefix the prefix
-	 * @param id the id
-	 * @return the unique id
-	 */
-	public static SET<II> buildUniqueId(final IdPrefixes prefix, Integer id) {
-		if(id == null) {
-			id = 0;
-		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(prefix).append("-").append(id.toString());
-
-		II ii = new II(Constants.EMR.EMR_OID, sb.toString());
-		ii.setAssigningAuthorityName(Constants.EMR.EMR_VERSION);
-		return new SET<>(ii);
-	}
-
-	/*
-	// Create Prefix-number id object from long
-	public static SET<II> buildUniqueId(IdPrefixes prefix, Long id) {
-		if(id == null) {
-			id = 0L;
-		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(prefix).append("-").append(id.toString());
-
-		II ii = new II(Constants.EMR.EMR_OID, sb.toString());
-		ii.setAssigningAuthorityName(Constants.EMR.EMR_VERSION);
-		return new SET<II>(ii);
-	}
-	 */
-
-	/**
-	 * Create a TS object from a Java Date with default day precision.
-	 *
-	 * @param date the date
-	 * @return the ts
-	 */
-	// Create a TS object from a Java Date with Day precision
-	public static TS buildTSFromDate(final Date date) {
-		return buildTSFromDate(date, TS.DAY);
-	}
-
-	/**
-	 * Create a TS object from a Java Date with specified precision.
-	 *
-	 * @param date the date
-	 * @param precision the precision
-	 * @return the ts
-	 */
-	public static TS buildTSFromDate(final Date date, final Integer precision) {
-		if(date == null) {
-			return null;
-		}
-
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		return new TS(calendar, precision);
-	}
-
 	/*
 	// Create a Date object from dateString
 	public static Date stringToDate(String dateString) {

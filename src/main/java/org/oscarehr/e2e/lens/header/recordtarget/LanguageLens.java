@@ -16,9 +16,9 @@ public class LanguageLens extends AbstractLens<Pair<Demographic, RecordTarget>, 
 	public LanguageLens() {
 		get = source -> {
 			String value = source.getLeft().getOfficialLanguage();
+			ArrayList<LanguageCommunication> languages = source.getRight().getPatientRole().getPatient().getLanguageCommunication();
 
-			ArrayList<LanguageCommunication> languages = null;
-			if(!EverestUtils.isNullorEmptyorWhitespace(value) && Mappings.languageCode.containsKey(value)) {
+			if(languages.isEmpty() && !EverestUtils.isNullorEmptyorWhitespace(value) && Mappings.languageCode.containsKey(value)) {
 				LanguageCommunication language = new LanguageCommunication();
 				language.setLanguageCode(Mappings.languageCode.get(value));
 				languages = new ArrayList<>(Arrays.asList(language));

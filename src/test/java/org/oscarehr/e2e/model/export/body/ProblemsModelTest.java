@@ -25,6 +25,7 @@ import org.marc.everest.rmim.uv.cdar2.vocabulary.ActStatus;
 import org.oscarehr.common.dao.DxresearchDao;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.e2e.constant.Constants;
+import org.oscarehr.e2e.lens.common.TSDateLens;
 import org.oscarehr.e2e.model.export.body.ProblemsModel;
 import org.oscarehr.e2e.util.EverestUtils;
 import org.springframework.context.ApplicationContext;
@@ -145,7 +146,7 @@ public class ProblemsModelTest {
 	public void effectiveTimeTest() {
 		IVL<TS> ivl = problemsModel.getEffectiveTime();
 		assertNotNull(ivl);
-		assertEquals(EverestUtils.buildTSFromDate(problem.getStartDate()), ivl.getLow());
+		assertEquals(new TSDateLens().get(problem.getStartDate()), ivl.getLow());
 	}
 
 	@Test

@@ -14,8 +14,7 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Observation;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_ActMoodDocumentObservation;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_ActRelationshipEntryRelationship;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.model.export.template.observation.DateObservationModel;
-import org.oscarehr.e2e.util.EverestUtils;
+import org.oscarehr.e2e.lens.common.TSDateLens;
 
 public class DateObservationModelTest {
 	@Test
@@ -31,7 +30,7 @@ public class DateObservationModelTest {
 		Observation observation = entryRelationship.getClinicalStatementIfObservation();
 		assertNotNull(observation);
 		assertEquals(x_ActMoodDocumentObservation.Eventoccurrence, observation.getMoodCode().getCode());
-		assertEquals(EverestUtils.buildTSFromDate(date), observation.getEffectiveTime().getLow());
+		assertEquals(new TSDateLens().get(date), observation.getEffectiveTime().getLow());
 
 		CD<String> code = observation.getCode();
 		assertNotNull(code);

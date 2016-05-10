@@ -5,7 +5,7 @@ import org.marc.everest.datatypes.AddressPartType;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class AddressPartLens extends AbstractLens<String, ADXP> {
-	public AddressPartLens(AddressPartType addressPartType) {
+	public AddressPartLens(final AddressPartType addressPartType) {
 		get = value -> {
 			ADXP addrPart = null;
 			if(!EverestUtils.isNullorEmptyorWhitespace(value)) {

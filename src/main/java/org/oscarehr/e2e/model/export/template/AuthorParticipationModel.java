@@ -16,6 +16,7 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Person;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.e2e.constant.Constants;
+import org.oscarehr.e2e.lens.common.TSDateLens;
 import org.oscarehr.e2e.model.export.header.AuthorModel;
 import org.oscarehr.e2e.util.EverestUtils;
 
@@ -46,7 +47,7 @@ public class AuthorParticipationModel extends AuthorModel {
 	}
 
 	public Author getAuthor(Date date) {
-		TS time = EverestUtils.buildTSFromDate(date);
+		TS time = new TSDateLens().get(date);
 		if(time == null) {
 			time = new TS();
 			time.setNullFlavor(NullFlavor.Unknown);

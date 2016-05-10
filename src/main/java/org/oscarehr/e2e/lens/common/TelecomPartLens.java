@@ -7,7 +7,7 @@ import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class TelecomPartLens extends AbstractLens<String, TEL> {
-	public TelecomPartLens(TelecommunicationsAddressUse telecomAddressUse, TelecomType telecomType) {
+	public TelecomPartLens(final TelecommunicationsAddressUse telecomAddressUse, final TelecomType telecomType) {
 		get = value -> {
 			TEL tel = null;
 			if(!EverestUtils.isNullorEmptyorWhitespace(value)) {

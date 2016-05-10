@@ -14,6 +14,8 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ActStatus;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.e2e.constant.Constants;
+import org.oscarehr.e2e.lens.common.EntryIdLens;
+import org.oscarehr.e2e.lens.common.TSDateLens;
 import org.oscarehr.e2e.model.export.template.AuthorParticipationModel;
 import org.oscarehr.e2e.model.export.template.observation.DateObservationModel;
 import org.oscarehr.e2e.model.export.template.observation.SecondaryCodeICD9ObservationModel;
@@ -69,7 +71,7 @@ public class ProblemsModel {
 	}
 
 	private void setIds() {
-		this.ids = EverestUtils.buildUniqueId(Constants.IdPrefixes.ProblemList, problem.getDxresearchNo());
+		this.ids = new EntryIdLens(Constants.IdPrefixes.ProblemList).get(problem.getDxresearchNo());
 	}
 
 	public CD<String> getCode() {
@@ -112,7 +114,7 @@ public class ProblemsModel {
 
 	private void setEffectiveTime() {
 		IVL<TS> ivl = null;
-		TS startTime = EverestUtils.buildTSFromDate(problem.getStartDate());
+		TS startTime = new TSDateLens().get(problem.getStartDate());
 		if(startTime != null) {
 			ivl = new IVL<TS>(startTime, null);
 		}

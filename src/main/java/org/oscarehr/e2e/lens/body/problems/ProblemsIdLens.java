@@ -8,7 +8,7 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Entry;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
-import org.oscarehr.e2e.util.EverestUtils;
+import org.oscarehr.e2e.lens.common.EntryIdLens;
 
 public class ProblemsIdLens extends AbstractLens<Pair<Dxresearch, Entry>, Pair<Dxresearch, Entry>> {
 	public ProblemsIdLens() {
@@ -17,7 +17,7 @@ public class ProblemsIdLens extends AbstractLens<Pair<Dxresearch, Entry>, Pair<D
 			SET<II> id = source.getRight().getClinicalStatementIfObservation().getId();
 
 			if(id == null) {
-				id = EverestUtils.buildUniqueId(Constants.IdPrefixes.ProblemList, problemId);
+				id = new EntryIdLens(Constants.IdPrefixes.ProblemList).get(problemId);
 			}
 
 			source.getRight().getClinicalStatementIfObservation().setId(id);
@@ -29,7 +29,7 @@ public class ProblemsIdLens extends AbstractLens<Pair<Dxresearch, Entry>, Pair<D
 			SET<II> id = source.getRight().getClinicalStatementIfObservation().getId();
 
 			if(problemId == null) {
-				problemId = Integer.parseInt(id.get(0).getExtension().replaceAll("[\\D]", ""));
+				problemId = new EntryIdLens(Constants.IdPrefixes.ProblemList).put(id);
 			}
 
 			target.getLeft().setDxresearchNo(problemId);

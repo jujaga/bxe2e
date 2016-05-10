@@ -12,9 +12,9 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalStatement;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Observation;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ActStatus;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_ActMoodDocumentObservation;
-import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.constant.BodyConstants.AdvanceDirectives;
-import org.oscarehr.e2e.util.EverestUtils;
+import org.oscarehr.e2e.constant.Constants;
+import org.oscarehr.e2e.lens.common.EntryIdLens;
 
 public class AdvanceDirectivesPopulator extends AbstractBodyPopulator<AdvanceDirectivesPopulator> {
 	AdvanceDirectivesPopulator() {
@@ -31,7 +31,7 @@ public class AdvanceDirectivesPopulator extends AbstractBodyPopulator<AdvanceDir
 	public ClinicalStatement populateNullFlavorClinicalStatement() {
 		Observation observation = new Observation(x_ActMoodDocumentObservation.Eventoccurrence);
 
-		observation.setId(EverestUtils.buildUniqueId(Constants.IdPrefixes.AdvanceDirectives, null));
+		observation.setId(new EntryIdLens(Constants.IdPrefixes.ProblemList).get(null));
 		observation.setCode(new CD<String>() {{setNullFlavor(NullFlavor.NoInformation);}});
 		observation.setText(new ED() {{setNullFlavor(NullFlavor.NoInformation);}});
 		observation.setStatusCode(ActStatus.Completed);
