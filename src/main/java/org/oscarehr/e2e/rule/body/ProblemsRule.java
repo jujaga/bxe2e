@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Entry;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.e2e.lens.body.problems.ProblemsAuthorLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsCodeLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsEffectiveTimeLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsIdLens;
@@ -35,6 +36,7 @@ public class ProblemsRule extends AbstractRule<Dxresearch, Entry> {
 				.compose(new ProblemsTextLens())
 				.compose(new ProblemsStatusCodeLens())
 				.compose(new ProblemsEffectiveTimeLens())
-				.compose(new ProblemsValueLens());
+				.compose(new ProblemsValueLens())
+				.compose(new ProblemsAuthorLens());
 	}
 }

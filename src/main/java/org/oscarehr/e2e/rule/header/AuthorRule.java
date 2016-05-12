@@ -17,9 +17,7 @@ import org.oscarehr.e2e.rule.common.AbstractRule;
 public class AuthorRule extends AbstractRule<String, ArrayList<Author>> {
 	public AuthorRule(String source, ArrayList<Author> target) {
 		super(source, target);
-		if(this.pair.getLeft() == null) {
-			pair = new ImmutablePair<>(new String(), pair.getRight());
-		}
+		// Source is allowed to be null
 		if(this.pair.getRight() == null) {
 			pair = new ImmutablePair<>(pair.getLeft(), new ArrayList<>());
 		}
