@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -29,9 +30,11 @@ import org.marc.everest.datatypes.AddressPartType;
 import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.EntityNameUse;
+import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.TEL;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
+import org.marc.everest.datatypes.generic.CD;
 import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.exceptions.ObjectDisposedException;
 import org.marc.everest.formatters.interfaces.IFormatterGraphResult;
@@ -40,12 +43,15 @@ import org.marc.everest.formatters.xml.datatypes.r1.DatatypeFormatter;
 import org.marc.everest.formatters.xml.datatypes.r1.R1FormatterCompatibilityMode;
 import org.marc.everest.formatters.xml.its1.XmlIts1Formatter;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.LanguageCommunication;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Observation;
 import org.marc.everest.xml.XMLStateStreamWriter;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProviderDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.e2e.constant.BodyConstants;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.constant.Mappings;
@@ -60,12 +66,11 @@ public class EverestUtils {
 	private static final Logger log = Logger.getLogger(EverestUtils.class.getName());
 	private static final String OSCAR_PREVENTIONITEMS_FILE = "/PreventionItems.xml";
 	static Map<String, String> preventionTypeCodes = null;
-	private static final XmlIts1Formatter fmtr = new XmlIts1Formatter();
-	static {
-		fmtr.getGraphAides().add(new DatatypeFormatter(R1FormatterCompatibilityMode.ClinicalDocumentArchitecture));
-		fmtr.addCachedClass(ClinicalDocument.class);
-		fmtr.registerXSITypeName("POCD_MT000040UV.Observation", ObservationWithConfidentialityCode.class);
-	}
+	private static final XmlIts1Formatter fmtr = new XmlIts1Formatter() {{
+		getGraphAides().add(new DatatypeFormatter(R1FormatterCompatibilityMode.ClinicalDocumentArchitecture));
+		addCachedClass(ClinicalDocument.class);
+		registerXSITypeName("POCD_MT000040UV.Observation", ObservationWithConfidentialityCode.class);
+	}};
 
 	private static final Map<Integer, Demographic> demographicCache = new ConcurrentHashMap<>();
 	private static final Map<Integer, Provider> providerCache = new ConcurrentHashMap<>();
@@ -231,6 +236,42 @@ public class EverestUtils {
 	}
 
 	// Body Utility Functions
+	/**
+	 * Find the entryRelationship with the specified oid.
+	 *
+	 * @param entryRelationships the entryRelationships
+	 * @param oid the oid
+	 * @return the entryRelationship if found, otherwise null
+	 */
+	public static EntryRelationship findEntryRelationship(final ArrayList<EntryRelationship> entryRelationships, final String oid) {
+		return entryRelationships.stream()
+				.filter(e -> BodyConstants.isEntryRelationshipType.test(e, oid))
+				.findFirst()
+				.orElse(null);
+	}
+
+	/**
+	 * Creates an observation template entryRelationship.
+	 *
+	 * @param oid the oid
+	 * @return a generic observation template entryRelationship
+	 */
+	public static EntryRelationship createObservationTemplate(final String oid) {
+		CD<String> code = new CD<String>() {{
+			setCodeSystem(Constants.CodeSystems.OBSERVATIONTYPE_CA_PENDING_OID);
+			setCodeSystemName(Constants.CodeSystems.OBSERVATIONTYPE_CA_PENDING_NAME);
+		}};
+
+		Observation observation = new Observation();
+		observation.setCode(code);
+
+		EntryRelationship entryRelationship = new EntryRelationship();
+		entryRelationship.setContextConductionInd(true);
+		entryRelationship.setTemplateId(Arrays.asList(new II(oid)));
+		entryRelationship.setClinicalStatement(observation);
+		return entryRelationship;
+	}
+
 	/*
 	// Create a Date object from dateString
 	public static Date stringToDate(String dateString) {

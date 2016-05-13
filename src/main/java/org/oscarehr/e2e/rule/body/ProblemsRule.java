@@ -6,7 +6,9 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Entry;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.e2e.lens.body.problems.ProblemsAuthorLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsCodeLens;
+import org.oscarehr.e2e.lens.body.problems.ProblemsDiagnosisDateLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsEffectiveTimeLens;
+import org.oscarehr.e2e.lens.body.problems.ProblemsICD9Lens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsIdLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsStatusCodeLens;
@@ -37,6 +39,8 @@ public class ProblemsRule extends AbstractRule<Dxresearch, Entry> {
 				.compose(new ProblemsStatusCodeLens())
 				.compose(new ProblemsEffectiveTimeLens())
 				.compose(new ProblemsValueLens())
-				.compose(new ProblemsAuthorLens());
+				.compose(new ProblemsAuthorLens())
+				.compose(new ProblemsICD9Lens())
+				.compose(new ProblemsDiagnosisDateLens());
 	}
 }

@@ -19,11 +19,9 @@ public class ProviderLens extends AbstractLens<Pair<String, ArrayList<Author>>, 
 	public ProviderLens(final Date date) {
 		get = source -> {
 			Author author = new Author();
-			AssignedAuthor assignedAuthor = new AssignedAuthor();
-
 			author.setContextControlCode(ContextControl.OverridingPropagating);
 			author.setTime(new TSDateLens().get(date));
-			author.setAssignedAuthor(assignedAuthor);
+			author.setAssignedAuthor(new AssignedAuthor());
 
 			source.getRight().add(author);
 			return new ImmutablePair<>(source.getLeft(), source.getRight());

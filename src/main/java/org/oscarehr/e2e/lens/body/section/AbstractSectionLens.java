@@ -78,10 +78,6 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 	abstract PatientModel createModelList(PatientModel patientModel);
 
 	private Component3 makeSectionComponent(PatientModel patientModel, Boolean hasEntries) {
-		Component3 component = new Component3();
-		component.setTypeCode(ActRelationshipHasComponent.HasComponent);
-		component.setContextConductionInd(true);
-
 		Section section = new Section();
 		section.setCode(new CE<String>(bodyConstants.CODE, bodyConstants.CODE_SYSTEM, bodyConstants.CODE_SYSTEM_NAME, null));
 
@@ -103,6 +99,9 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 			section.setText(new SD(list));
 		}
 
+		Component3 component = new Component3();
+		component.setTypeCode(ActRelationshipHasComponent.HasComponent);
+		component.setContextConductionInd(true);
 		component.setSection(section);
 		return component;
 	}

@@ -6,6 +6,7 @@ import java.util.function.Function;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.generic.LIST;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Component3;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
 
 /**
  * The Class BodyConstants. Contains Section heading constants used in E2E Body Sections.
@@ -22,29 +23,40 @@ public class BodyConstants {
 
 	// Functions
 	public static Function<Component3, LIST<II>> componentToII = e -> {
+		LIST<II> result = null;
 		if(e.getSection() != null) {
-			return e.getSection().getTemplateId();
+			result = e.getSection().getTemplateId();
 		}
-		return null;
+		return result;
 	};
 
 	public static BiPredicate<LIST<II>, AbstractBodyConstants> entryFilter = (e, bc) -> {
+		Boolean result = false;
 		if(e != null && !e.isNull() && !e.isEmpty()) {
-			return e.stream().anyMatch(ii -> {
+			result = e.stream().anyMatch(ii -> {
 				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID) ||
 						ii.getRoot().equals(bc.WITHOUT_ENTRIES_TEMPLATE_ID);
 			});
 		}
-		return false;
+		return result;
 	};
 
 	public static BiPredicate<LIST<II>, AbstractBodyConstants> filledEntryFilter = (e, bc) -> {
+		Boolean result = false;
 		if(e != null && !e.isNull() && !e.isEmpty()) {
-			return e.stream().anyMatch(ii -> {
+			result = e.stream().anyMatch(ii -> {
 				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID);
 			});
 		}
-		return false;
+		return result;
+	};
+
+	public static BiPredicate<EntryRelationship, String> isEntryRelationshipType = (e, oid) -> {
+		Boolean result = false;
+		if(e != null && e.getTemplateId() != null && !e.getTemplateId().isEmpty()) {
+			result = e.getTemplateId().stream().anyMatch(ii -> ii.getRoot().equals(oid));
+		}
+		return result;
 	};
 
 	// Body Constants

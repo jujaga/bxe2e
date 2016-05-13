@@ -19,28 +19,23 @@ import org.oscarehr.e2e.lens.common.TSDateLens;
 public class AuthorParticipationLens extends AbstractLens<Date, ArrayList<Author>> {
 	public AuthorParticipationLens(final String providerNo) {
 		get = date -> {
-			ArrayList<Author> authors = new ArrayList<>();
-
 			TS time = new TSDateLens().get(date);
 			if(time == null) {
 				time = new TS();
 				time.setNullFlavor(NullFlavor.Unknown);
 			}
 
-			Author author = new Author();
 			AssignedAuthor assignedAuthor = new AssignedAuthor();
+			assignedAuthor.setId(new AuthorIdLens().get(providerNo));
+			assignedAuthor.setAssignedAuthorChoice(new AuthorPersonLens().get(providerNo));
 
+			Author author = new Author();
 			author.setContextControlCode(ContextControl.OverridingPropagating);
 			author.setTemplateId(Arrays.asList(new II(Constants.TemplateOids.AUTHOR_PARTICIPATION_TEMPLATE_ID)));
 			author.setTime(time);
 			author.setAssignedAuthor(assignedAuthor);
 
-			assignedAuthor.setId(new AuthorIdLens().get(providerNo));
-			assignedAuthor.setAssignedAuthorChoice(new AuthorPersonLens().get(providerNo));
-
-			authors.add(author);
-
-			return authors;
+			return new ArrayList<>(Arrays.asList(author));
 		};
 
 		put = (date, authors) -> {

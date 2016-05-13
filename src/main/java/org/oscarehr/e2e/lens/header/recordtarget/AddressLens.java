@@ -24,11 +24,11 @@ public class AddressLens extends AbstractLens<Pair<Demographic, RecordTarget>, P
 
 			if(addresses == null) {
 				List<ADXP> addrParts = new ArrayList<>();
-
 				addrParts.add(new AddressPartLens(AddressPartType.Delimiter).get(demographic.getAddress()));
 				addrParts.add(new AddressPartLens(AddressPartType.City).get(demographic.getCity()));
 				addrParts.add(new AddressPartLens(AddressPartType.State).get(demographic.getProvince()));
 				addrParts.add(new AddressPartLens(AddressPartType.PostalCode).get(demographic.getPostal()));
+
 				if(!addrParts.isEmpty()) {
 					CS<PostalAddressUse> use = new CS<>(PostalAddressUse.HomeAddress);
 					AD addr = new AD(use, addrParts);
