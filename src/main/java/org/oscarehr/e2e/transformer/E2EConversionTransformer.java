@@ -35,6 +35,14 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 	private Map<String, Pair<?, ?>> results;
 	private String patientUUID;
 
+	public E2EConversionTransformer(PatientModel model) {
+		this(model, null, Original.SOURCE);
+	}
+
+	public E2EConversionTransformer(ClinicalDocument target) {
+		this(null, target, Original.TARGET);
+	}
+
 	public E2EConversionTransformer(PatientModel model, ClinicalDocument target, Original original) {
 		super(model, target, original);
 	}

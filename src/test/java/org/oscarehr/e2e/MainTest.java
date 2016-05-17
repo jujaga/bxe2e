@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+//@Ignore
 public class MainTest {
 	@BeforeClass
 	public static void beforeClass() {
