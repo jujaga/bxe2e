@@ -7,7 +7,7 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 
 public abstract class AbstractRule<S, T> implements IRule<S, T> {
 	protected final Logger log = Logger.getLogger(this.getClass().getSimpleName());
-	private static final String EXECUTE_WARNING = "Rule not yet executed - results may not be properly transformed";
+	private static final String EXECUTE_WARNING = "Rule Not Executed: results may not be in valid transformed state";
 	protected static Original original = Original.SOURCE;
 	protected String ruleName = this.getClass().getSimpleName();
 	private Boolean executed = false;
@@ -18,11 +18,34 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 	protected AbstractRule(S source, T target) {
 		this.pair = new ImmutablePair<S, T>(source, target);
 
-		lens = defineLens();
+		try {
+			lens = defineLens();
+		} catch (NullPointerException e) {
+			log.error("Rule Error: Lens definition failed", e);
+		}
 	}
 
+	/**
+	 * Define the lens.
+	 *
+	 * @return the lens
+	 */
 	protected abstract AbstractLens<Pair<S, T>, Pair<S, T>> defineLens();
 
+	/**
+	 * Gets the lens.
+	 *
+	 * @return the lens
+	 */
+	public final AbstractLens<Pair<S, T>, Pair<S, T>> getLens() {
+		return lens;
+	}
+
+	/**
+	 * Sets the original transformation direction.
+	 *
+	 * @param original the original source
+	 */
 	public static void setOriginal(Original original) {
 		AbstractRule.original = original;
 	}
@@ -34,7 +57,7 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 
 	@Override
 	public IRule<S, T> execute() {
-		if(!executed) {
+		if(!executed && lens != null) {
 			try {
 				if(original == Original.SOURCE) {
 					pair = lens.get(pair);

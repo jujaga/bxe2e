@@ -60,8 +60,13 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 			target = new ClinicalDocument();
 		}
 
-		results = map();
-		reduce();
+		// Map Reduce
+		try {
+			results = map();
+			reduce();
+		} catch (Exception e) {
+			log.error("Transformer Error: Failed transformation. Contains invalid results", e);
+		}
 
 		// Save Patient UUID session
 		try {
@@ -113,7 +118,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 			if(problems != null && !problems.isEmpty()) {
 				problems.forEach(problem -> rules.add(new ProblemsRule(problem, null)));
 			}
-		} else {
+		} else if(original == Original.TARGET) {
 			Component3 component = findBodySection(components, Problems.getConstants());
 
 			if(component != null) {
@@ -139,7 +144,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 			reduceProblems(components);
 
 			target.getComponent().getBodyChoiceIfStructuredBody().setComponent(components);
-		} else {
+		} else if(original == Original.TARGET) {
 			model = (PatientModel) results.get(E2EConversionRule.class.getSimpleName()).getLeft();
 
 			Integer demographicNo = null;
@@ -169,7 +174,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 					}
 				});
 			}
-		} else {
+		} else if(original == Original.TARGET) {
 			results.entrySet().forEach(e -> {
 				if(e.getKey().startsWith(ProblemsRule.class.getSimpleName())) {
 					model.getProblems().add((Dxresearch) e.getValue().getLeft());

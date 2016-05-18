@@ -67,7 +67,7 @@ public class Main {
 		}
 
 		// Check patientUUID session
-		if(patientUUID.equalsIgnoreCase(transformer.getPatientUUID())) {
+		if(patientUUID != null && patientUUID.equalsIgnoreCase(transformer.getPatientUUID())) {
 			System.out.println("UUID session matched: " + patientUUID + "\n");
 		}
 
