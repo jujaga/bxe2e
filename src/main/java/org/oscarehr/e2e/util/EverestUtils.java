@@ -8,8 +8,8 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -64,16 +64,25 @@ import org.oscarehr.e2e.model.CreatePatient;
  */
 public class EverestUtils {
 	private static final Logger log = Logger.getLogger(EverestUtils.class.getName());
-	private static final String OSCAR_PREVENTIONITEMS_FILE = "/PreventionItems.xml";
-	static Map<String, String> preventionTypeCodes = null;
+	private static final Map<Integer, Demographic> demographicCache = new HashMap<>();
+	private static final Map<Integer, Provider> providerCache = new HashMap<>();
+	private static Map<String, String> preventionTypeCodes = null;
+	static {
+		try (InputStream is = EverestUtils.class.getResourceAsStream("/PreventionItems.xml")) {
+			Element root = new SAXBuilder().build(is).getRootElement();
+			preventionTypeCodes = root.getChildren("item").stream()
+					.filter(e -> e.getAttribute("atc") != null && !isNullorEmptyorWhitespace(e.getAttribute("atc").getValue()))
+					.collect(Collectors.toMap(e -> e.getAttribute("name").getValue(), e -> e.getAttribute("atc").getValue()));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
 	private static final XmlIts1Formatter fmtr = new XmlIts1Formatter() {{
 		getGraphAides().add(new DatatypeFormatter(R1FormatterCompatibilityMode.ClinicalDocumentArchitecture));
 		addCachedClass(ClinicalDocument.class);
 		registerXSITypeName("POCD_MT000040UV.Observation", ObservationWithConfidentialityCode.class);
 	}};
-
-	private static final Map<Integer, Demographic> demographicCache = new ConcurrentHashMap<>();
-	private static final Map<Integer, Provider> providerCache = new ConcurrentHashMap<>();
 
 	EverestUtils() {
 		throw new UnsupportedOperationException();
@@ -373,17 +382,6 @@ public class EverestUtils {
 	 * @return the prevention type
 	 */
 	public static String getPreventionType(final String type) {
-		if(preventionTypeCodes == null) {
-			try (InputStream is = EverestUtils.class.getResourceAsStream(OSCAR_PREVENTIONITEMS_FILE)) {
-				Element root = new SAXBuilder().build(is).getRootElement();
-				preventionTypeCodes = root.getChildren("item").stream()
-						.filter(e -> e.getAttribute("atc") != null && !isNullorEmptyorWhitespace(e.getAttribute("atc").getValue()))
-						.collect(Collectors.toConcurrentMap(e -> e.getAttribute("name").getValue(), e -> e.getAttribute("atc").getValue()));
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-		}
-
 		if(!isNullorEmptyorWhitespace(type) && preventionTypeCodes.containsKey(type)) {
 			return preventionTypeCodes.get(type);
 		}

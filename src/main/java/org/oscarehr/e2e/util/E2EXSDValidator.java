@@ -95,8 +95,9 @@ public class E2EXSDValidator {
 			// Prepend the correct path
 			String correctedId = E2EXSDValidator.class.getResource("/e2e/" + filename).getPath();
 
-			InputSource is = new InputSource(ClassLoader.getSystemResourceAsStream(correctedId));
-			is.setSystemId(correctedId);
+			InputSource is = new InputSource(ClassLoader.getSystemResourceAsStream(correctedId)) {{
+				setSystemId(correctedId);
+			}};
 
 			return is;
 		}

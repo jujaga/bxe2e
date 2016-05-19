@@ -18,6 +18,11 @@ import org.marc.everest.formatters.xml.its1.XmlIts1Formatter;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 
 public class E2EEverestValidatorTest {
+	private static final XmlIts1Formatter fmtr = new XmlIts1Formatter() {{
+		setValidateConformance(true);
+		getGraphAides().add(new DatatypeFormatter());
+	}};
+
 	@BeforeClass
 	public static void beforeClass() {
 		Logger.getRootLogger().setLevel(Level.FATAL);
@@ -30,23 +35,14 @@ public class E2EEverestValidatorTest {
 
 	@Test
 	public void isValidCDAGraphTest() {
-		XmlIts1Formatter fmtr = new XmlIts1Formatter();
-		fmtr.setValidateConformance(true);
-		fmtr.getGraphAides().add(new DatatypeFormatter());
 		IFormatterGraphResult result = fmtr.graph(new NullOutputStream(), new ClinicalDocument());
-
 		assertFalse(E2EEverestValidator.isValidCDAGraph(result));
 	}
 
 	@Test
 	public void isValidCDAParseTest() {
 		String document = EverestUtils.generateDocumentToString(new ClinicalDocument(), true);
-
-		XmlIts1Formatter fmtr = new XmlIts1Formatter();
-		fmtr.setValidateConformance(true);
-		fmtr.getGraphAides().add(new DatatypeFormatter());
 		IFormatterParseResult result = fmtr.parse(new ByteArrayInputStream(document.getBytes(StandardCharsets.UTF_8)));
-
 		assertFalse(E2EEverestValidator.isValidCDAParse(result));
 	}
 

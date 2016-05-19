@@ -6,11 +6,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Map;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Observation;
 import org.oscarehr.e2e.constant.Constants;
 
 public class EverestUtilsTest {
@@ -53,18 +59,61 @@ public class EverestUtilsTest {
 	}
 
 	@Test
-	public void getPreventionTypeTest() {
-		assertNull(EverestUtils.getPreventionType(null));
-		assertNotNull(EverestUtils.preventionTypeCodes);
-		assertEquals(38, EverestUtils.preventionTypeCodes.size());
-		assertEquals("J07CA02", EverestUtils.getPreventionType("DTaP-HBV-IPV-Hib"));
+	public void findEntryRelationshipTest() {
+		final String testOid = "testOid";
+		ArrayList<EntryRelationship> entryRelationships = new ArrayList<>();
+		assertNull(EverestUtils.findEntryRelationship(entryRelationships, testOid));
+		entryRelationships.add(EverestUtils.createObservationTemplate(testOid));
+		assertNotNull(EverestUtils.findEntryRelationship(entryRelationships, testOid));
+	}
+
+	@Test
+	public void createObservationTemplateTest() {
+		final String testOid = "testOid";
+		EntryRelationship entryRelationship = EverestUtils.createObservationTemplate(testOid);
+		assertNotNull(entryRelationship);
+		assertTrue(entryRelationship.getContextConductionInd().getValue());
+		assertEquals(testOid, entryRelationship.getTemplateId().get(0).getRoot());
+
+		Observation observation = entryRelationship.getClinicalStatementIfObservation();
+		assertNotNull(observation);
+		assertNotNull(observation.getCode());
+		assertEquals(Constants.CodeSystems.OBSERVATIONTYPE_CA_PENDING_OID, observation.getCode().getCodeSystem());
+		assertEquals(Constants.CodeSystems.OBSERVATIONTYPE_CA_PENDING_NAME, observation.getCode().getCodeSystemName());
 	}
 
 	@Test
 	public void getDemographicProviderNoTest() {
 		assertNull(EverestUtils.getDemographicProviderNo(Constants.Runtime.INVALID_VALUE));
-		assertNotNull(EverestUtils.getDemographicProviderNo(Constants.Runtime.VALID_DEMOGRAPHIC));
+		assertEquals(Constants.Runtime.VALID_PROVIDER.toString(), EverestUtils.getDemographicProviderNo(Constants.Runtime.VALID_DEMOGRAPHIC));
 		// Test Caching
-		assertNotNull(EverestUtils.getDemographicProviderNo(Constants.Runtime.VALID_DEMOGRAPHIC));
+		assertEquals(Constants.Runtime.VALID_PROVIDER.toString(), EverestUtils.getDemographicProviderNo(Constants.Runtime.VALID_DEMOGRAPHIC));
+	}
+
+	@Test
+	public void getProviderFromStringTest() {
+		assertNotNull(EverestUtils.getProviderFromString(Constants.Runtime.VALID_PROVIDER.toString()));
+		assertNull(EverestUtils.getProviderFromString(Constants.Runtime.INVALID_VALUE.toString()));
+		assertNull(EverestUtils.getProviderFromString(Constants.Runtime.SPRING_APPLICATION_CONTEXT));
+	}
+
+	@Test
+	public void getICD9DescriptionTest() {
+		assertEquals("HEART FAILURE*", EverestUtils.getICD9Description("428"));
+		assertNull(EverestUtils.getICD9Description(Constants.Runtime.INVALID_VALUE.toString()));
+		assertNull(EverestUtils.getICD9Description(null));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void getPreventionTypeTest() throws Exception {
+		Field f = EverestUtils.class.getDeclaredField("preventionTypeCodes");
+		f.setAccessible(true);
+		Map<String, String> preventionTypeCodes = (Map<String, String>) f.get(EverestUtils.class);
+
+		assertNotNull(preventionTypeCodes);
+		assertEquals(38, preventionTypeCodes.size());
+		assertNull(EverestUtils.getPreventionType(null));
+		assertEquals("J07CA02", EverestUtils.getPreventionType("DTaP-HBV-IPV-Hib"));
 	}
 }
