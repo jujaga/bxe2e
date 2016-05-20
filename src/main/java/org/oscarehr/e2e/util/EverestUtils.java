@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -35,6 +37,7 @@ import org.marc.everest.datatypes.PN;
 import org.marc.everest.datatypes.TEL;
 import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.CD;
+import org.marc.everest.datatypes.generic.LIST;
 import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.exceptions.ObjectDisposedException;
 import org.marc.everest.formatters.interfaces.IFormatterGraphResult;
@@ -43,6 +46,7 @@ import org.marc.everest.formatters.xml.datatypes.r1.DatatypeFormatter;
 import org.marc.everest.formatters.xml.datatypes.r1.R1FormatterCompatibilityMode;
 import org.marc.everest.formatters.xml.its1.XmlIts1Formatter;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Component3;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.LanguageCommunication;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Observation;
@@ -87,6 +91,48 @@ public class EverestUtils {
 	EverestUtils() {
 		throw new UnsupportedOperationException();
 	}
+
+	// Lambda Functions
+	/** Maps a component to a list of iis. */
+	public static Function<Component3, LIST<II>> componentToII = e -> {
+		LIST<II> result = null;
+		if(e.getSection() != null) {
+			result = e.getSection().getTemplateId();
+		}
+		return result;
+	};
+
+	/** Looks for section entry with or without entries. */
+	public static BiPredicate<LIST<II>, BodyConstants.AbstractBodyConstants> entryFilter = (e, bc) -> {
+		Boolean result = false;
+		if(e != null && !e.isNull() && !e.isEmpty()) {
+			result = e.stream().anyMatch(ii -> {
+				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID) ||
+						ii.getRoot().equals(bc.WITHOUT_ENTRIES_TEMPLATE_ID);
+			});
+		}
+		return result;
+	};
+
+	/** Looks for section entry with entries only. */
+	public static BiPredicate<LIST<II>, BodyConstants.AbstractBodyConstants> filledEntryFilter = (e, bc) -> {
+		Boolean result = false;
+		if(e != null && !e.isNull() && !e.isEmpty()) {
+			result = e.stream().anyMatch(ii -> {
+				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID);
+			});
+		}
+		return result;
+	};
+
+	/** Looks for entryRelationships of specified oid type. */
+	public static BiPredicate<EntryRelationship, String> isEntryRelationshipType = (e, oid) -> {
+		Boolean result = false;
+		if(e != null && e.getTemplateId() != null && !e.getTemplateId().isEmpty()) {
+			result = e.getTemplateId().stream().anyMatch(ii -> ii.getRoot().equals(oid));
+		}
+		return result;
+	};
 
 	// General Everest Utility Functions
 	/**
@@ -254,7 +300,7 @@ public class EverestUtils {
 	 */
 	public static EntryRelationship findEntryRelationship(final ArrayList<EntryRelationship> entryRelationships, final String oid) {
 		return entryRelationships.stream()
-				.filter(e -> BodyConstants.isEntryRelationshipType.test(e, oid))
+				.filter(e -> EverestUtils.isEntryRelationshipType.test(e, oid))
 				.findFirst()
 				.orElse(null);
 	}

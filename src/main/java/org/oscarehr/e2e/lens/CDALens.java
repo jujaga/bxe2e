@@ -1,12 +1,13 @@
 package org.oscarehr.e2e.lens;
 
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.TS;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.oscarehr.e2e.lens.common.AbstractLens;
+import org.oscarehr.e2e.lens.common.TSDateLens;
 import org.oscarehr.e2e.model.IModel;
 
 public class CDALens extends AbstractLens<Pair<IModel, ClinicalDocument>, Pair<IModel, ClinicalDocument>> {
@@ -15,7 +16,7 @@ public class CDALens extends AbstractLens<Pair<IModel, ClinicalDocument>, Pair<I
 			TS ts = source.getRight().getEffectiveTime();
 
 			if(ts == null || ts.isNull() || ts.isInvalidDate()) {
-				ts = new TS(new GregorianCalendar(), TS.MINUTE);
+				ts = new TSDateLens(TS.MINUTE).get(new Date());
 			}
 
 			source.getRight().setEffectiveTime(ts);

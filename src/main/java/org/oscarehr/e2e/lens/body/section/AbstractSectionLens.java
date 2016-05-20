@@ -18,12 +18,12 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Component3;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Section;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ActRelationshipHasComponent;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_BasicConfidentialityKind;
-import org.oscarehr.e2e.constant.BodyConstants;
 import org.oscarehr.e2e.constant.BodyConstants.AbstractBodyConstants;
 import org.oscarehr.e2e.constant.BodyConstants.SectionPriority;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.model.IModel;
 import org.oscarehr.e2e.model.PatientModel;
+import org.oscarehr.e2e.util.EverestUtils;
 
 abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDocument>, Pair<IModel, ClinicalDocument>> {
 	private AbstractBodyConstants bodyConstants;
@@ -40,7 +40,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 
 			// Find Section Component if it exists
 			Optional<Component3> oComponent = components.stream()
-					.filter(e -> BodyConstants.entryFilter.test(BodyConstants.componentToII.apply(e), bodyConstants))
+					.filter(e -> EverestUtils.entryFilter.test(EverestUtils.componentToII.apply(e), bodyConstants))
 					.findFirst();
 
 			// Setup Section Component Structure
@@ -61,7 +61,7 @@ abstract class AbstractSectionLens extends AbstractLens<Pair<IModel, ClinicalDoc
 
 			// Find Section Component if it exists
 			Optional<Component3> oComponent = components.stream()
-					.filter(e -> BodyConstants.filledEntryFilter.test(BodyConstants.componentToII.apply(e), bodyConstants))
+					.filter(e -> EverestUtils.filledEntryFilter.test(EverestUtils.componentToII.apply(e), bodyConstants))
 					.findFirst();
 
 			// Setup Model Structure

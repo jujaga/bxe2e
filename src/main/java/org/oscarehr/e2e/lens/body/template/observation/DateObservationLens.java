@@ -8,7 +8,6 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Observation;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_ActMoodDocumentObservation;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_ActRelationshipEntryRelationship;
-import org.oscarehr.e2e.constant.BodyConstants;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.lens.common.TSDateLens;
@@ -35,7 +34,7 @@ public class DateObservationLens extends AbstractLens<Date, EntryRelationship> {
 		};
 
 		put = (date, entryRelationship) -> {
-			if(date == null && BodyConstants.isEntryRelationshipType.test(entryRelationship, oid)) {
+			if(date == null && EverestUtils.isEntryRelationshipType.test(entryRelationship, oid)) {
 				IVL<TS> ivl = entryRelationship.getClinicalStatementIfObservation().getEffectiveTime();
 				if(ivl != null && !ivl.isNull()) {
 					date = new TSDateLens().put(ivl.getLow());

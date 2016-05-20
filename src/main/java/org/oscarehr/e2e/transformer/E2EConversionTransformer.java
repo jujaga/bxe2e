@@ -17,7 +17,6 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Dxresearch;
-import org.oscarehr.e2e.constant.BodyConstants;
 import org.oscarehr.e2e.constant.BodyConstants.AbstractBodyConstants;
 import org.oscarehr.e2e.constant.BodyConstants.Problems;
 import org.oscarehr.e2e.model.PatientModel;
@@ -29,6 +28,7 @@ import org.oscarehr.e2e.rule.header.AuthorRule;
 import org.oscarehr.e2e.rule.header.CustodianRule;
 import org.oscarehr.e2e.rule.header.InformationRecipientRule;
 import org.oscarehr.e2e.rule.header.RecordTargetRule;
+import org.oscarehr.e2e.util.EverestUtils;
 
 public class E2EConversionTransformer extends AbstractTransformer<PatientModel, ClinicalDocument> {
 	private List<IRule<?, ?>> rules;
@@ -185,7 +185,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 
 	private Component3 findBodySection(ArrayList<Component3> components, AbstractBodyConstants bodyConstants) {
 		return components.stream()
-				.filter(e -> BodyConstants.filledEntryFilter.test(BodyConstants.componentToII.apply(e), bodyConstants))
+				.filter(e -> EverestUtils.filledEntryFilter.test(EverestUtils.componentToII.apply(e), bodyConstants))
 				.findFirst()
 				.orElse(null);
 	}

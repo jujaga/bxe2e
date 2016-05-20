@@ -7,7 +7,6 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Observation;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_ActMoodDocumentObservation;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.x_ActRelationshipEntryRelationship;
-import org.oscarehr.e2e.constant.BodyConstants;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
 import org.oscarehr.e2e.util.EverestUtils;
@@ -42,7 +41,7 @@ public class SecondaryCodeICD9ObservationLens extends AbstractLens<String, Entry
 		};
 
 		put = (code, entryRelationship) -> {
-			if(BodyConstants.isEntryRelationshipType.test(entryRelationship, oid)) {
+			if(EverestUtils.isEntryRelationshipType.test(entryRelationship, oid)) {
 				ANY value = entryRelationship.getClinicalStatementIfObservation().getValue();
 				if(value != null && !value.isNull() && value.getDataType() == CD.class) {
 					@SuppressWarnings("unchecked")

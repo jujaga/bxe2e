@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class BaseLensTest {
-	private AbstractLens<String, Boolean> lens = new StringIntLens().compose(new IntBooleanLens());
+	private final AbstractLens<String, Boolean> lens = new StringIntLens().compose(new IntBooleanLens());
 
 	@BeforeClass
 	public static void beforeClass() {
