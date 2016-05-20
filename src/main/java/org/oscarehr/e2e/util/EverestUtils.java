@@ -102,25 +102,20 @@ public class EverestUtils {
 		return result;
 	};
 
-	/** Looks for section entry with or without entries. */
-	public static BiPredicate<LIST<II>, BodyConstants.AbstractBodyConstants> entryFilter = (e, bc) -> {
-		Boolean result = false;
-		if(e != null && !e.isNull() && !e.isEmpty()) {
-			result = e.stream().anyMatch(ii -> {
-				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID) ||
-						ii.getRoot().equals(bc.WITHOUT_ENTRIES_TEMPLATE_ID);
-			});
-		}
-		return result;
-	};
-
 	/** Looks for section entry with entries only. */
 	public static BiPredicate<LIST<II>, BodyConstants.AbstractBodyConstants> filledEntryFilter = (e, bc) -> {
 		Boolean result = false;
 		if(e != null && !e.isNull() && !e.isEmpty()) {
-			result = e.stream().anyMatch(ii -> {
-				return ii.getRoot().equals(bc.WITH_ENTRIES_TEMPLATE_ID);
-			});
+			result = e.contains(new II(bc.WITH_ENTRIES_TEMPLATE_ID));
+		}
+		return result;
+	};
+
+	/** Looks for section entry with or without entries. */
+	public static BiPredicate<LIST<II>, BodyConstants.AbstractBodyConstants> entryFilter = (e, bc) -> {
+		Boolean result = false;
+		if(e != null && !e.isNull() && !e.isEmpty()) {
+			result = filledEntryFilter.test(e, bc) || e.contains(new II(bc.WITHOUT_ENTRIES_TEMPLATE_ID));
 		}
 		return result;
 	};
@@ -129,7 +124,7 @@ public class EverestUtils {
 	public static BiPredicate<EntryRelationship, String> isEntryRelationshipType = (e, oid) -> {
 		Boolean result = false;
 		if(e != null && e.getTemplateId() != null && !e.getTemplateId().isEmpty()) {
-			result = e.getTemplateId().stream().anyMatch(ii -> ii.getRoot().equals(oid));
+			result = e.getTemplateId().contains(new II(oid));
 		}
 		return result;
 	};

@@ -26,9 +26,9 @@ public class AuthorIdLens extends AbstractLens<String, SET<II>> {
 					id.setRoot(Constants.DocumentHeader.LOCALLY_ASSIGNED_IDENTIFIER_OID);
 					id.setAssigningAuthorityName(Constants.DocumentHeader.LOCALLY_ASSIGNED_IDENTIFIER_NAME);
 					id.setExtension(provider.getProviderNo().toString());
-				} else {
-					id.setNullFlavor(NullFlavor.NoInformation);
 				}
+			} else {
+				id.setNullFlavor(NullFlavor.NoInformation);
 			}
 
 			return new SET<>(id);

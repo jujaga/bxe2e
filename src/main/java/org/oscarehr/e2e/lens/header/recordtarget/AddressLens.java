@@ -47,21 +47,18 @@ public class AddressLens extends AbstractLens<Pair<Demographic, RecordTarget>, P
 			if(addresses != null && !addresses.isNull() && !addresses.isEmpty()) {
 				AD addr = addresses.get(0);
 				if(!addr.isNull()) {
-					List<ADXP> addrParts = addr.getPart();
-					for(ADXP addrPart : addrParts) {
+					addr.getPart().forEach(addrPart -> {
 						AddressPartType addressPartType = addrPart.getPartType();
-						String value = new AddressPartLens(addressPartType).put(addrPart);
-
 						if(addressPartType == AddressPartType.Delimiter) {
-							demographic.setAddress(value);
+							demographic.setAddress(new AddressPartLens(addressPartType).put(demographic.getAddress(), addrPart));
 						} else if(addressPartType == AddressPartType.City) {
-							demographic.setCity(value);
+							demographic.setCity(new AddressPartLens(addressPartType).put(demographic.getCity(), addrPart));
 						} else if(addressPartType == AddressPartType.State) {
-							demographic.setProvince(value);
+							demographic.setProvince(new AddressPartLens(addressPartType).put(demographic.getProvince(), addrPart));
 						} else if(addressPartType == AddressPartType.PostalCode) {
-							demographic.setPostal(value);
+							demographic.setPostal(new AddressPartLens(addressPartType).put(demographic.getPostal(), addrPart));
 						}
-					}
+					});
 				}
 			}
 
