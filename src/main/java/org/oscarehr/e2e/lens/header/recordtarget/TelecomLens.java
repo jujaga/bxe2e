@@ -22,9 +22,9 @@ public class TelecomLens extends AbstractLens<Pair<Demographic, RecordTarget>, P
 
 			if(telecoms == null) {
 				ArrayList<TEL> tels = new ArrayList<>();
-				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.TELEPHONE).get(demographic.getPhone()));
-				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.WorkPlace, TelecomType.TELEPHONE).get(demographic.getPhone2()));
-				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.EMAIL).get(demographic.getEmail()));
+				tels.add(new TelecomPartLens(TelecomType.TELEPHONE, TelecommunicationsAddressUse.Home).get(demographic.getPhone()));
+				tels.add(new TelecomPartLens(TelecomType.TELEPHONE, TelecommunicationsAddressUse.WorkPlace).get(demographic.getPhone2()));
+				tels.add(new TelecomPartLens(TelecomType.EMAIL, TelecommunicationsAddressUse.Home).get(demographic.getEmail()));
 				tels.removeAll(Collections.singleton(null));
 
 				if(!tels.isEmpty()) {
@@ -43,14 +43,14 @@ public class TelecomLens extends AbstractLens<Pair<Demographic, RecordTarget>, P
 			if(telecoms != null && !telecoms.isNull() && !telecoms.isEmpty()) {
 				for(TEL tel : telecoms) {
 					if(TEL.isValidPhoneFlavor(tel)) {
-						String value = new TelecomPartLens(null, TelecomType.TELEPHONE).put(tel);
+						String value = new TelecomPartLens(TelecomType.TELEPHONE).put(tel);
 						if(tel.getUse().get(0).getCode() == TelecommunicationsAddressUse.Home) {
 							demographic.setPhone(value);
 						} else if(tel.getUse().get(0).getCode() == TelecommunicationsAddressUse.WorkPlace) {
 							demographic.setPhone2(value);
 						}
 					} else if(TEL.isValidEMailFlavor(tel)) {
-						String value = new TelecomPartLens(null, TelecomType.EMAIL).put(tel);
+						String value = new TelecomPartLens(TelecomType.EMAIL).put(tel);
 						if(tel.getUse().get(0).getCode() == TelecommunicationsAddressUse.Home) {
 							demographic.setEmail(value);
 						}

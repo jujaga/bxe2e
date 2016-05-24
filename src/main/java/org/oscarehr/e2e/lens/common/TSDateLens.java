@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.apache.commons.lang3.Validate;
 import org.marc.everest.datatypes.TS;
 
 public class TSDateLens extends AbstractLens<Date, TS> {
@@ -12,22 +13,25 @@ public class TSDateLens extends AbstractLens<Date, TS> {
 	}
 
 	public TSDateLens(final Integer precision) {
+		Validate.notNull(precision);
+
 		get = date -> {
-			if(date == null) {
-				return null;
+			TS ts = null;
+			if(date != null) {
+				Calendar calendar = new GregorianCalendar();
+				calendar.setTime(date);
+				ts = new TS(calendar, precision);
 			}
 
-			Calendar calendar = new GregorianCalendar();
-			calendar.setTime(date);
-			return new TS(calendar, precision);
+			return ts;
 		};
 
 		put = (date, ts) -> {
-			if(ts == null) {
-				return null;
+			if(ts != null && !ts.isNull() && !ts.isInvalidDate()) {
+				date = ts.getDateValue().getTime();
 			}
 
-			return ts.getDateValue().getTime();
+			return date;
 		};
 	}
 }

@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
@@ -16,9 +18,13 @@ import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.NullFlavor;
+import org.marc.everest.datatypes.TEL;
+import org.marc.everest.datatypes.TS;
+import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.SET;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.e2e.constant.Constants;
+import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class CommonLensesTest {
@@ -246,5 +252,78 @@ public class CommonLensesTest {
 		assertEquals(test, lens.put(test, new ENXP(null, null)));
 
 		assertNotNull(lens.put(lens.get(test)));
+	}
+
+	@Test(expected=NullPointerException.class)
+	public void telecomPartLensNullTest() {
+		new TelecomPartLens(null);
+	}
+
+	@Test
+	public void telecomPartLensGetTest() {
+		final String testNumber = "123-4567";
+		final String testEmail = "test@test.com";
+
+		TelecomPartLens phoneLens = new TelecomPartLens(TelecomType.TELEPHONE, TelecommunicationsAddressUse.Home);
+		assertNotNull(phoneLens);
+
+		assertNull(phoneLens.get(null));
+		assertTrue(phoneLens.get(testNumber).getValue().startsWith(Constants.DocumentHeader.TEL_PREFIX));
+		assertTrue(phoneLens.get(testNumber).getValue().endsWith(testNumber.replaceAll("[^0-9]", "")));
+		assertEquals(TelecommunicationsAddressUse.Home, phoneLens.get(testNumber).getUse().get(0).getCode());
+
+		TelecomPartLens emailLens = new TelecomPartLens(TelecomType.EMAIL, TelecommunicationsAddressUse.Home);
+		assertNotNull(emailLens);
+		assertTrue(emailLens.get(testEmail).getValue().startsWith(Constants.DocumentHeader.EMAIL_PREFIX));
+		assertTrue(emailLens.get(testEmail).getValue().endsWith(testEmail));
+		assertEquals(TelecommunicationsAddressUse.Home, emailLens.get(testEmail).getUse().get(0).getCode());
+	}
+
+	@Test
+	public void telecomPartLensPutTest() {
+		final String testNumber = "123-4567";
+		final String testEmail = "test@test.com";
+
+		TelecomPartLens phoneLens = new TelecomPartLens(TelecomType.TELEPHONE);
+		assertNotNull(phoneLens);
+
+		assertNull(phoneLens.put(null, null));
+		assertEquals(testNumber, phoneLens.put(testNumber, new TEL()));
+		assertEquals(testNumber.replaceAll("[^0-9]", ""), phoneLens.put(phoneLens.get(testNumber)));
+
+		TelecomPartLens emailLens = new TelecomPartLens(TelecomType.EMAIL);
+		assertNotNull(emailLens);
+
+		assertEquals(testEmail, emailLens.put(testEmail, new TEL()));
+		assertEquals(testEmail, emailLens.put(emailLens.get(testEmail)));
+	}
+
+	@Test(expected=NullPointerException.class)
+	public void tsDateLensNullTest() {
+		new TSDateLens(null);
+	}
+
+	@Test
+	public void tsDateLensGetTest() {
+		final Date date = new Date();
+
+		TSDateLens lens = new TSDateLens();
+		assertNotNull(lens);
+
+		assertNull(lens.get(null));
+		assertEquals(date, lens.get(date).getDateValue().getTime());
+		assertEquals(new Integer(TS.DAY), lens.get(date).getDateValuePrecision());
+	}
+
+	@Test
+	public void tsDateLensPutTest() {
+		final Date date = new Date();
+
+		TSDateLens lens = new TSDateLens();
+		assertNotNull(lens);
+
+		assertNull(lens.put(null));
+		assertEquals(date, lens.put(date, null));
+		assertEquals(date, lens.put(lens.get(date)));
 	}
 }

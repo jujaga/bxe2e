@@ -15,16 +15,11 @@ public class InformationRecipientLens extends AbstractLens<Pair<Object, ArrayLis
 		get = source -> {
 			ArrayList<InformationRecipient> informationRecipients = source.getRight();
 
-			if(informationRecipients == null || informationRecipients.isEmpty()) {
-				informationRecipients = new ArrayList<>();
-				InformationRecipient informationRecipient = new InformationRecipient();
+			if(informationRecipients.isEmpty()) {
 				IntendedRecipient intendedRecipient = new IntendedRecipient();
-
-				informationRecipient.setIntendedRecipient(intendedRecipient);
-				informationRecipient.setTypeCode(x_InformationRecipient.PRCP);
-
 				intendedRecipient.setNullFlavor(NullFlavor.NoInformation);
-				informationRecipients.add(informationRecipient);
+
+				informationRecipients.add(new InformationRecipient(x_InformationRecipient.PRCP, intendedRecipient));
 			}
 
 			return new ImmutablePair<>(source.getLeft(), informationRecipients);

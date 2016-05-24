@@ -42,7 +42,7 @@ public class CustodianIdLens extends AbstractLens<Pair<Clinic, Custodian>, Pair<
 				if(id != null && !id.isNull() && id.getRoot().equals(Constants.EMR.EMR_OID)) {
 					try {
 						clinicId = Integer.parseInt(id.getExtension());
-					} catch (NumberFormatException e) {
+					} catch (Exception e) {
 						clinicId = null;
 					}
 					target.getLeft().setId(clinicId);

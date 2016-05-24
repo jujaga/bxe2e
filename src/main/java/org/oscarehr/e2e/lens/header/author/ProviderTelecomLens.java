@@ -23,9 +23,9 @@ public class ProviderTelecomLens extends AbstractLens<Pair<String, ArrayList<Aut
 			SET<TEL> telecoms = null;
 			if(provider != null) {
 				ArrayList<TEL> tels = new ArrayList<>();
-				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.TELEPHONE).get(provider.getPhone()));
-				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.WorkPlace, TelecomType.TELEPHONE).get(provider.getWorkPhone()));
-				tels.add(new TelecomPartLens(TelecommunicationsAddressUse.Home, TelecomType.EMAIL).get(provider.getEmail()));
+				tels.add(new TelecomPartLens(TelecomType.TELEPHONE, TelecommunicationsAddressUse.Home).get(provider.getPhone()));
+				tels.add(new TelecomPartLens(TelecomType.TELEPHONE, TelecommunicationsAddressUse.WorkPlace).get(provider.getWorkPhone()));
+				tels.add(new TelecomPartLens(TelecomType.EMAIL, TelecommunicationsAddressUse.Home).get(provider.getEmail()));
 				tels.removeAll(Collections.singleton(null));
 
 				if(!tels.isEmpty()) {
