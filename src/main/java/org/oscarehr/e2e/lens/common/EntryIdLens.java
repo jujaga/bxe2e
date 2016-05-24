@@ -33,7 +33,7 @@ public class EntryIdLens extends AbstractLens<Integer, SET<II>> {
 					} else {
 						value = 0;
 					}
-				} catch (NumberFormatException|NullPointerException e) {
+				} catch (Exception e) {
 					value = 0;
 				}
 			}
