@@ -37,7 +37,7 @@ public class CustodianIdLens extends AbstractLens<Pair<Clinic, Custodian>, Pair<
 			Integer clinicId = target.getLeft().getId();
 			SET<II> ids = target.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().getId();
 
-			if(ids != null && !ids.isNull() && !ids.isEmpty()) {
+			if(clinicId == null && ids != null && !ids.isNull() && !ids.isEmpty()) {
 				II id = ids.get(0);
 				if(id != null && !id.isNull() && id.getRoot().equals(Constants.EMR.EMR_OID)) {
 					try {

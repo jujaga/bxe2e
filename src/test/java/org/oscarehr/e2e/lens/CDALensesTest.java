@@ -22,7 +22,7 @@ import org.oscarehr.e2e.model.IModel;
 import org.oscarehr.e2e.model.PatientModel;
 
 public class CDALensesTest {
-	private Pair<IModel, ClinicalDocument> inputPair;
+	private Pair<IModel, ClinicalDocument> blankPair;
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -35,7 +35,7 @@ public class CDALensesTest {
 		ClinicalDocument clinicalDocument = new ClinicalDocument();
 		clinicalDocument.setId(UUID.randomUUID().toString().toUpperCase(), Constants.Runtime.VALID_DEMOGRAPHIC.toString());
 
-		inputPair = Pair.of(patientModel, clinicalDocument);
+		blankPair = Pair.of(patientModel, clinicalDocument);
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class CDALensesTest {
 		CDALens lens = new CDALens();
 		assertNotNull(lens);
 
-		Pair<IModel, ClinicalDocument> pair = lens.get(inputPair);
+		Pair<IModel, ClinicalDocument> pair = lens.get(blankPair);
 		assertNotNull(pair);
 		assertNotNull(pair.getLeft());
 		assertNotNull(pair.getRight());
@@ -57,7 +57,7 @@ public class CDALensesTest {
 		CDALens lens = new CDALens();
 		assertNotNull(lens);
 
-		Pair<IModel, ClinicalDocument> pair = lens.put(inputPair, inputPair);
+		Pair<IModel, ClinicalDocument> pair = lens.put(blankPair, blankPair);
 		assertNotNull(pair);
 		assertNotNull(pair.getLeft());
 		assertNotNull(pair.getRight());
@@ -68,7 +68,7 @@ public class CDALensesTest {
 		E2EConversionLens lens = new E2EConversionLens();
 		assertNotNull(lens);
 
-		Pair<IModel, ClinicalDocument> pair = lens.get(inputPair);
+		Pair<IModel, ClinicalDocument> pair = lens.get(blankPair);
 		assertNotNull(pair);
 		assertNotNull(pair.getLeft());
 		assertNotNull(pair.getRight());
@@ -107,12 +107,12 @@ public class CDALensesTest {
 
 	@Test
 	public void e2eConversionLensPutTest() {
-		((PatientModel) inputPair.getLeft()).getDemographic().setDemographicNo(null);
+		((PatientModel) blankPair.getLeft()).getDemographic().setDemographicNo(null);
 
 		E2EConversionLens lens = new E2EConversionLens();
 		assertNotNull(lens);
 
-		Pair<IModel, ClinicalDocument> pair = lens.put(inputPair, inputPair);
+		Pair<IModel, ClinicalDocument> pair = lens.put(blankPair, blankPair);
 		assertNotNull(pair);
 		assertNotNull(pair.getLeft());
 		assertNotNull(pair.getRight());
