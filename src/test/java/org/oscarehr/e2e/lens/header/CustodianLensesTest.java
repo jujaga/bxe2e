@@ -5,14 +5,19 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.NullFlavor;
+import org.marc.everest.datatypes.ON;
 import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AssignedCustodian;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Custodian;
@@ -22,6 +27,7 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.header.custodian.CustodianIdLens;
 import org.oscarehr.e2e.lens.header.custodian.CustodianLens;
+import org.oscarehr.e2e.lens.header.custodian.CustodianNameLens;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -141,5 +147,61 @@ public class CustodianLensesTest {
 
 		pair = lens.put(putPair, putPair);
 		assertNull(pair.getLeft().getId());
+	}
+
+	@Test
+	public void custodianNameLensNullGetTest() {
+		CustodianNameLens lens = new CustodianNameLens();
+		assertNotNull(lens);
+
+		Pair<Clinic, Custodian> pair = lens.get(blankPair);
+		assertNotNull(pair);
+		assertNotNull(pair.getLeft());
+		assertNotNull(pair.getRight());
+
+		ON on = pair.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().getName();
+		assertNull(on);
+	}
+
+	@Test
+	public void custodianNameLensGetTest() {
+		CustodianNameLens lens = new CustodianNameLens();
+		assertNotNull(lens);
+
+		Pair<Clinic, Custodian> pair = lens.get(getPair);
+		assertNotNull(pair);
+		assertNotNull(pair.getLeft());
+		assertNotNull(pair.getRight());
+
+		ON on = pair.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().getName();
+		assertNotNull(on);
+		assertEquals(clinic.getClinicName(), on.getPart(0).getValue());
+	}
+
+	@Test
+	public void custodianNameLensNullPutTest() {
+		CustodianNameLens lens = new CustodianNameLens();
+		assertNotNull(lens);
+
+		Pair<Clinic, Custodian> pair = lens.put(blankPair, blankPair);
+		assertNotNull(pair);
+		assertNotNull(pair.getLeft());
+		assertNotNull(pair.getRight());
+		assertNull(pair.getLeft().getClinicName());
+	}
+
+	@Test
+	public void custodianNameLensPutTest() {
+		CustodianNameLens lens = new CustodianNameLens();
+		assertNotNull(lens);
+
+		ON on = new ON(null, (Collection<ENXP>) Arrays.asList(new ENXP(clinic.getClinicName())));
+		putPair.getRight().getAssignedCustodian().getRepresentedCustodianOrganization().setName(on);
+
+		Pair<Clinic, Custodian> pair = lens.put(putPair, putPair);
+		assertNotNull(pair);
+		assertNotNull(pair.getLeft());
+		assertNotNull(pair.getRight());
+		assertEquals(clinic.getClinicName(), pair.getLeft().getClinicName());
 	}
 }

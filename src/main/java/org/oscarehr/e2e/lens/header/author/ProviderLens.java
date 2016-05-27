@@ -23,7 +23,7 @@ public class ProviderLens extends AbstractLens<Pair<String, ArrayList<Author>>, 
 			author.setTime(new TSDateLens().get(date));
 			author.setAssignedAuthor(new AssignedAuthor());
 
-			source.getRight().add(author);
+			source.getRight().add(0, author);
 			return new ImmutablePair<>(source.getLeft(), source.getRight());
 		};
 

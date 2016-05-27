@@ -1,14 +1,13 @@
 package org.oscarehr.e2e.lens.header.author;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.II;
 import org.marc.everest.datatypes.NullFlavor;
 import org.marc.everest.datatypes.SC;
-import org.marc.everest.datatypes.TS;
 import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AssignedAuthor;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Author;
@@ -16,6 +15,7 @@ import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AuthoringDevice;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.AbstractLens;
+import org.oscarehr.e2e.lens.common.TSDateLens;
 
 public class SystemLens extends AbstractLens<Pair<String, ArrayList<Author>>, Pair<String, ArrayList<Author>>> {
 	public SystemLens() {
@@ -24,7 +24,7 @@ public class SystemLens extends AbstractLens<Pair<String, ArrayList<Author>>, Pa
 			AssignedAuthor assignedSystem = new AssignedAuthor();
 
 			system.setContextControlCode(ContextControl.OverridingPropagating);
-			system.setTime(new GregorianCalendar(), TS.DAY);
+			system.setTime(new TSDateLens().get(new Date()));
 			system.setAssignedAuthor(assignedSystem);
 
 			II id = new II();

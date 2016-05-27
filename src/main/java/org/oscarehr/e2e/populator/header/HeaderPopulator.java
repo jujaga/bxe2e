@@ -28,7 +28,6 @@ public class HeaderPopulator extends AbstractPopulator {
 
 		populators.add(new RecordTargetPopulator(patientModel));
 		populators.add(new AuthorPopulator(patientModel));
-		populators.add(new InformationRecipientPopulator());
 	}
 
 	@Override
