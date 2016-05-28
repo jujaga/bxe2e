@@ -19,9 +19,9 @@ public class ProviderTelecomLens extends AbstractLens<Pair<String, ArrayList<Aut
 	public ProviderTelecomLens() {
 		get = source -> {
 			Provider provider = EverestUtils.getProviderFromString(source.getLeft());
+			SET<TEL> telecoms = source.getRight().get(0).getAssignedAuthor().getTelecom();
 
-			SET<TEL> telecoms = null;
-			if(provider != null) {
+			if(telecoms == null && provider != null) {
 				ArrayList<TEL> tels = new ArrayList<>();
 				tels.add(new TelecomPartLens(TelecomType.TELEPHONE, TelecommunicationsAddressUse.Home).get(provider.getPhone()));
 				tels.add(new TelecomPartLens(TelecomType.TELEPHONE, TelecommunicationsAddressUse.WorkPlace).get(provider.getWorkPhone()));

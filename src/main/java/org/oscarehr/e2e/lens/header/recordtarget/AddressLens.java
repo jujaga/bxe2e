@@ -30,9 +30,7 @@ public class AddressLens extends AbstractLens<Pair<Demographic, RecordTarget>, P
 				addrParts.add(new AddressPartLens(AddressPartType.PostalCode).get(demographic.getPostal()));
 
 				if(!addrParts.isEmpty()) {
-					CS<PostalAddressUse> use = new CS<>(PostalAddressUse.HomeAddress);
-					AD addr = new AD(use, addrParts);
-					addresses = new SET<>(addr);
+					addresses = new SET<>(new AD(new CS<>(PostalAddressUse.HomeAddress), addrParts));
 				}
 			}
 

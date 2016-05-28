@@ -39,7 +39,7 @@ public class HinIdLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pai
 
 			if(id != null && !id.isNull() && !id.isEmpty()) {
 				II ii = id.get(0);
-				if(!ii.isNull()) {
+				if(!ii.isNull() && ii.getRoot() != null && ii.getRoot().equals(Constants.DocumentHeader.BC_PHN_OID)) {
 					hin = ii.getExtension();
 				}
 			}
