@@ -3,6 +3,7 @@ package org.oscarehr.e2e.lens.header.recordtarget;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.marc.everest.datatypes.NullFlavor;
@@ -10,6 +11,7 @@ import org.marc.everest.datatypes.TS;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.RecordTarget;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.e2e.lens.common.AbstractLens;
+import org.oscarehr.e2e.util.EverestUtils;
 
 public class BirthDateLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair<Demographic, RecordTarget>> {
 	public BirthDateLens() {
@@ -19,28 +21,28 @@ public class BirthDateLens extends AbstractLens<Pair<Demographic, RecordTarget>,
 
 			if(birthDate == null) {
 				birthDate = new TS();
-				if(demographic.getYearOfBirth() != null && demographic.getMonthOfBirth() != null) {
+				if(!EverestUtils.isNullorEmptyorWhitespace(demographic.getYearOfBirth()) &&
+						!EverestUtils.isNullorEmptyorWhitespace(demographic.getMonthOfBirth())) {
 					try {
 						if(Integer.parseInt(demographic.getYearOfBirth()) >= 0 &&
 								Integer.parseInt(demographic.getMonthOfBirth()) >= 1 &&
 								Integer.parseInt(demographic.getMonthOfBirth()) <= 12) {
 							Calendar cal = Calendar.getInstance();
+							String value = demographic.getYearOfBirth().concat(demographic.getMonthOfBirth());
+							String format = "yyyyMM";
+							Integer precision = TS.MONTH;
 
-							if(demographic.getDateOfBirth() != null &&
+							if(!EverestUtils.isNullorEmptyorWhitespace(demographic.getDateOfBirth()) &&
 									Integer.parseInt(demographic.getDateOfBirth()) >= 1 &&
 									Integer.parseInt(demographic.getDateOfBirth()) <= 31) {
-								String dob = demographic.getYearOfBirth() + demographic.getMonthOfBirth() + demographic.getDateOfBirth();
-								SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-								cal.setTime(sdf.parse(dob));
-								birthDate.setDateValuePrecision(TS.DAY);
-							} else {
-								String mob = demographic.getYearOfBirth() + demographic.getMonthOfBirth();
-								SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
-								cal.setTime(sdf.parse(mob));
-								birthDate.setDateValuePrecision(TS.MONTH);
+								value = value.concat(demographic.getDateOfBirth());
+								format = "yyyyMMdd";
+								precision = TS.DAY;
 							}
 
+							cal.setTime(new SimpleDateFormat(format).parse(value));
 							birthDate.setDateValue(cal);
+							birthDate.setDateValuePrecision(precision);
 						} else {
 							throw new NumberFormatException();
 						}
@@ -65,7 +67,8 @@ public class BirthDateLens extends AbstractLens<Pair<Demographic, RecordTarget>,
 
 				demographic.setYearOfBirth(Integer.toString(date.get(Calendar.YEAR)));
 				if(birthDate.getDateValuePrecision() > TS.YEAR) {
-					demographic.setMonthOfBirth(Integer.toString(date.get(Calendar.MONTH)));
+					String month = StringUtils.leftPad(Integer.toString(date.get(Calendar.MONTH) + 1), 2, '0');
+					demographic.setMonthOfBirth(month);
 					if(birthDate.getDateValuePrecision() > TS.MONTH) {
 						demographic.setDateOfBirth(Integer.toString(date.get(Calendar.DATE)));
 					}

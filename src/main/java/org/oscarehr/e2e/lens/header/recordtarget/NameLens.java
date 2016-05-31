@@ -46,8 +46,7 @@ public class NameLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair
 			if(names != null && !names.isNull() && !names.isEmpty()) {
 				PN name = names.get(0);
 				if(!name.isNull()) {
-					List<ENXP> nameParts = name.getParts();
-					for(ENXP namePart : nameParts) {
+					name.getParts().forEach(namePart -> {
 						EntityNamePartType entityNamePartType = namePart.getType().getCode();
 						String value = new NamePartLens(entityNamePartType).put(namePart);
 						if(entityNamePartType == EntityNamePartType.Given) {
@@ -55,7 +54,7 @@ public class NameLens extends AbstractLens<Pair<Demographic, RecordTarget>, Pair
 						} else if(entityNamePartType == EntityNamePartType.Family) {
 							demographic.setLastName(value);
 						}
-					}
+					});
 				}
 			}
 

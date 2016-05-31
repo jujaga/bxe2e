@@ -27,8 +27,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
-import org.marc.everest.datatypes.ADXP;
-import org.marc.everest.datatypes.AddressPartType;
 import org.marc.everest.datatypes.ENXP;
 import org.marc.everest.datatypes.EntityNamePartType;
 import org.marc.everest.datatypes.EntityNameUse;
@@ -48,7 +46,6 @@ import org.marc.everest.formatters.xml.its1.XmlIts1Formatter;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.ClinicalDocument;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Component3;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
-import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.LanguageCommunication;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Observation;
 import org.marc.everest.xml.XMLStateStreamWriter;
 import org.oscarehr.common.dao.DemographicDao;
@@ -244,13 +241,6 @@ public class EverestUtils {
 	}
 
 	// Header Utility Functions
-	public static void addAddressPart(ArrayList<ADXP> addrParts, String value, AddressPartType addressPartType) {
-		if(!isNullorEmptyorWhitespace(value)) {
-			ADXP addrPart = new ADXP(value, addressPartType);
-			addrParts.add(addrPart);
-		}
-	}
-
 	// Add a telecom element to the telecoms set
 	public static void addTelecomPart(SET<TEL> telecoms, String value, TelecommunicationsAddressUse telecomAddressUse, TelecomType telecomType) {
 		if(!isNullorEmptyorWhitespace(value)) {
@@ -273,15 +263,6 @@ public class EverestUtils {
 		}
 		if(!name.isEmpty()) {
 			names.add(new PN(entityNameUse, name));
-		}
-	}
-
-	// Add a language to the languages list
-	public static void addLanguagePart(ArrayList<LanguageCommunication> languages, String value) {
-		if(!isNullorEmptyorWhitespace(value) && Mappings.languageCode.containsKey(value)) {
-			LanguageCommunication language = new LanguageCommunication();
-			language.setLanguageCode(Mappings.languageCode.get(value));
-			languages.add(language);
 		}
 	}
 
