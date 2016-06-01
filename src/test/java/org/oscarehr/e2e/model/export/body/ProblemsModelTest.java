@@ -26,7 +26,6 @@ import org.oscarehr.common.dao.DxresearchDao;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.common.TSDateLens;
-import org.oscarehr.e2e.model.export.body.ProblemsModel;
 import org.oscarehr.e2e.util.EverestUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -183,6 +182,18 @@ public class ProblemsModelTest {
 		ArrayList<Author> authors = nullProblemsModel.getAuthor();
 		assertNotNull(authors);
 		assertEquals(1, authors.size());
+	}
+
+	@Test
+	public void secondaryCodeICD9Test() {
+		EntryRelationship entryRelationship = problemsModel.getSecondaryCodeICD9();
+		assertNotNull(entryRelationship);
+	}
+
+	@Test
+	public void secondaryCodeICD9NullTest() {
+		EntryRelationship entryRelationship = nullProblemsModel.getSecondaryCodeICD9();
+		assertNotNull(entryRelationship);
 	}
 
 	@Test
