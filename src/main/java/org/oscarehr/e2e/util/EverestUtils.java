@@ -27,16 +27,9 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
-import org.marc.everest.datatypes.ENXP;
-import org.marc.everest.datatypes.EntityNamePartType;
-import org.marc.everest.datatypes.EntityNameUse;
 import org.marc.everest.datatypes.II;
-import org.marc.everest.datatypes.PN;
-import org.marc.everest.datatypes.TEL;
-import org.marc.everest.datatypes.TelecommunicationsAddressUse;
 import org.marc.everest.datatypes.generic.CD;
 import org.marc.everest.datatypes.generic.LIST;
-import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.exceptions.ObjectDisposedException;
 import org.marc.everest.formatters.interfaces.IFormatterGraphResult;
 import org.marc.everest.formatters.interfaces.IFormatterParseResult;
@@ -54,7 +47,6 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.e2e.constant.BodyConstants;
 import org.oscarehr.e2e.constant.Constants;
-import org.oscarehr.e2e.constant.Constants.TelecomType;
 import org.oscarehr.e2e.constant.Mappings;
 import org.oscarehr.e2e.extension.ObservationWithConfidentialityCode;
 import org.oscarehr.e2e.lens.common.EverestBugLens;
@@ -238,32 +230,6 @@ public class EverestUtils {
 		}
 
 		return null;
-	}
-
-	// Header Utility Functions
-	// Add a telecom element to the telecoms set
-	public static void addTelecomPart(SET<TEL> telecoms, String value, TelecommunicationsAddressUse telecomAddressUse, TelecomType telecomType) {
-		if(!isNullorEmptyorWhitespace(value)) {
-			if(telecomType == Constants.TelecomType.TELEPHONE) {
-				telecoms.add(new TEL(Constants.DocumentHeader.TEL_PREFIX + value.replaceAll("-", ""), telecomAddressUse));
-			} else if(telecomType == Constants.TelecomType.EMAIL) {
-				telecoms.add(new TEL(Constants.DocumentHeader.EMAIL_PREFIX + value, telecomAddressUse));
-			}
-		}
-	}
-
-	// Add a name to the names set
-	public static void addNamePart(SET<PN> names, String firstName, String lastName, EntityNameUse entityNameUse) {
-		ArrayList<ENXP> name = new ArrayList<ENXP>();
-		if(!isNullorEmptyorWhitespace(firstName)) {
-			name.add(new ENXP(firstName, EntityNamePartType.Given));
-		}
-		if(!isNullorEmptyorWhitespace(lastName)) {
-			name.add(new ENXP(lastName, EntityNamePartType.Family));
-		}
-		if(!name.isEmpty()) {
-			names.add(new PN(entityNameUse, name));
-		}
 	}
 
 	// Body Utility Functions

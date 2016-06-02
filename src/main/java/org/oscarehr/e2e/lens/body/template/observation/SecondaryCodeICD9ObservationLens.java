@@ -13,7 +13,7 @@ import org.oscarehr.e2e.util.EverestUtils;
 
 public class SecondaryCodeICD9ObservationLens extends AbstractLens<String, EntryRelationship> {
 	public SecondaryCodeICD9ObservationLens() {
-		String oid = Constants.ObservationOids.SECONDARY_CODE_ICD9_OBSERVATION_TEMPLATE_ID;
+		final String oid = Constants.ObservationOids.SECONDARY_CODE_ICD9_OBSERVATION_TEMPLATE_ID;
 
 		get = code -> {
 			EntryRelationship entryRelationship = EverestUtils.createObservationTemplate(oid);
