@@ -15,10 +15,10 @@ import org.marc.everest.rmim.uv.cdar2.vocabulary.ActStatus;
 import org.oscarehr.common.model.Dxresearch;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.body.template.AuthorParticipationLens;
+import org.oscarehr.e2e.lens.body.template.observation.DateObservationLens;
+import org.oscarehr.e2e.lens.body.template.observation.SecondaryCodeICD9ObservationLens;
 import org.oscarehr.e2e.lens.common.EntryIdLens;
 import org.oscarehr.e2e.lens.common.TSDateLens;
-import org.oscarehr.e2e.model.export.template.observation.DateObservationModel;
-import org.oscarehr.e2e.model.export.template.observation.SecondaryCodeICD9ObservationModel;
 import org.oscarehr.e2e.util.EverestUtils;
 
 public class ProblemsModel {
@@ -144,7 +144,7 @@ public class ProblemsModel {
 	}
 
 	private void setSecondaryCodeICD9() {
-		this.secondaryCodeICD9 = new SecondaryCodeICD9ObservationModel().getEntryRelationship(problem.getDxresearchCode());
+		this.secondaryCodeICD9 = new SecondaryCodeICD9ObservationLens().get(problem.getDxresearchCode());
 	}
 
 	public EntryRelationship getDiagnosisDate() {
@@ -152,6 +152,6 @@ public class ProblemsModel {
 	}
 
 	private void setDiagnosisDate() {
-		this.diagnosisDate = new DateObservationModel().getEntryRelationship(problem.getUpdateDate());
+		this.diagnosisDate = new DateObservationLens().get(problem.getUpdateDate());
 	}
 }
