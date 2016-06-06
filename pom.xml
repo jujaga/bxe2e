@@ -60,8 +60,8 @@ Based off of the E2E-DTC 1.4 specification
         <version>1.5.0</version>
         <configuration>
           <mainClass>org.oscarehr.e2e.Main</mainClass>
-          <!-- to get rid of the warning: [WARNING] Warning: killAfter is 
-            now deprecated. Do you need it ? Please comment on MEXEC-6. see: method execute() 
+          <!-- to get rid of the warning: [WARNING] Warning: killAfter is
+            now deprecated. Do you need it ? Please comment on MEXEC-6. see: method execute()
             in https://github.com/ispringer/exec-maven-plugin/blob/master/src/main/java/org/codehaus/mojo/exec/ExecJavaMojo.java -->
           <killAfter>-1</killAfter>
         </configuration>
@@ -110,7 +110,7 @@ Based off of the E2E-DTC 1.4 specification
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.1.0</version>
+        <version>4.2.0</version>
         <configuration>
           <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
           <serviceName>travis-ci</serviceName>

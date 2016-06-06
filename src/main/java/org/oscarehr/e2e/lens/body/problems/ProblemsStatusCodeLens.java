@@ -19,8 +19,6 @@ public class ProblemsStatusCodeLens extends AbstractLens<Pair<Dxresearch, Entry>
 					statusCode = new CS<>(ActStatus.Active);
 				} else if (status != null && status.equals('C')) {
 					statusCode = new CS<>(ActStatus.Completed);
-				} else {
-					statusCode = null;
 				}
 			}
 
@@ -33,10 +31,12 @@ public class ProblemsStatusCodeLens extends AbstractLens<Pair<Dxresearch, Entry>
 			CS<ActStatus> statusCode = target.getRight().getClinicalStatementIfObservation().getStatusCode();
 
 			if(status == null) {
-				if(statusCode.getCode() == ActStatus.Active) {
-					status = 'A';
-				} else if (statusCode.getCode() == ActStatus.Completed) {
-					status = 'C';
+				if(statusCode != null) {
+					if(statusCode.getCode() == ActStatus.Active) {
+						status = 'A';
+					} else if (statusCode.getCode() == ActStatus.Completed) {
+						status = 'C';
+					}
 				} else {
 					status = 'D';
 				}
