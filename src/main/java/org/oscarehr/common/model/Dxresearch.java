@@ -31,7 +31,7 @@ public class Dxresearch implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date startDate;
 	@Column(name="update_date")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date updateDate;
 	private Character status;
 	@Column(name="dxresearch_code")

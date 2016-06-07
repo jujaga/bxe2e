@@ -28,6 +28,7 @@ import org.marc.everest.datatypes.generic.SET;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.AssignedAuthor;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Author;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Entry;
+import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.EntryRelationship;
 import org.marc.everest.rmim.uv.cdar2.pocd_mt000040uv.Observation;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ActStatus;
 import org.marc.everest.rmim.uv.cdar2.vocabulary.ContextControl;
@@ -40,12 +41,15 @@ import org.oscarehr.e2e.constant.BodyConstants.Problems;
 import org.oscarehr.e2e.constant.Constants;
 import org.oscarehr.e2e.lens.body.problems.ProblemsAuthorLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsCodeLens;
+import org.oscarehr.e2e.lens.body.problems.ProblemsDiagnosisDateLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsEffectiveTimeLens;
+import org.oscarehr.e2e.lens.body.problems.ProblemsICD9Lens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsIdLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsStatusCodeLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsTextLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsValueLens;
+import org.oscarehr.e2e.lens.common.TSDateLens;
 import org.oscarehr.e2e.util.EverestUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -263,6 +267,7 @@ public class ProblemsLensesTest {
 		assertFalse(effectiveTime.isNull());
 		assertFalse(effectiveTime.getLow().isNull());
 		assertFalse(effectiveTime.getLow().isInvalidDate());
+		assertEquals(new TSDateLens().get(problem.getStartDate()), effectiveTime.getLow());
 	}
 
 	@Test
@@ -270,13 +275,13 @@ public class ProblemsLensesTest {
 		ProblemsEffectiveTimeLens lens = new ProblemsEffectiveTimeLens();
 		assertNotNull(lens);
 
-		putPair.getRight().getClinicalStatementIfObservation().setEffectiveTime(new TS(new GregorianCalendar(), TS.DAY), null);
+		putPair.getRight().getClinicalStatementIfObservation().setEffectiveTime(new TSDateLens().get(problem.getStartDate()), null);
 
 		Pair<Dxresearch, Entry> pair = lens.put(putPair, putPair);
 		assertNotNull(pair);
 		assertNotNull(pair.getLeft());
 		assertNotNull(pair.getRight());
-		assertNotNull(pair.getLeft().getStartDate());
+		assertEquals(problem.getStartDate(), pair.getLeft().getStartDate());
 	}
 
 	@Test
@@ -336,5 +341,80 @@ public class ProblemsLensesTest {
 		assertNotNull(pair.getLeft());
 		assertNotNull(pair.getRight());
 		assertNotNull(pair.getLeft().getUpdateDate());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void problemsICD9LensGetTest() {
+		ProblemsICD9Lens lens = new ProblemsICD9Lens();
+		assertNotNull(lens);
+
+		Pair<Dxresearch, Entry> pair = lens.get(getPair);
+		assertNotNull(pair);
+		assertNotNull(pair.getLeft());
+		assertNotNull(pair.getRight());
+
+		ArrayList<EntryRelationship> entryRelationships = pair.getRight().getClinicalStatementIfObservation().getEntryRelationship();
+		EntryRelationship entryRelationship = EverestUtils.findEntryRelationship(entryRelationships, Constants.ObservationOids.SECONDARY_CODE_ICD9_OBSERVATION_TEMPLATE_ID);
+		assertNotNull(entryRelationship);
+		assertEquals(CD.class, entryRelationship.getClinicalStatementIfObservation().getValue().getClass());
+
+		CD<String> value = (CD<String>) entryRelationship.getClinicalStatementIfObservation().getValue();
+		assertEquals(Constants.CodeSystems.ICD9_OID, value.getCodeSystem());
+		assertEquals(problem.getDxresearchCode(), value.getCode());
+	}
+
+	@Test
+	public void problemsICD9LensPutTest() {
+		ProblemsICD9Lens lens = new ProblemsICD9Lens();
+		assertNotNull(lens);
+
+		EntryRelationship entryRelationship = EverestUtils.createObservationTemplate(Constants.ObservationOids.SECONDARY_CODE_ICD9_OBSERVATION_TEMPLATE_ID);
+		entryRelationship.getClinicalStatementIfObservation().setValue(new CD<>(problem.getDxresearchCode(), Constants.CodeSystems.ICD9_OID));
+		putPair.getRight().getClinicalStatementIfObservation().getEntryRelationship().add(entryRelationship);
+
+		Pair<Dxresearch, Entry> pair = lens.put(putPair, putPair);
+		assertNotNull(pair);
+		assertNotNull(pair.getLeft());
+		assertNotNull(pair.getRight());
+		assertEquals(problem.getDxresearchCode(), pair.getLeft().getDxresearchCode());
+	}
+
+	@Test
+	public void problemsDiagnosisDateLensGetTest() {
+		ProblemsDiagnosisDateLens lens = new ProblemsDiagnosisDateLens();
+		assertNotNull(lens);
+
+		Pair<Dxresearch, Entry> pair = lens.get(getPair);
+		assertNotNull(pair);
+		assertNotNull(pair.getLeft());
+		assertNotNull(pair.getRight());
+
+		ArrayList<EntryRelationship> entryRelationships = pair.getRight().getClinicalStatementIfObservation().getEntryRelationship();
+		EntryRelationship entryRelationship = EverestUtils.findEntryRelationship(entryRelationships, Constants.ObservationOids.DATE_OBSERVATION_TEMPLATE_ID);
+		assertNotNull(entryRelationship);
+
+		IVL<TS> ivl = entryRelationship.getClinicalStatementIfObservation().getEffectiveTime();
+		assertNotNull(ivl);
+		assertFalse(ivl.isNull());
+		assertFalse(ivl.getLow().isNull());
+		assertFalse(ivl.getLow().isInvalidDate());
+		assertEquals(new TSDateLens().get(problem.getUpdateDate()), ivl.getLow());
+	}
+
+	@Test
+	public void problemsDiagnosisDateLensPutTest() {
+		ProblemsDiagnosisDateLens lens = new ProblemsDiagnosisDateLens();
+		assertNotNull(lens);
+
+		EntryRelationship entryRelationship = EverestUtils.createObservationTemplate(Constants.ObservationOids.DATE_OBSERVATION_TEMPLATE_ID);
+		entryRelationship.getClinicalStatementIfObservation().setEffectiveTime(new TSDateLens().get(problem.getUpdateDate()), null);
+		putPair.getRight().getClinicalStatementIfObservation().getEntryRelationship().add(entryRelationship);
+
+		Pair<Dxresearch, Entry> pair = lens.put(putPair, putPair);
+		assertNotNull(pair);
+		assertNotNull(pair.getLeft());
+		assertNotNull(pair.getRight());
+		assertEquals(problem.getUpdateDate(), pair.getLeft().getUpdateDate());
 	}
 }

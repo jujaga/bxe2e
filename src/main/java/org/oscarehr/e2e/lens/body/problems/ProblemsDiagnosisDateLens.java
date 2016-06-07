@@ -36,7 +36,7 @@ public class ProblemsDiagnosisDateLens extends AbstractLens<Pair<Dxresearch, Ent
 			ArrayList<EntryRelationship> entryRelationships = target.getRight().getClinicalStatementIfObservation().getEntryRelationship();
 
 			EntryRelationship entryRelationship = EverestUtils.findEntryRelationship(entryRelationships, oid);
-			if(entryRelationship != null) {
+			if(date == null && entryRelationship != null) {
 				date = new DateObservationLens().put(entryRelationship);
 			}
 

@@ -35,7 +35,7 @@ public class ProblemsICD9Lens extends AbstractLens<Pair<Dxresearch, Entry>, Pair
 			ArrayList<EntryRelationship> entryRelationships = target.getRight().getClinicalStatementIfObservation().getEntryRelationship();
 
 			EntryRelationship entryRelationship = EverestUtils.findEntryRelationship(entryRelationships, oid);
-			if(entryRelationship != null) {
+			if(code == null && entryRelationship != null) {
 				code = new SecondaryCodeICD9ObservationLens().put(entryRelationship);
 			}
 
