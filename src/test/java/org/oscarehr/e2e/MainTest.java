@@ -7,10 +7,8 @@ import java.io.PrintStream;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class MainTest {
 	@BeforeClass
 	public static void beforeClass() {

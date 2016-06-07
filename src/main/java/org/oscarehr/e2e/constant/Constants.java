@@ -39,14 +39,17 @@ public class Constants {
 		OUTCOBS, PRNIND, REACTOBS, REASON, RECLINK, SEV, TRTNOTE, UNBOUND
 	}
 
+	/*
 	public static enum PreventionExtKeys {
 		comments, dose, location, lot, manufacture, name, neverReason, route
 	}
+	 */
 
 	public static enum ReactionTypeCode {
 		ALG, DALG, DINT, DNAINT, EALG, EINT, ENAINT, FALG, FINT, FNAINT, NAINT, OINT
 	}
 
+	/*
 	public static enum RoleClass {
 		MANU, PAT, PROV, ROL, SDLOC
 	}
@@ -54,6 +57,7 @@ public class Constants {
 	public static enum SubstanceAdministrationType {
 		DRUG, IMMUNIZ, ANTIGEN
 	}
+	 */
 
 	public static enum TelecomType {
 		EMAIL, TELEPHONE
