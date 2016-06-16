@@ -2,7 +2,6 @@ package org.oscarehr.e2e.transformer;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
-import org.oscarehr.e2e.rule.common.AbstractRule;
 import org.oscarehr.e2e.rule.common.IRule.Original;
 
 public abstract class AbstractTransformer<IModel, T> {
@@ -16,7 +15,6 @@ public abstract class AbstractTransformer<IModel, T> {
 		this.model = model;
 		this.target = target;
 		this.original = original;
-		AbstractRule.setOriginal(original);
 
 		transform();
 	}

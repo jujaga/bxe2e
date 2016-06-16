@@ -105,6 +105,7 @@ public class E2EConversionTransformer extends AbstractTransformer<PatientModel, 
 		mapProblems(components);
 
 		// Run all rules
+		rules.forEach(e -> e.setOriginal(original));
 		return rules.parallelStream()
 				.map(IRule::execute)
 				.sequential()

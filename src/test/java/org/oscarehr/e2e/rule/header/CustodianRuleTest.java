@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.oscarehr.e2e.lens.header.custodian.CustodianIdLens;
 import org.oscarehr.e2e.lens.header.custodian.CustodianLens;
 import org.oscarehr.e2e.lens.header.custodian.CustodianNameLens;
-import org.oscarehr.e2e.rule.common.AbstractRule;
 import org.oscarehr.e2e.rule.common.AbstractRuleTest;
 import org.oscarehr.e2e.rule.common.IRule.Original;
 
@@ -34,14 +33,14 @@ public class CustodianRuleTest extends AbstractRuleTest {
 
 	@Test
 	public void custodianRuleSourceExecutionTest() {
-		AbstractRule.setOriginal(Original.SOURCE);
+		rule.setOriginal(Original.SOURCE);
 		rule.execute();
 		assertTrue(rule.executed());
 	}
 
 	@Test
 	public void custodianRuleTargetExecutionTest() {
-		AbstractRule.setOriginal(Original.TARGET);
+		rule.setOriginal(Original.TARGET);
 		rule.execute();
 		assertTrue(rule.executed());
 	}

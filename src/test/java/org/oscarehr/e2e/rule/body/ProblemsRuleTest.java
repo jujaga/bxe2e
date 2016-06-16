@@ -15,7 +15,6 @@ import org.oscarehr.e2e.lens.body.problems.ProblemsLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsStatusCodeLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsTextLens;
 import org.oscarehr.e2e.lens.body.problems.ProblemsValueLens;
-import org.oscarehr.e2e.rule.common.AbstractRule;
 import org.oscarehr.e2e.rule.common.AbstractRuleTest;
 import org.oscarehr.e2e.rule.common.IRule.Original;
 
@@ -48,14 +47,14 @@ public class ProblemsRuleTest extends AbstractRuleTest {
 
 	@Test
 	public void problemsRuleSourceExecutionTest() {
-		AbstractRule.setOriginal(Original.SOURCE);
+		rule.setOriginal(Original.SOURCE);
 		rule.execute();
 		assertTrue(rule.executed());
 	}
 
 	@Test
 	public void problemsRuleTargetExecutionTest() {
-		AbstractRule.setOriginal(Original.TARGET);
+		rule.setOriginal(Original.TARGET);
 		rule.execute();
 		assertTrue(rule.executed());
 	}

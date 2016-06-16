@@ -8,7 +8,8 @@ import org.oscarehr.e2e.lens.common.AbstractLens;
 public abstract class AbstractRule<S, T> implements IRule<S, T> {
 	protected final Logger log = Logger.getLogger(this.getClass().getSimpleName());
 	private static final String EXECUTE_WARNING = "Rule Not Executed: results may not be in valid transformed state";
-	protected static Original original = Original.SOURCE;
+
+	protected Original original = null;
 	protected String ruleName = this.getClass().getSimpleName();
 	private Boolean executed = false;
 
@@ -41,13 +42,9 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 		return lens;
 	}
 
-	/**
-	 * Sets the original transformation direction.
-	 *
-	 * @param original the original source
-	 */
-	public static void setOriginal(Original original) {
-		AbstractRule.original = original;
+	@Override
+	public void setOriginal(Original original) {
+		this.original = original;
 	}
 
 	@Override
@@ -57,7 +54,7 @@ public abstract class AbstractRule<S, T> implements IRule<S, T> {
 
 	@Override
 	public IRule<S, T> execute() {
-		if(!executed && lens != null) {
+		if(!executed && lens != null && original != null) {
 			try {
 				if(original == Original.SOURCE) {
 					pair = lens.get(pair);

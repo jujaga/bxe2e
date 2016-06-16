@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.e2e.lens.header.InformationRecipientLens;
-import org.oscarehr.e2e.rule.common.AbstractRule;
 import org.oscarehr.e2e.rule.common.AbstractRuleTest;
 import org.oscarehr.e2e.rule.common.IRule.Original;
 
@@ -30,14 +29,14 @@ public class InformationRecipientRuleTest extends AbstractRuleTest {
 
 	@Test
 	public void informationRecipientRuleSourceExecutionTest() {
-		AbstractRule.setOriginal(Original.SOURCE);
+		rule.setOriginal(Original.SOURCE);
 		rule.execute();
 		assertTrue(rule.executed());
 	}
 
 	@Test
 	public void informationRecipientRuleTargetExecutionTest() {
-		AbstractRule.setOriginal(Original.TARGET);
+		rule.setOriginal(Original.TARGET);
 		rule.execute();
 		assertTrue(rule.executed());
 	}

@@ -18,6 +18,13 @@ public interface IRule<S, T> {
 	}
 
 	/**
+	 * Sets the original transformation direction.
+	 *
+	 * @param original the original source
+	 */
+	void setOriginal(Original original);
+
+	/**
 	 * Gets the rule name.
 	 *
 	 * @return the name

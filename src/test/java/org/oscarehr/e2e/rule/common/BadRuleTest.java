@@ -19,7 +19,7 @@ public class BadRuleTest {
 	@Test
 	public void badRuleSourceExecutionTest() {
 		BadRule rule = new BadRule(null, null);
-		AbstractRule.setOriginal(Original.SOURCE);
+		rule.setOriginal(Original.SOURCE);
 		rule.execute();
 		assertFalse(rule.executed());
 	}

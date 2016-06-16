@@ -13,7 +13,6 @@ import org.oscarehr.e2e.lens.header.recordtarget.LanguageLens;
 import org.oscarehr.e2e.lens.header.recordtarget.NameLens;
 import org.oscarehr.e2e.lens.header.recordtarget.RecordTargetLens;
 import org.oscarehr.e2e.lens.header.recordtarget.TelecomLens;
-import org.oscarehr.e2e.rule.common.AbstractRule;
 import org.oscarehr.e2e.rule.common.AbstractRuleTest;
 import org.oscarehr.e2e.rule.common.IRule.Original;
 
@@ -44,14 +43,14 @@ public class RecordTargetRuleTest extends AbstractRuleTest {
 
 	@Test
 	public void recordTargetRuleSourceExecutionTest() {
-		AbstractRule.setOriginal(Original.SOURCE);
+		rule.setOriginal(Original.SOURCE);
 		rule.execute();
 		assertTrue(rule.executed());
 	}
 
 	@Test
 	public void recordTargetRuleTargetExecutionTest() {
-		AbstractRule.setOriginal(Original.TARGET);
+		rule.setOriginal(Original.TARGET);
 		rule.execute();
 		assertTrue(rule.executed());
 	}

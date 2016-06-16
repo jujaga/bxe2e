@@ -18,10 +18,13 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+		//new CreatePatient(Constants.Runtime.VALID_DEMOGRAPHIC);
+		//Arrays.asList(new Integer[10000]).parallelStream().forEach(i -> {
 		PatientModel patientModel = new CreatePatient(Constants.Runtime.VALID_DEMOGRAPHIC).getPatientModel();
 
 		String exportString = doExport(patientModel);
 		doImport(exportString);
+		//});
 
 		// Merge patientModels if UUID matches
 	}

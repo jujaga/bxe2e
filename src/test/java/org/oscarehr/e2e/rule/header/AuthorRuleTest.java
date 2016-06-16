@@ -11,7 +11,6 @@ import org.oscarehr.e2e.lens.header.author.ProviderLens;
 import org.oscarehr.e2e.lens.header.author.ProviderPersonLens;
 import org.oscarehr.e2e.lens.header.author.ProviderTelecomLens;
 import org.oscarehr.e2e.lens.header.author.SystemLens;
-import org.oscarehr.e2e.rule.common.AbstractRule;
 import org.oscarehr.e2e.rule.common.AbstractRuleTest;
 import org.oscarehr.e2e.rule.common.IRule.Original;
 
@@ -39,14 +38,14 @@ public class AuthorRuleTest extends AbstractRuleTest {
 
 	@Test
 	public void authorRuleSourceExecutionTest() {
-		AbstractRule.setOriginal(Original.SOURCE);
+		rule.setOriginal(Original.SOURCE);
 		rule.execute();
 		assertTrue(rule.executed());
 	}
 
 	@Test
 	public void authorRuleTargetExecutionTest() {
-		AbstractRule.setOriginal(Original.TARGET);
+		rule.setOriginal(Original.TARGET);
 		rule.execute();
 		assertTrue(rule.executed());
 	}
