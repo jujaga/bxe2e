@@ -15,13 +15,15 @@ import org.oscarehr.e2e.util.EverestUtils;
 public class ProblemsICD9Lens extends AbstractLens<Pair<Dxresearch, Entry>, Pair<Dxresearch, Entry>> {
 	public ProblemsICD9Lens() {
 		final String oid = Constants.ObservationOids.SECONDARY_CODE_ICD9_OBSERVATION_TEMPLATE_ID;
+		final String icd9 = "icd9";
 
 		get = source -> {
 			String code = source.getLeft().getDxresearchCode();
+			String codeSystem = source.getLeft().getCodingSystem();
 			ArrayList<EntryRelationship> entryRelationships = source.getRight().getClinicalStatementIfObservation().getEntryRelationship();
 
 			EntryRelationship entryRelationship = EverestUtils.findEntryRelationship(entryRelationships, oid);
-			if(entryRelationship == null) {
+			if(entryRelationship == null && icd9.equals(codeSystem)) {
 				entryRelationship = new SecondaryCodeICD9ObservationLens().get(code);
 				entryRelationships.add(entryRelationship);
 			}
@@ -32,14 +34,17 @@ public class ProblemsICD9Lens extends AbstractLens<Pair<Dxresearch, Entry>, Pair
 
 		put = (source, target) -> {
 			String code = target.getLeft().getDxresearchCode();
+			String codeSystem = target.getLeft().getCodingSystem();
 			ArrayList<EntryRelationship> entryRelationships = target.getRight().getClinicalStatementIfObservation().getEntryRelationship();
 
 			EntryRelationship entryRelationship = EverestUtils.findEntryRelationship(entryRelationships, oid);
-			if(code == null && entryRelationship != null) {
+			if(code == null && codeSystem == null && entryRelationship != null) {
 				code = new SecondaryCodeICD9ObservationLens().put(entryRelationship);
+				codeSystem = icd9;
 			}
 
 			target.getLeft().setDxresearchCode(code);
+			target.getLeft().setCodingSystem(codeSystem);
 			return new ImmutablePair<>(target.getLeft(), target.getRight());
 		};
 	}

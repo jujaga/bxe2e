@@ -30,8 +30,8 @@ Based off of the E2E-DTC 1.4 specification
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <everest.version>1.1.0</everest.version>
-    <spring.version>4.3.0.RELEASE</spring.version>
-    <hibernate.version>5.1.0.Final</hibernate.version>
+    <spring.version>4.3.1.RELEASE</spring.version>
+    <hibernate.version>5.2.1.Final</hibernate.version>
   </properties>
   <repositories>
     <!-- MARC-HI Everest Framework -->

@@ -378,6 +378,7 @@ public class ProblemsLensesTest {
 		assertNotNull(pair.getLeft());
 		assertNotNull(pair.getRight());
 		assertEquals(problem.getDxresearchCode(), pair.getLeft().getDxresearchCode());
+		assertEquals("icd9", pair.getLeft().getCodingSystem());
 	}
 
 	@Test
