@@ -30,8 +30,8 @@ Based off of the E2E-DTC 1.4 specification
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <everest.version>1.1.0</everest.version>
-    <spring.version>4.3.2.RELEASE</spring.version>
-    <hibernate.version>5.2.2.Final</hibernate.version>
+    <spring.version>4.3.8.RELEASE</spring.version>
+    <hibernate.version>5.2.10.Final</hibernate.version>
   </properties>
   <repositories>
     <!-- MARC-HI Everest Framework -->
@@ -45,7 +45,7 @@ Based off of the E2E-DTC 1.4 specification
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.6.1</version>
         <configuration>
           <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
@@ -57,7 +57,7 @@ Based off of the E2E-DTC 1.4 specification
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.5.0</version>
+        <version>1.6.0</version>
         <configuration>
           <mainClass>org.oscarehr.e2e.Main</mainClass>
           <!-- to get rid of the warning: [WARNING] Warning: killAfter is
@@ -69,7 +69,7 @@ Based off of the E2E-DTC 1.4 specification
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.6</version>
+        <version>3.7</version>
         <executions>
           <execution>
             <phase>process-sources</phase>
@@ -97,7 +97,7 @@ Based off of the E2E-DTC 1.4 specification
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.7.201606060606</version>
+        <version>0.7.9</version>
         <executions>
           <execution>
             <id>prepare-agent</id>
@@ -110,7 +110,7 @@ Based off of the E2E-DTC 1.4 specification
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.2.0</version>
+        <version>4.3.0</version>
         <configuration>
           <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
           <serviceName>travis-ci</serviceName>
@@ -131,7 +131,7 @@ Based off of the E2E-DTC 1.4 specification
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.4</version>
+      <version>3.5</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -202,13 +202,13 @@ Based off of the E2E-DTC 1.4 specification
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.3.4</version>
+      <version>2.4.0</version>
     </dependency>
     <!-- Logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.21</version>
+      <version>1.7.25</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
